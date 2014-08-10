@@ -2,9 +2,11 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/sandbox/core.js",
  "sources":["core.cljs"],
- "lineCount":12,
+ "lineCount":14,
  "mappings":
- ";AAAA;;;;AAGA,wCAAA,2CAAA,iEAAA,mFAAA,wEAAA,+DAAA,kEAAA,SAAA,oEAAA,mCAAA,hiBAACA,8lBAGqC,WAAAC,UAAA,AAAA,IAAAC,aAAAD,oBAAA,AAAAE,4BAAAD,WAAA,KAAA,nDAAQE,mDACN,OAACC,wBAAI;yBAAA,AAAA,0FAAA,jGAAKC,4JAAiB,AAAA,mFAAIA;;CAAeF",
+ ";AAAA;;;;AAGA,wCAAA,2CAAA,iEAAA,mFAAA,+DAAA,kEAAA,SAAA,oEAAA,mCAAA,xdAACA,shBAGqC,WAAAC,UAAA,AAAA,IAAAC,aAAAD,oBAAA,AAAAE,4BAAAD,WAAA,KAAA,nDAAQE,mDACN,OAACC,wBAAI;yBAAA,AAAA,0FAAA,jGAAKC,4JAAqBA;;CAASF;;AAEhF,qDAAA,rDAAmB,uBAAA,vBAAgBG,6DAEhB,aAAA,AACE,iFAAA,mFAAA,8EAAA,3OAACC,+BAAMC,uBAAkBC,sKAAmBC",
  "names":
- ["antares.core/create-component", "p__15131", "vec__15132",
-  "cljs.core/nthnext", "data", "cljs.core/map", "datum"]}
+ ["antares.core/create-component", "p__15150", "vec__15151",
+  "cljs.core/nthnext", "data", "cljs.core/map", "datum", "js/document",
+  "cljs.core/swap!", "antares.core/app-state", "cljs.core/update-in",
+  "cljs.core/conj"]}
