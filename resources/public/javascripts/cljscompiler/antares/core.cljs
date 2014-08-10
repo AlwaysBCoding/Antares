@@ -10,9 +10,7 @@
 ;; GLOBAL ATOMS
 (def app-state (atom {}))
 (def registered-bindings (atom []))
-
-(add-watch app-state :render-bindings
-  (fn [k r old-state new-state] (render-bindings @registered-bindings new-state)))
+(def registered-components (atom []))
 
 ;; RENDERABLE PROTOCOL
 (defprotocol Renderable
@@ -34,12 +32,24 @@
                                      "")))]
       (dommy/set-text! target-node target-data))))
 
+(defrecord Component
+  [app-cursor dom-cursor render-fn interactions]
+
+  Renderable
+  (render [self]
+    (let [target-node (sel1 dom-cursor)
+          new-nodes-data (render-fn (get-in @app-state app-cursor))]
+      (dommy/clear! target-node)
+      (doseq [new-node-data new-nodes-data]
+        (let [node-to-append (node new-node-data)]
+          (dommy/append! target-node node-to-append))))))
+
 ;; LIBRARY CODE
 (defn register-app-state-cursor
-  [cursor]
+  [cursor value]
   (if (nil? (get-in @app-state cursor))
     (swap! app-state (fn [app-value]
-                       (update-in app-value cursor (fn [old-value] nil))))))
+                       (update-in app-value cursor (fn [old-value] value))))))
 
 (defn register-binding
   [data-binding]
@@ -50,6 +60,23 @@
   (doseq [data-binding data-bindings]
     (render data-binding)))
 
+(defn register-component
+  [component]
+  (swap! registered-components conj component))
+
+(defn render-components
+  [components]
+  (doseq [component components]
+    (render component)))
+
+;; CREATE COMPONENTS
+(defn create-component
+  [source-map]
+  (let [component (map->Component source-map)]
+    (register-app-state-cursor (-> source-map :app-cursor) [])
+    (register-component component)
+    (render component)
+    component))
 
 ;; CREATE DATA BINDINGS [can take lists for app-cursor or dom-cursor]
 (defmulti create-data-binding (fn [app-cursors dom-cursor render-fn]
@@ -60,7 +87,7 @@
                       {:app-cursor app-cursor
                        :dom-cursor dom-cursor
                        :render-fn  render-fn})]
-    (register-app-state-cursor app-cursor)
+    (register-app-state-cursor app-cursor "")
     (register-binding data-binding)
     (render data-binding)
     data-binding))
@@ -71,7 +98,7 @@
                        :dom-cursor dom-cursor
                        :render-fn  render-fn})]
     (doseq [app-cursor app-cursors]
-      (register-app-state-cursor app-cursor))
+      (register-app-state-cursor app-cursor ""))
     (register-binding data-binding)
     (render data-binding)
     data-binding))
@@ -85,3 +112,9 @@
 (defmethod data-bind true [app-cursor dom-cursors render-fn]
   (doseq [dom-cursor dom-cursors]
     (create-data-binding app-cursor dom-cursor render-fn)))
+
+;; CREATE RENDER WATCHERS
+(add-watch app-state :render-bindings
+  (fn [k r old-state new-state] (render-bindings @registered-bindings)))
+(add-watch app-state :render-components
+  (fn [k r old-state new-state] (render-components @registered-components)))
