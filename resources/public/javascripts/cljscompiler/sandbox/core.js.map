@@ -1,0 +1,11 @@
+{"version":3,
+ "file":
+ "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/sandbox/core.js",
+ "sources":["core.cljs"],
+ "lineCount":16,
+ "mappings":
+ ";AAAA;;;;AAGA,iCAAA,mFAAA,uEAAA,3LAACA,wMAEmB,iBAAA,NAAKC,MAAM,OAAcA;;AAE7C,iCAAA,mFAAA,qEAAA,eAAA,YAAA,pNAACD,kOAEmB,iBAAA,NAAKC,MAAMA;;AAE/B,iCAAA,eAAA,mFAAA,uEAAA,mFAAA,sEAAA,nWAACD,kXAEkB,WAAAE,UAAA,AAAA,IAAAC,aAAAD,yBAAA,AAAAE,wBAAAD,WAAA,IAAA,qBAAA,AAAAC,wBAAAD,WAAA,IAAA,MAAA,rHAAME,6DAAUC,wDACd,gFAAA,zBAAK,AAAcD,yEAAeC;;AAEvD,uDAAA,2CAAA,+DAAA,SAAA,6DAAA,vOAACC,gCAAOC;AAGR,AAACC,WAAc,aAAA,AACE,8DAAA,2CAAA,+DAAA,SAAA,6DAAA,vOAACF,gCAAOC;GADzB",
+ "names":
+ ["antares.core/data-bind", "data", "p__11827", "vec__11828",
+  "cljs.core/nth", "firstname", "lastname", "cljs.core/reset!",
+  "antares.core/app-state", "js/setTimeout"]}
