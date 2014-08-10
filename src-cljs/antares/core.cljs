@@ -77,20 +77,11 @@
     data-binding))
 
 (defmulti data-bind (fn [app-cursors dom-cursors render-fn]
-                      [(= (type app-cursors) cljs.core/List)
-                       (= (type dom-cursors) cljs.core/List)]))
+                      (= (type dom-cursors) cljs.core/List)))
 
-(defmethod data-bind [false false] [app-cursor dom-cursor render-fn]
+(defmethod data-bind false [app-cursor dom-cursor render-fn]
   (create-data-binding app-cursor dom-cursor render-fn))
 
-(defmethod data-bind [false true] [app-cursor dom-cursors render-fn]
+(defmethod data-bind true [app-cursor dom-cursors render-fn]
   (doseq [dom-cursor dom-cursors]
     (create-data-binding app-cursor dom-cursor render-fn)))
-
-(defmethod data-bind [true false] [app-cursors dom-cursor render-fn]
-  (create-data-binding app-cursors dom-cursor render-fn))
-
-#_(defmethod data-bind [true true] [app-cursors dom-cursors render-fn]
-  (doseq [app-cursor app-cursors]
-    (doseq [dom-cursor dom-curors]
-      (create-data-binding app-cursor dom-cursor render-fn))))
