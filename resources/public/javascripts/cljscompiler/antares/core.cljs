@@ -82,8 +82,8 @@
     component))
 
 ;; CREATE DATA BINDINGS [can take lists for app-cursor or dom-cursor]
-(defmulti create-data-binding (fn [app-cursors dom-cursor render-fn]
-                                (= (type app-cursors) cljs.core/List)))
+(defmulti create-data-binding (fn [app-cursor dom-cursor render-fn]
+                                (= (type app-cursor) cljs.core/List)))
 
 (defmethod create-data-binding false [app-cursor dom-cursor render-fn]
   (let [data-binding (map->DataBinding
@@ -95,17 +95,18 @@
     (render data-binding)
     data-binding))
 
-(defmethod create-data-binding true [app-cursors dom-cursor render-fn]
-  let [data-binding (map->DataBinding
-                     {:app-cursor app-cursors
-                      :dom-cursor dom-cursor
-                      :render-fn  render-fn})]
-  (doseq [app-cursor app-cursors]
-    (register-app-state-cursor app-cursor ""))
-  (register-binding data-binding)
-)
+(defmethod create-data-binding true [app-cursor dom-cursor render-fn]
+  (let [data-binding (map->DataBinding
+                      {:app-cursor app-cursor
+                       :dom-cursor dom-cursor
+                       :render-fn render-fn})]
+    (doseq [cursor app-cursor]
+      (register-app-state-cursor cursor ""))
+    (register-binding data-binding)
+    (render data-binding)
+    data-binding))
 
-(defmulti data-bind (fn [app-cursors dom-cursors render-fn]
+(defmulti data-bind (fn [app-cursor dom-cursors render-fn]
                       (= (type dom-cursors) cljs.core/List)))
 
 (defmethod data-bind false [app-cursor dom-cursor render-fn]
@@ -114,10 +115,6 @@
 (defmethod data-bind true [app-cursor dom-cursors render-fn]
   (doseq [dom-cursor dom-cursors]
     (create-data-binding app-cursor dom-cursor render-fn)))
-
-;; CREATE TWO WAY DATA BINDINGS
-(defn two-way-data-bind
-  [app-cursor dom-cursor])
 
 ;; CREATE EVENT BINDINGS
 (defn bind-event [dom-cursor event-type action]

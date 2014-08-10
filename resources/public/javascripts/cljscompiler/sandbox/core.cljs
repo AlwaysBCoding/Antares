@@ -1,16 +1,17 @@
 (ns sandbox.core
   (:require [antares.core :as antares]))
 
-(antares/data-bind [:display-name] ".display-name" (fn [data] data))
+(antares/data-bind '([:firstname] [:lastname])
+                   ".display-name"
+                   (fn [[firstname lastname]]
+                     (str firstname " " lastname)))
 
-(antares/data-bind [:display-name] ".input-name" (fn [data] data))
-
-(antares/bind-event ".input-name"
+(antares/bind-event ".input-first-name"
                     "input"
                     (fn [event]
-                      (antares/update-cursor [:display-name] (.-value (.-target event)))))
+                      (antares/update-cursor [:firstname] (.-value (.-target event)))))
 
-(antares/bind-event ".reset-button"
-                    "click"
+(antares/bind-event ".input-last-name"
+                    "input"
                     (fn [event]
-                      (antares/update-cursor [:display-name] "reset!!")))
+                      (antares/update-cursor [:lastname] (.-value (.-target event)))))
