@@ -1,13 +1,16 @@
 (ns sandbox.core
   (:require [antares.core :as antares]))
 
-(antares/create-component {:app-cursor [:items]
-                           :dom-cursor ".items"
-                           :interactions {}
-                           :render-fn (fn [[& data]]
-                                        (map (fn [datum] [:li.item (-> datum)]) data))})
+(antares/data-bind [:display-name] ".display-name" (fn [data] data))
 
-(.addEventListener (.querySelector js/document ".add-item")
-                   "click"
-                   (fn []
-                     (swap! antares/app-state update-in [:items] conj "item")))
+(antares/data-bind [:display-name] ".input-name" (fn [data] data))
+
+(antares/bind-event ".input-name"
+                    "input"
+                    (fn [event]
+                      (antares/update-cursor [:display-name] (.-value (.-target event)))))
+
+(antares/bind-event ".reset-button"
+                    "click"
+                    (fn [event]
+                      (antares/update-cursor [:display-name] "reset!!")))

@@ -30,7 +30,10 @@
                         (render-fn (if-let [app-data (get-in @app-state app-cursor)]
                                      app-data
                                      "")))]
-      (dommy/set-text! target-node target-data))))
+      (case (.-tagName target-node)
+        "INPUT" (set! (.-value target-node) target-data)
+        "TEXTAREA" (set! (.-value target-node) target-data)
+        (set! (.-innerText target-node) target-data)))))
 
 (defrecord Component
   [app-cursor dom-cursor render-fn interactions]
@@ -93,15 +96,14 @@
     data-binding))
 
 (defmethod create-data-binding true [app-cursors dom-cursor render-fn]
-  (let [data-binding (map->DataBinding
-                      {:app-cursor app-cursors
-                       :dom-cursor dom-cursor
-                       :render-fn  render-fn})]
-    (doseq [app-cursor app-cursors]
-      (register-app-state-cursor app-cursor ""))
-    (register-binding data-binding)
-    (render data-binding)
-    data-binding))
+  let [data-binding (map->DataBinding
+                     {:app-cursor app-cursors
+                      :dom-cursor dom-cursor
+                      :render-fn  render-fn})]
+  (doseq [app-cursor app-cursors]
+    (register-app-state-cursor app-cursor ""))
+  (register-binding data-binding)
+)
 
 (defmulti data-bind (fn [app-cursors dom-cursors render-fn]
                       (= (type dom-cursors) cljs.core/List)))
@@ -113,8 +115,22 @@
   (doseq [dom-cursor dom-cursors]
     (create-data-binding app-cursor dom-cursor render-fn)))
 
+;; CREATE TWO WAY DATA BINDINGS
+(defn two-way-data-bind
+  [app-cursor dom-cursor])
+
+;; CREATE EVENT BINDINGS
+(defn bind-event [dom-cursor event-type action]
+  (.addEventListener (.querySelector js/document dom-cursor) event-type action))
+
 ;; CREATE RENDER WATCHERS
 (add-watch app-state :render-bindings
   (fn [k r old-state new-state] (render-bindings @registered-bindings)))
 (add-watch app-state :render-components
   (fn [k r old-state new-state] (render-components @registered-components)))
+
+;; CURSOR API ENDPOINTS
+(defn update-cursor
+  [cursor new-value]
+  (swap! app-state (fn [state]
+                     (update-in state cursor (fn [old-value] new-value)))))
