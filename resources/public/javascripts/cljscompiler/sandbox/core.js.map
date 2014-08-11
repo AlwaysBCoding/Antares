@@ -2,10 +2,6 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/sandbox/core.js",
  "sources":["core.cljs"],
- "lineCount":13,
- "mappings":
- ";AAAA;;;;AAGA,iCAAA,eAAA,mFAAA,uEAAA,mFAAA,sEAAA,nWAACA,mXAEkB,WAAAC,UAAA,AAAA,IAAAC,aAAAD,yBAAA,AAAAE,wBAAAD,WAAA,IAAA,qBAAA,AAAAC,wBAAAD,WAAA,IAAA,MAAA,rHAAME,6DAAUC,wDACd,kEAAA,XAAKD,2DAAcC;;AAExC,kCAAA,oBAAA,tDAACC,8DAEmB,kBAAA,PAAKC,OACH,4CAAA,mFAAA,xHAACC,+LAAmC,AAAS,AAAUD;;AAE7E,kCAAA,mBAAA,rDAACD,6DAEmB,kBAAA,PAAKC,OACH,4CAAA,mFAAA,xHAACC,6LAAkC,AAAS,AAAUD",
- "names":
- ["antares.core/data-bind", "p__16582", "vec__16583", "cljs.core/nth",
-  "firstname", "lastname", "antares.core/bind-event", "event",
-  "antares.core/update-cursor"]}
+ "lineCount":7,
+ "mappings":";AAAA",
+ "names":[]}

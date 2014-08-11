@@ -1,7 +1,0 @@
-{"version":3,
- "file":
- "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/sandbox_brepl.js",
- "sources":["sandbox_brepl.cljs"],
- "lineCount":8,
- "mappings":";AAAA;;;;AAGA,uCAAA,vCAACA",
- "names":["clojure.browser.repl/connect"]}

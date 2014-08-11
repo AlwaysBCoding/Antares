@@ -145,6 +145,22 @@
 (add-watch app-state :render-components
   (fn [k r old-state new-state] (render-components @registered-components)))
 
-;; MAGICAL DOM
-(defn dom
-  [& nodes])
+;; CREATE ATOM COMPONENTS
+(dommy/prepend! (.querySelector js/document "body") (node [:div.antares.app-state
+                                                           [:textarea.antares.app-state-inspector
+                                                            {:style
+                                                             {:width "100%"
+                                                              :height "80px"
+                                                              :font-size ".8rem"}}]]))
+
+(data-bind
+ []
+ ".antares.app-state-inspector"
+ (fn [data]
+   (pr-str data)))
+
+(bind-event
+  ".antares.app-state-inspector"
+  "input"
+  (fn [event]
+    (update-app-state (fn [] (read-data (-> event .-target .-value))))))
