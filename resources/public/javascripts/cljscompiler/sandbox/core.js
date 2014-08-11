@@ -3,11 +3,18 @@ goog.provide('sandbox.core');
 goog.require('cljs.core');
 goog.require('antares.core');
 goog.require('antares.core');
-antares.core.data_bind.call(null,cljs.core.list(new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"firstname","firstname",1659984849)], null),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"lastname","lastname",-265181465)], null)),".display-name",(function (p__16582){var vec__16583 = p__16582;var firstname = cljs.core.nth.call(null,vec__16583,(0),null);var lastname = cljs.core.nth.call(null,vec__16583,(1),null);return (''+cljs.core.str.cljs$core$IFn$_invoke$arity$1(firstname)+" "+cljs.core.str.cljs$core$IFn$_invoke$arity$1(lastname));
+sandbox.core.display_name = antares.core.data_bind.call(null,cljs.core.list(new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"firstname","firstname",1659984849)], null),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"lastname","lastname",-265181465)], null)),".display-name",(function (p__18406){var vec__18407 = p__18406;var firstname = cljs.core.nth.call(null,vec__18407,(0),null);var lastname = cljs.core.nth.call(null,vec__18407,(1),null);return (''+cljs.core.str.cljs$core$IFn$_invoke$arity$1(firstname)+" "+cljs.core.str.cljs$core$IFn$_invoke$arity$1(lastname));
 }));
-antares.core.bind_event.call(null,".input-first-name","input",(function (event){return antares.core.update_cursor.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"firstname","firstname",1659984849)], null),event.target.value);
+sandbox.core.first_name = antares.core.two_way_bind.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"firstname","firstname",1659984849)], null),".input-first-name");
+sandbox.core.last_name = antares.core.two_way_bind.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"lastname","lastname",-265181465)], null),".input-last-name");
+sandbox.core.items_list = antares.core.create_component.call(null,new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"app-cursor","app-cursor",1859881648),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"items","items",1031954938)], null),new cljs.core.Keyword(null,"dom-cursor","dom-cursor",-1375555677),".items-list",new cljs.core.Keyword(null,"interactions","interactions",550841811),cljs.core.PersistentArrayMap.EMPTY,new cljs.core.Keyword(null,"render-fn","render-fn",398796518),(function (data){return cljs.core.map.call(null,(function (datum){return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"li.item","li.item",1019267471),new cljs.core.Keyword(null,"name","name",1843675177).cljs$core$IFn$_invoke$arity$1(datum)], null);
+}),data);
+})], null));
+sandbox.core.add_item = antares.core.bind_event.call(null,".add-item","click",(function (event){return antares.core.update_cursor.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"items","items",1031954938)], null),(function (old_value){return cljs.core.conj.call(null,old_value,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"name","name",1843675177),"item"], null));
 }));
-antares.core.bind_event.call(null,".input-last-name","input",(function (event){return antares.core.update_cursor.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"lastname","lastname",-265181465)], null),event.target.value);
 }));
-
-//# sourceMappingURL=core.js.map
+sandbox.core.atom_inspector = antares.core.data_bind.call(null,cljs.core.PersistentVector.EMPTY,".app-state-inspector",(function (data){return cljs.core.pr_str.call(null,data);
+}));
+sandbox.core.atom_inspector = antares.core.bind_event.call(null,".app-state-inspector","input",(function (event){return antares.core.update_app_state.call(null,(function (){return antares.core.read_data.call(null,event.target.value);
+}));
+}));

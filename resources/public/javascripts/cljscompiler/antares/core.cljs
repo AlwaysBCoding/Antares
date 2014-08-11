@@ -1,10 +1,8 @@
 (ns antares.core
   (:require-macros
-    [dommy.macros :refer [node sel sel1]])
+    [dommy.macros :refer [node]])
   (:require
     [dommy.core :as dommy]
-    [dommy.utils :as utils]
-    [dommy.attrs :as attrs]
     [cljs.reader :as edn]))
 
 ;; GLOBAL ATOMS
@@ -21,7 +19,7 @@
   
   Renderable
   (render [self]
-    (let [target-node (sel1 dom-cursor)
+    (let [target-node (.querySelector js/document dom-cursor)
           target-data (if (= (type app-cursor) cljs.core/List)
                         (render-fn (map (fn [cursor]
                                           (if-let [app-data (get-in @app-state cursor)]
@@ -40,9 +38,9 @@
 
   Renderable
   (render [self]
-    (let [target-node (sel1 dom-cursor)
+    (let [target-node (.querySelector js/document dom-cursor)
           new-nodes-data (render-fn (get-in @app-state app-cursor))]
-      (dommy/clear! target-node)
+      (set! (.-innerHTML target-node) "")
       (doseq [new-node-data new-nodes-data]
         (let [node-to-append (node new-node-data)]
           (dommy/append! target-node node-to-append))))))
@@ -71,6 +69,21 @@
   [components]
   (doseq [component components]
     (render component)))
+
+;; CURSOR API ENDPOINTS
+(defn update-cursor
+  [cursor update-fn]
+  (swap! app-state (fn [state]
+                     (update-in state cursor update-fn))))
+
+(defn update-app-state
+  [update-fn]
+  (reset! app-state (update-fn)))
+
+;; HELPER API ENDPOINTS
+(defn read-data
+  [data-string]
+  (edn/read-string data-string))
 
 ;; CREATE COMPONENTS
 (defn create-component
@@ -120,14 +133,18 @@
 (defn bind-event [dom-cursor event-type action]
   (.addEventListener (.querySelector js/document dom-cursor) event-type action))
 
+;; CREATE TWO WAY BINDINGS (Data Binding + Event Binding)
+(defn two-way-bind
+  [app-cursor dom-cursor]
+  (data-bind app-cursor dom-cursor (fn [data] data))
+  (bind-event dom-cursor "input" (fn [event] (update-cursor app-cursor (fn [old-value] (-> event .-target .-value))))))
+
 ;; CREATE RENDER WATCHERS
 (add-watch app-state :render-bindings
   (fn [k r old-state new-state] (render-bindings @registered-bindings)))
 (add-watch app-state :render-components
   (fn [k r old-state new-state] (render-components @registered-components)))
 
-;; CURSOR API ENDPOINTS
-(defn update-cursor
-  [cursor new-value]
-  (swap! app-state (fn [state]
-                     (update-in state cursor (fn [old-value] new-value)))))
+;; MAGICAL DOM
+(defn dom
+  [& nodes])
