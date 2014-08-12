@@ -2,6 +2,9 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/sandbox/core.js",
  "sources":["core.cljs"],
- "lineCount":7,
- "mappings":";AAAA",
- "names":[]}
+ "lineCount":11,
+ "mappings":
+ ";AAAA;;;;AAGA,oCAAA,mFAAA,uEAAA,9LAACA;AACD,iCAAA,mFAAA,uEAAA,3LAACC,gNAAoD,iBAAA,NAAKC,MAAMA;;AAEhE,AAAKC,yBAAU,sCAAA,2CAAA,mEAAA,6CAAA,gEAAA,jQAACC",
+ "names":
+ ["antares.core/two-way-bind", "antares.core/data-bind", "data",
+  "sandbox.core/test-file", "antares.core/map->S3File"]}

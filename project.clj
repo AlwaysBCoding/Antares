@@ -6,16 +6,17 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2277"]
                  [org.clojure/core.async "0.1.303.0-886421-alpha"]
-                 [figwheel "0.1.3-SNAPSHOT"]
+
+                 [com.cemerick/piggieback "0.1.3"]
+                 [weasel "0.3.0"]
+                 
+                 [cljs-http "0.1.15"]
 
                  [prismatic/dommy "0.1.2"]]
 
-  :plugins [[lein-cljsbuild "1.0.3"]
-            [lein-figwheel  "0.1.3-SNAPSHOT"]]
+  :plugins [[lein-cljsbuild "1.0.3"]]
 
-  :figwheel {:http-server-root "public"
-             :port 3449
-             :css-dirs ["resources/public/stylesheets"]}
+  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src-cljs"]

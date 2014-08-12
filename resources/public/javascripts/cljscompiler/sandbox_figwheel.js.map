@@ -1,7 +1,0 @@
-{"version":3,
- "file":
- "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/sandbox_figwheel.js",
- "sources":["sandbox_figwheel.cljs"],
- "lineCount":8,
- "mappings":";AAAA;;;;AAGA,AAACA",
- "names":["figwheel.client/watch-and-reload"]}

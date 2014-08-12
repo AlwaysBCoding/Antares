@@ -2,6 +2,8 @@
   (:require-macros
     [dommy.macros :refer [node]])
   (:require
+    [antares.importers :as importers]
+    [antares.repl :as repl]
     [dommy.core :as dommy]
     [cljs.reader :as edn]))
 
@@ -44,6 +46,17 @@
       (doseq [new-node-data new-nodes-data]
         (let [node-to-append (node new-node-data)]
           (dommy/append! target-node node-to-append))))))
+
+;; DATA SOURCE PROTOCOL
+(defprotocol DataSource
+  (import-data [self]))
+
+(defrecord S3File
+  [bucket-name file-name mapping-fn]
+
+  DataSource
+  (import-data [self]
+    (importers/s3File bucket-name file-name)))
 
 ;; LIBRARY CODE
 (defn register-app-state-cursor
