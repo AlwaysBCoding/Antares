@@ -1,16 +1,38 @@
 (ns antares.core
   (:require-macros
+    [cljs.core.async.macros :refer (go)]
     [dommy.macros :refer [node]])
   (:require
     [antares.importers :as importers]
     [antares.repl :as repl]
     [dommy.core :as dommy]
-    [cljs.reader :as edn]))
+    [cljs.reader :as edn]
+    [clojure.string :as str]
+    [cljs.core.async :refer (<!)]))
 
 ;; GLOBAL ATOMS
 (def app-state (atom {}))
 (def registered-bindings (atom []))
 (def registered-components (atom []))
+
+;; HELPER API ENDPOINTS
+(defn read-data
+  [data-string]
+  (edn/read-string data-string))
+
+(defn split-last
+  [regex data]
+  (str/split data regex))
+
+(defn string->matrix
+  [string]
+  (->> (str/split string #"\n")
+       (map (fn [string] (str/split string #",")))))
+
+(defn cursor->value
+  [cursor new-value]
+  (swap! app-state (fn [app-value]
+                     (update-in app-value cursor (fn [old-value] new-value)))))
 
 ;; RENDERABLE PROTOCOL
 (defprotocol Renderable
@@ -49,14 +71,29 @@
 
 ;; DATA SOURCE PROTOCOL
 (defprotocol DataSource
-  (import-data [self]))
+  (load-data [self]))
 
-(defrecord S3File
-  [bucket-name file-name mapping-fn]
+(defrecord DataComponent
+  [app-cursor dom-cursor render-fn interactions data]
 
+  Renderable
+  (render [self]
+    (let [target-node (.querySelector js/document dom-cursor)
+          new-nodes-data (render-fn (get-in @app-state app-cursor))]
+      (set! (.-innerHTML target-node) "")
+      (doseq [new-node-data new-nodes-data]
+        (let [node-to-append (node new-node-data)]
+          (dommy/append! target-node node-to-append)))))
+  
   DataSource
-  (import-data [self]
-    (importers/s3File bucket-name file-name)))
+  (load-data [self]
+    (go 
+      (->>
+       (importers/s3File (-> self :data :bucket-name) (-> self :data :file-name))
+       (<!)
+       (:body)
+       (string->matrix)
+       (cursor->value app-cursor)))))
 
 ;; LIBRARY CODE
 (defn register-app-state-cursor
@@ -93,11 +130,6 @@
   [update-fn]
   (reset! app-state (update-fn)))
 
-;; HELPER API ENDPOINTS
-(defn read-data
-  [data-string]
-  (edn/read-string data-string))
-
 ;; CREATE COMPONENTS
 (defn create-component
   [source-map]
@@ -105,6 +137,16 @@
     (register-app-state-cursor (-> source-map :app-cursor) [])
     (register-component component)
     (render component)
+    component))
+
+;; CREATE DATA COMPONENT
+(defn create-data-component
+  [source-map]
+  (let [component (map->DataComponent source-map)]
+    (register-app-state-cursor (-> source-map :app-cursor) [[][]])
+    (register-component component)
+    (render component)
+    (load-data component)
     component))
 
 ;; CREATE DATA BINDINGS [can take lists for app-cursor or dom-cursor]
