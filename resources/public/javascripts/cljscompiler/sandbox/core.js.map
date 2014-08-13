@@ -2,11 +2,10 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/sandbox/core.js",
  "sources":["core.cljs"],
- "lineCount":21,
+ "lineCount":18,
  "mappings":
- ";AAAA;;;;AAGA,oCAAA,mFAAA,uEAAA,9LAACA;AACD,iCAAA,mFAAA,uEAAA,3LAACC,gNAAoD,iBAAA,NAAKC,MAAMA;;AAEhE,6CAAA,2CAAA,iEAAA,mFAAA,uEAAA,kEAAA,mBAAA,oEAAA,mCAAA,/eAACC,6iBAG0C,iBAAA,NAAKD,MACH,wFAAA,AAAA,0FAAA,mFAAA,uDAAA,mFAAA,3YAAME,UAAQ,AAACC,0BAAMH,UACfI,OAAQ,AAACC,yBAAKL,+WAGf,AAACM,wBAAI;0BAAA,AAAA,0FAAA,lGAAKC,mJAAaA;;0BAJ5B,mFAAA,5GAIqCL,kKAEjC,AAACI,wBAAI;uBAAA,AAAA,0FAAA,/FAAKE,iJAAU,AAACF,wBAAI;4BAAA,AAAA,0FAAA,pGAAKG,qJACCA;;CAAWD;;CAAOJ;GAXlG,qDAAA,2CAAA,yDAAA,KAAA,mEAAA,6CAAA,gEAAA",
+ ";AAAA;;;;;;AAIA,oCAAA,mFAAA,uEAAA,9LAACA;AACD,iCAAA,mFAAA,uEAAA,3LAACC,gNAAoD,iBAAA,NAAKC,MAAMA;;AAkChE,wCAAA,2CAAA,iEAAA,mFAAA,0EAAA,kEAAA,cAAA,oEAAA,mFAAA,2CAAA,gEAAA,QAAA,yEAAA,eAAA,nuBAACC,wyBAIwD,kBAAA,PAAKC,OAAO,kDAAA,mFAAA,9HAACC,yMAED,CAAA,kIAA2F,AAAA,AAAA,AAAID;mBANpK,8DAOsC,iBAAA,NAAKF,MACH,OAACI,wBAAI,sBAAA,AAAA,0FAAA,sEAAA,2CAAA,tNAAKC,6RAC2BA,kBAAWA;GAAYL;GATpG,qDAAA,2CAAA,yDAAA,WAAA,mEAAA;AAaA,wCAAA,2CAAA,iEAAA,mFAAA,2EAAA,kEAAA,uBAAA,3YAACC,ycAEqC,iBAAA,NAAKD,MAAMA",
  "names":
  ["antares.core/two-way-bind", "antares.core/data-bind", "data",
-  "antares.core/create-data-component", "headers", "cljs.core/first",
-  "rows", "cljs.core/rest", "cljs.core/map", "header", "row",
-  "row-item"]}
+  "antares.core/create-component", "event",
+  "antares.core/update-cursor-async", "cljs.core/map", "file-name"]}

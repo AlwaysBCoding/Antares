@@ -12,12 +12,17 @@
       <p class="firstname-binding"></p>
     </div>
 
-    <div class="game-data">
-      <table class="game-data-table">
-      </table>
+    <div class="files-container">
+      <ul class="files-list"></ul>
+    </div>
+
+    <div class="active-file-container">
+      <div class="active-file-content">
+      </div>
     </div>
     
     <div class="footer-javascripts">
+      <script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.12.min.js"></script>
       <script src="javascripts/cljscompiler/goog/base.js" type="text/javascript"></script>
       <script src="javascripts/cljscompiler/dev.js" type="text/javascript"></script>
       <script type="text/javascript">goog.require("sandbox.core");</script>

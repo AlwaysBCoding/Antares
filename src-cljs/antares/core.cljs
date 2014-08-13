@@ -8,6 +8,7 @@
     [dommy.core :as dommy]
     [cljs.reader :as edn]
     [clojure.string :as str]
+    [cljs-http.client :as http]
     [cljs.core.async :refer (<!)]))
 
 ;; GLOBAL ATOMS
@@ -20,9 +21,13 @@
   [data-string]
   (edn/read-string data-string))
 
-(defn split-last
+(defn split-threadlast
   [regex data]
   (str/split data regex))
+
+(defn nth-threadlast
+  [index collection]
+  (nth collection index))
 
 (defn string->matrix
   [string]
@@ -32,12 +37,19 @@
 (defn cursor->value
   [cursor new-value]
   (swap! app-state (fn [app-value]
-                     (update-in app-value cursor (fn [old-value] new-value)))))
+                     (update-in app-value cursor (fn [old-value] (vec new-value))))))
 
-;; RENDERABLE PROTOCOL
+;; PROTOCOLS
 (defprotocol Renderable
   (render [self]))
 
+(defprotocol EventResponder
+  (bind-events [self]))
+
+(defprotocol DataSource
+  (load-data [self]))
+
+;; CORE RECORDS
 (defrecord DataBinding
   [app-cursor dom-cursor render-fn]
   
@@ -58,23 +70,13 @@
         (set! (.-innerText target-node) target-data)))))
 
 (defrecord Component
-  [app-cursor dom-cursor render-fn interactions]
-
-  Renderable
-  (render [self]
-    (let [target-node (.querySelector js/document dom-cursor)
-          new-nodes-data (render-fn (get-in @app-state app-cursor))]
-      (set! (.-innerHTML target-node) "")
-      (doseq [new-node-data new-nodes-data]
-        (let [node-to-append (node new-node-data)]
-          (dommy/append! target-node node-to-append))))))
-
-;; DATA SOURCE PROTOCOL
-(defprotocol DataSource
-  (load-data [self]))
-
-(defrecord DataComponent
   [app-cursor dom-cursor render-fn interactions data]
+
+  EventResponder
+  (bind-events [self]
+    (when-let [interactions (-> self :interactions)]
+      (doseq [interaction interactions]
+        (.addEventListener (.querySelector js/document dom-cursor) (-> interaction :event-type) (-> interaction :event-action) true))))
 
   Renderable
   (render [self]
@@ -84,16 +86,15 @@
       (doseq [new-node-data new-nodes-data]
         (let [node-to-append (node new-node-data)]
           (dommy/append! target-node node-to-append)))))
-  
+
   DataSource
   (load-data [self]
-    (go 
-      (->>
-       (importers/s3File (-> self :data :bucket-name) (-> self :data :file-name))
-       (<!)
-       (:body)
-       (string->matrix)
-       (cursor->value app-cursor)))))
+    (when (-> self :data)
+      (go
+        (->> (importers/s3Bucket (-> self :data :bucket-name))
+             (<!)
+             (:body)
+             (cursor->value app-cursor))))))
 
 ;; LIBRARY CODE
 (defn register-app-state-cursor
@@ -126,6 +127,17 @@
   (swap! app-state (fn [state]
                      (update-in state cursor update-fn))))
 
+(defn update-cursor-async
+  [cursor resource-url]
+  (go
+    (let [file-content 
+          (->> (http/get resource-url {})
+               (<!)
+               (:body)
+               (:content))]
+      (swap! app-state (fn [state]
+                         (update-in state cursor (fn [old-value] file-content)))))))
+
 (defn update-app-state
   [update-fn]
   (reset! app-state (update-fn)))
@@ -136,15 +148,7 @@
   (let [component (map->Component source-map)]
     (register-app-state-cursor (-> source-map :app-cursor) [])
     (register-component component)
-    (render component)
-    component))
-
-;; CREATE DATA COMPONENT
-(defn create-data-component
-  [source-map]
-  (let [component (map->DataComponent source-map)]
-    (register-app-state-cursor (-> source-map :app-cursor) [[][]])
-    (register-component component)
+    (bind-events component)
     (render component)
     (load-data component)
     component))

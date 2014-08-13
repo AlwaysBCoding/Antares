@@ -2,9 +2,9 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/antares/importers.js",
  "sources":["importers.cljs"],
- "lineCount":9,
+ "lineCount":11,
  "mappings":
- ";AAAA;;;;AAGA,2BAAA,wCAAA,nEAAMA,4CACHC,YAAYC,iDACT,CAAA,oFAAA,bAAgCD,6DAAgBC,3KAChD,uLAAA,2CAAA,gFAAA,3SAACC",
+ ";AAAA;;;;AAGA,2BAAA,wCAAA,nEAAMA,4CACHC,YAAYC,iDACT,CAAA,oFAAA,bAAgCD,6DAAgBC,3KAChD,uLAAA,2CAAA,gFAAA,3SAACC;;AAEP,6BAAA,gCAAA,7DAAMC,gDACHH,mDACG,CAAA,8GAAA,bAA0DA,xIAC1D,sKAAA,/JAACE",
  "names":
  ["antares.importers/s3File", "bucket-name", "file-name",
-  "cljs-http.client/get"]}
+  "cljs-http.client/get", "antares.importers/s3Bucket"]}
