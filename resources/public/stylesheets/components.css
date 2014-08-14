@@ -1,3 +1,6 @@
+.files-container .files-list li.active {
+  color: blue; }
+
 .templates-container .templates-list li.active {
   color: blue; }
 

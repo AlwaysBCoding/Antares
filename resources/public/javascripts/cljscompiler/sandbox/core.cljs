@@ -43,8 +43,11 @@
 
 (defn activate-file
   [event]
-  (antares/update-cursor-async
+  (antares/update-cursor
    [:active-file]
+   (fn [old-value] (-> event .-target .-dataset .-fileName)))
+  (antares/update-cursor-async
+   [:active-file-data]
    (str "http://antares-services.herokuapp.com/services/s3/vendoriq-data-imports/get-object/" (-> event .-target .-dataset .-fileName)))
   (antares/update-cursor
    [:active-analysis]
@@ -58,8 +61,11 @@
 (renderer/defhtml render-files-list
   [data]
   (map (fn [file-name]
-         [:li.file-name
-          {:data-file-name file-name} file-name]) data))
+         [:li
+          (if (= (get-in @antares/app-state [:active-file]) file-name)
+            {:data-file-name file-name :class "active file-name"}
+            {:data-file-name file-name :class "inactive file-name"})
+           file-name]) data))
 
 (antares/create-component {:app-cursor [:files-list]
                            :dom-cursor ".files-list"
@@ -86,15 +92,14 @@
             {:data-template-name template-name :class "inactive template-name"})
            template-name]) data))
 
-(def component-templates-list
-  (antares/create-component {:app-cursor [:templates-list]
-                             :dom-cursor ".templates-list"
-                             :interactions [{:event-type "click"
-                                             :event-selctor "li.template-name"
-                                             :event-action activate-template}]
-                             :render-fn render-templates-list
-                             :data {:source "static"
-                                    :initialize ["template1" "template2" "template3"]}}))
+(antares/create-component {:app-cursor [:templates-list]
+                           :dom-cursor ".templates-list"
+                           :interactions [{:event-type "click"
+                                           :event-selctor "li.template-name"
+                                           :event-action activate-template}]
+                           :render-fn render-templates-list
+                           :data {:source "static"
+                                  :initialize ["template1" "template2" "template3"]}})
 
 ;; 2) Active Collection Items
 ;; ===================================
@@ -105,7 +110,7 @@
   [data]
   [:pre (-> data :filecontent)])
 
-(antares/create-component {:app-cursor [:active-file]
+(antares/create-component {:app-cursor [:active-file-data]
                            :dom-cursor ".active-file-content"
                            :render-fn render-active-file-content})
 
