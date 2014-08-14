@@ -48,9 +48,9 @@
    (fn [old-value] {:invoice-number "123456"
                    :invoice-amount "$125.35"
                    :items [{:item-name "Tomatoes"
-                            :overpayment-percentage "20"}
+                            :overpayment-percentage 20}
                            {:item-name "Celery"
-                            :overpayment-percentage "11"}]})))
+                            :overpayment-percentage 11}]})))
 
 (renderer/defhtml render-files-list
   [data]
@@ -100,7 +100,7 @@
          [:div.slider-segment.segment3
           [:p.segment-text "OVERPAYING"]]
          [:div.slider-marker
-          {:style "left: 90%"}]]
+          {:style (str "left: " (min (+ (-> item :overpayment-percentage) 60) 90) "%")}]]
         [:hr]])
      (-> data :items))]])
 
