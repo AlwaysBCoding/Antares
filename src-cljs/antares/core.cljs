@@ -37,7 +37,7 @@
 (defn cursor->value
   [cursor new-value]
   (swap! app-state (fn [app-value]
-                     (update-in app-value cursor (fn [old-value] (vec new-value))))))
+                     (update-in app-value cursor (fn [old-value] new-value)))))
 
 ;; PROTOCOLS
 (defprotocol Renderable
@@ -87,11 +87,16 @@
   DataSource
   (load-data [self]
     (when (-> self :data)
-      (go
-        (->> (importers/s3Bucket (-> self :data :bucket-name))
-             (<!)
-             (:body)
-             (cursor->value app-cursor))))))
+      (case (-> self :data :source)
+        "s3Bucket" (go
+                     (->> (importers/s3Bucket (-> self :data :bucket-name))
+                          (<!)
+                          (:body)
+                          (vec)
+                          (cursor->value app-cursor)))
+        "static" (go
+                   (->> (-> self :data :initialize)
+                        (cursor->value app-cursor)))))))
 
 ;; LIBRARY CODE
 (defn register-app-state-cursor

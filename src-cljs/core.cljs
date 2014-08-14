@@ -36,7 +36,10 @@
 ;;                                                 (update-in app-value app-cursor (fn [old-value]
 ;;                                                                                   (update-in old-value [(+ row 1) column] (fn [old-cell-value] new-cell-value)))))))))
 
-;; 1 - Files List
+;; 1) Collections
+;; ===================================
+
+;; a) Files List
 
 (defn activate-file
   [event]
@@ -44,7 +47,7 @@
    [:active-file]
    (str "http://antares-services.herokuapp.com/services/s3/vendoriq-data-imports/get-object/" (-> event .-target .-dataset .-fileName)))
   (antares/update-cursor
-   [:active-template]
+   [:active-analysis]
    (fn [old-value] {:invoice-number "123456"
                    :invoice-amount "$125.35"
                    :items [{:item-name "Tomatoes"
@@ -67,7 +70,33 @@
                            :data {:source "s3Bucket"
                                   :bucket-name "vendoriq-data-imports"}})
 
-;; 2 - Active File
+;; b) Templates List
+(defn activate-template
+  [event]
+  (antares/update-cursor
+   [:active-template]
+   (fn [old-value]
+     {:template-week (-> event .-target .-dataset .-templateName)})))
+
+(renderer/defhtml render-templates-list
+  [data]
+  (map (fn [template-name]
+         [:li.template-name
+          {:data-template-name template-name} template-name]) data))
+
+(antares/create-component {:app-cursor [:templates-list]
+                           :dom-cursor ".templates-list"
+                           :interactions [{:event-type "click"
+                                           :event-selctor "li.template-name"
+                                           :event-action activate-template}]
+                           :render-fn render-templates-list
+                           :data {:source "static"
+                                  :initialize ["week1" "week2" "week3"]}})
+
+;; 2) Active Collection Items
+;; ===================================
+
+;; a) Active File
 
 (renderer/defhtml render-active-file-content
   [data]
@@ -76,6 +105,8 @@
 (antares/create-component {:app-cursor [:active-file]
                            :dom-cursor ".active-file-content"
                            :render-fn render-active-file-content})
+
+;; b) Active Template
 
 ;; 3 - Week 1 Template
 
@@ -104,7 +135,7 @@
         [:hr]])
      (-> data :items))]])
 
-(antares/create-component {:app-cursor [:active-template]
+(antares/create-component {:app-cursor [:active-analysis]
                            :dom-cursor ".active-template-content"
                            :render-fn render-week1-template})
 
