@@ -1,0 +1,113 @@
+// File Container
+.file-container {
+
+}
+
+// Active File Container
+.active-file-container {
+
+}
+
+// Template
+.template.week1 {
+  min-width: 465px;
+  max-width: 465px;
+
+  .header {}
+  
+  .subheader {
+    background-color: rgb(213,214,217);
+    width: 100%;
+    min-width: 465px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 2px solid rgb(65,70,77);
+    position: relative;
+    min-height: 80px;
+
+    p.invoice_number {
+      font-size: 30px;
+      font-family: "futura";
+      letter-spacing: -2px;
+      color: rgb(65,70,77);
+      position: absolute;
+      margin: 0px;
+      top: 20px;
+      left: 20px;
+    }
+
+    p.invoice_amount {
+      font-size: 30px;
+      font-family: "futura";
+      letter-spacing: -2px;
+      color: rgb(10,90,177);
+      position: absolute;
+      margin: 0px;
+      top: 20px;
+      right: 30px;
+    }
+
+  }
+
+  .items {
+
+    p.item-name {
+      font-size: 24px;
+      color: rgb(65,70,77);
+      font-family: "futura";
+      letter-spacing: -1px;
+      text-align: center;
+      margin: 15px;
+    }
+
+    p.overpayment {
+      font-size: 22px;
+      color: rgb(150,154,153);
+      text-align: center;
+      font-family: "futura";
+    }
+
+    .overpayment-slider {
+      width: 95%;
+      margin: 0 auto;
+      position: relative;
+      height: 50px;
+
+      .slider-marker {
+        width: 0; 
+        height: 0; 
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;      
+        border-top: 20px solid rgb(30,96,174);
+        position: absolute;
+        top: -12px;
+        left: 70%; }
+
+      .slider-segment {
+        height: 40px;
+        display: inline-block;
+        width: 33%;
+        float: left;
+        p.segment-text {
+          font-family: "helvetica";
+          font-weight: bold;
+          color: white;
+          text-align: center;
+          margin-top: 13px;
+          font-size: 16px; } }
+ 
+      .segment1 {
+        background: -webkit-linear-gradient(left, rgb(63,146,45), rgb(45,95,51));
+        background: -moz-linear-gradient(right, rgb(63,146,45), rgb(45,95,51));
+        background: linear-gradient(to right, rgb(63,146,45), rgb(45,95,51)); }
+      .segment2 {
+        background: -webkit-linear-gradient(left, rgb(250,190,23), rgb(179,129,51));
+        background: -moz-linear-gradient(right, rgb(250,190,23), rgb(179,129,51));
+        background: linear-gradient(to right, rgb(250,190,23), rgb(179,129,51)); }
+      .segment3 {
+        background: -webkit-linear-gradient(left, rgb(190,14,30), rgb(149,1,24));
+        background: -moz-linear-gradient(right, rgb(190,14,30), rgb(149,1,24));
+        background: linear-gradient(to right, rgb(190,14,30), rgb(149,1,24)); } }
+
+  }
+}

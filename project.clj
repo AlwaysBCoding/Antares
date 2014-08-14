@@ -11,6 +11,7 @@
                  [weasel "0.3.0"]
                  
                  [cljs-http "0.1.15"]
+                 [hiccups "0.3.0"]
 
                  [prismatic/dommy "0.1.2"]]
 

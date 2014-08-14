@@ -1,9 +1,8 @@
 (ns sandbox.core
+  (:require-macros [hiccups.core :as renderer])
   (:require [antares.core :as antares]
-            [cljs-http.client :as http]))
-
-(antares/two-way-bind [:firstname] ".firstname-input")
-(antares/data-bind [:firstname] ".firstname-binding" (fn [data] data))
+            [cljs-http.client :as http]
+            [hiccups.runtime :as hiccupsrt]))
 
 ;; (antares/create-data-component {:app-cursor [:game-data]
 ;;                                 :dom-cursor ".game-data-table"
@@ -37,22 +36,77 @@
 ;;                                                 (update-in app-value app-cursor (fn [old-value]
 ;;                                                                                   (update-in old-value [(+ row 1) column] (fn [old-cell-value] new-cell-value)))))))))
 
+;; 1 - Files List
+
+(defn activate-file
+  [event]
+  (antares/update-cursor-async
+   [:active-file]
+   (str "http://antares-services.herokuapp.com/services/s3/vendoriq-data-imports/get-object/" (-> event .-target .-dataset .-fileName)))
+  (antares/update-cursor
+   [:active-template]
+   (fn [old-value] {:invoice-number "123456"
+                   :invoice-amount "$125.35"
+                   :items [{:item-name "Tomatoes"
+                            :overpayment-percentage "20"}
+                           {:item-name "Celery"
+                            :overpayment-percentage "11"}]})))
+
+(renderer/defhtml render-files-list
+  [data]
+  (map (fn [file-name]
+         [:li.file-name
+          {:data-file-name file-name} file-name]) data))
+
 (antares/create-component {:app-cursor [:files-list]
                            :dom-cursor ".files-list"
                            :interactions [{:event-type "click"
                                            :event-selector "li.file-name"
-                                           :event-action (fn [event] (antares/update-cursor-async
-                                                                     [:active-file]
-                                                                     (str "http://antares-services.herokuapp.com/services/s3/vendoriq-data-imports/get-object/" (-> event .-target .-dataset .-filename))))}]
-                           :render-fn (fn [data]
-                                        (map (fn [file-name] [:li.file-name
-                                                             {:data-filename file-name} file-name]) data))
+                                           :event-action activate-file}]
+                           :render-fn render-files-list
                            :data {:source "s3Bucket"
                                   :bucket-name "vendoriq-data-imports"}})
 
+;; 2 - Active File
+
+(renderer/defhtml render-active-file-content
+  [data]
+  [:pre (-> data :filecontent)])
+
 (antares/create-component {:app-cursor [:active-file]
                            :dom-cursor ".active-file-content"
-                           :render-fn (fn [data] data)})
+                           :render-fn render-active-file-content})
+
+;; 3 - Week 1 Template
+
+(renderer/defhtml render-week1-template
+  [data]
+  [:div.template.week1
+   [:div.header
+    [:img {:src ""}]]
+   [:div.subheader
+    [:p.invoice-number (-> data :invoice-number)]
+    [:p.invoice-amount (-> data :invoice-amount)]]
+   [:div.items
+    (mapcat
+     (fn [item]
+       [[:p.item-name (-> item :item-name)]
+        [:p.overpayment (-> item :overpayment-percentage)]
+        [:div.overpayment-slider
+         [:div.slider-segment.segment1
+          [:p.segment-text "GREAT VALUE"]]
+         [:div.slider-segment.segment2
+          [:p.segment-text "TARGET VALUE"]]
+         [:div.slider-segment.segment3
+          [:p.segment-text "OVERPAYING"]]
+         [:div.slider-marker
+          {:style "left: 90%"}]]
+        [:hr]])
+     (-> data :items))]])
+
+(antares/create-component {:app-cursor [:active-template]
+                           :dom-cursor ".active-template-content"
+                           :render-fn render-week1-template})
 
 ;; REPL
 #_

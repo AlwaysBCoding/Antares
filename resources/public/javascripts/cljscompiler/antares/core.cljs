@@ -82,10 +82,7 @@
   (render [self]
     (let [target-node (.querySelector js/document dom-cursor)
           new-nodes-data (render-fn (get-in @app-state app-cursor))]
-      (set! (.-innerHTML target-node) "")
-      (doseq [new-node-data new-nodes-data]
-        (let [node-to-append (node new-node-data)]
-          (dommy/append! target-node node-to-append)))))
+      (set! (.-innerHTML target-node) new-nodes-data)))
 
   DataSource
   (load-data [self]
@@ -130,13 +127,12 @@
 (defn update-cursor-async
   [cursor resource-url]
   (go
-    (let [file-content 
+    (let [response 
           (->> (http/get resource-url {})
                (<!)
-               (:body)
-               (:content))]
+               (:body))]
       (swap! app-state (fn [state]
-                         (update-in state cursor (fn [old-value] file-content)))))))
+                         (update-in state cursor (fn [old-value] response)))))))
 
 (defn update-app-state
   [update-fn]
@@ -146,7 +142,7 @@
 (defn create-component
   [source-map]
   (let [component (map->Component source-map)]
-    (register-app-state-cursor (-> source-map :app-cursor) [])
+    (register-app-state-cursor (-> source-map :app-cursor) {})
     (register-component component)
     (bind-events component)
     (render component)
