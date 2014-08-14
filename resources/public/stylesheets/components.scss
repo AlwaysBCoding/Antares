@@ -1,6 +1,12 @@
 // File Container
-.file-container {
+.files-container {
 
+}
+
+// Templates Container
+.templates-container {
+  .templates-list {
+    li.active { color: blue; } }
 }
 
 // Active File Container

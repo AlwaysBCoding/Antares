@@ -75,23 +75,26 @@
   [event]
   (antares/update-cursor
    [:active-template]
-   (fn [old-value]
-     {:template-week (-> event .-target .-dataset .-templateName)})))
+   (fn [old-value] (-> event .-target .-dataset .-templateName))))
 
 (renderer/defhtml render-templates-list
   [data]
   (map (fn [template-name]
-         [:li.template-name
-          {:data-template-name template-name} template-name]) data))
+         [:li
+          (if (= (get-in @antares/app-state [:active-template]) template-name)
+            {:data-template-name template-name :class "active template-name"}
+            {:data-template-name template-name :class "inactive template-name"})
+           template-name]) data))
 
-(antares/create-component {:app-cursor [:templates-list]
-                           :dom-cursor ".templates-list"
-                           :interactions [{:event-type "click"
-                                           :event-selctor "li.template-name"
-                                           :event-action activate-template}]
-                           :render-fn render-templates-list
-                           :data {:source "static"
-                                  :initialize ["week1" "week2" "week3"]}})
+(def component-templates-list
+  (antares/create-component {:app-cursor [:templates-list]
+                             :dom-cursor ".templates-list"
+                             :interactions [{:event-type "click"
+                                             :event-selctor "li.template-name"
+                                             :event-action activate-template}]
+                             :render-fn render-templates-list
+                             :data {:source "static"
+                                    :initialize ["template1" "template2" "template3"]}}))
 
 ;; 2) Active Collection Items
 ;; ===================================

@@ -1,3 +1,6 @@
+.templates-container .templates-list li.active {
+  color: blue; }
+
 .template.week1 {
   min-width: 465px;
   max-width: 465px; }
