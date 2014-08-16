@@ -124,8 +124,8 @@
      [:div.header
       [:img {:src ""}]]
      [:div.subheader
-      [:p.invoice-number (-> analyzed-data :invoice-number)]
-      [:p.invoice-amount (-> analyzed-data :invoice-amount)]]
+      [:p.invoice-number (str "Invoice #: " (-> analyzed-data :invoice-number))]
+      [:p.invoice-amount (str "$" (Math.round (-> analyzed-data :invoice-amount)))]]
      [:div.items
       (mapcat
        (fn [item]
