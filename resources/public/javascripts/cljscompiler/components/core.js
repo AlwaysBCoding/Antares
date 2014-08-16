@@ -8,7 +8,7 @@ goog.require('cljs_http.client');
 goog.require('antares.core');
 goog.require('antares.core');
 components.core.create_week1_output_structure = (function create_week1_output_structure(input_data){var matrix = antares.core.string__GT_matrix.call(null,input_data);var headers = cljs.core.map.call(null,((function (matrix){
-return (function (p1__16582_SHARP_){return cljs.core.keyword.call(null,p1__16582_SHARP_);
+return (function (p1__16586_SHARP_){return cljs.core.keyword.call(null,p1__16586_SHARP_);
 });})(matrix))
 ,cljs.core.first.call(null,matrix));var rows = cljs.core.rest.call(null,matrix);var input_data_map = cljs.core.map.call(null,((function (matrix,headers,rows){
 return (function (row){return cljs.core.zipmap.call(null,headers,row);

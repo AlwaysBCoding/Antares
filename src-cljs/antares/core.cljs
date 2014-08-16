@@ -212,7 +212,8 @@
                                                             {:style
                                                              {:width "100%"
                                                               :height "80px"
-                                                              :font-size ".8rem"}}]]))
+                                                              :font-size ".8rem"
+                                                              :display "none"}}]]))
 
 (data-bind
  []
