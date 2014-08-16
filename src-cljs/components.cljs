@@ -4,6 +4,24 @@
             [cljs-http.client :as http]
             [hiccups.runtime :as hiccupsrt]))
 
+;; 0) Domain Logic
+;; ===================================
+(defn create-week1-output-structure
+  [input-data]
+  (let [matrix  (antares/string->matrix input-data)
+        headers (map #(keyword %) (first matrix))
+        rows    (rest matrix)
+        input-data-map (map (fn [row] (zipmap headers row)) rows)]
+    {:restaurant (-> input-data-map first :restaurant)
+     :vendor (-> input-data-map first :vendor_invoiceanalyzer)
+     :invoice-number (-> input-data-map first :invoicenumber_invoiceanalyzer)
+     :invoice-amount (-> input-data-map first :invoiceamount_invoiceanalyzer)
+     :items (map
+             (fn [item-row]
+               {:item-name (-> item-row :description_invoiceanalyzer)
+                :overpayment (-> item-row :variance_invoiceanalyzer)})
+             (filter (fn [row] (not= "" (:variance_invoiceanalyzer row))) input-data-map))}))
+
 ;; 1) Collections
 ;;===================================
 
@@ -16,15 +34,7 @@
    (fn [old-value] (-> event .-target .-dataset .-fileName)))
   (antares/update-cursor-async
    [:active-file-data]
-   (str "http://antares-services.herokuapp.com/services/s3/vendoriq-data-imports/get-object/" (-> event .-target .-dataset .-fileName)))
-  (antares/update-cursor
-   [:active-analysis]
-   (fn [old-value] {:invoice-number "123456"
-                   :invoice-amount "$125.35"
-                   :items [{:item-name "Tomatoes"
-                            :overpayment-percentage 20}
-                           {:item-name "Celery"
-                            :overpayment-percentage 11}]})))
+   (str "http://antares-services.herokuapp.com/services/s3/vendoriq-data-imports/get-object/" (-> event .-target .-dataset .-fileName))))
 
 (renderer/defhtml render-files-list
   [data]

@@ -9,39 +9,22 @@
 
 (defn create-output-structure
   [input-data]
-  (let [create-map (fn [input-csv]
-                     (let [matrix (antares/string->matrix input-data)
-                           headers (first matrix)
-                           rows (rest matrix)]
-                       headers))]
-    (antares/string->matrix (pr-str input-data))))
-;
-;; (let [file (get-in @antares/app-state [:active-file-data :filecontent])]
-;;   (.log js/console (create-output-structure file)))
+  (let [matrix  (antares/string->matrix input-data)
+        headers (map #(keyword %) (first matrix))
+        rows    (rest matrix)
+        input-data-map (map (fn [row] (zipmap headers row)) rows)]
+    {:restaurant (-> input-data-map first :restaurant)
+     :vendor (-> input-data-map first :vendor_invoiceanalyzer)
+     :invoice-number (-> input-data-map first :invoicenumber_invoiceanalyzer)
+     :invoice-amount (-> input-data-map first :invoiceamount_invoiceanalyzer)
+     :items (map
+             (fn [item-row]
+               {:item-name (-> item-row :description_invoiceanalyzer)
+                :overpayment (-> item-row :variance_invoiceanalyzer)})
+             (filter (fn [row] (not= "" (:variance_invoiceanalyzer row))) input-data-map))}))
 
-;; (.log js/console (pr-str (get-in @antares/app-state [:active-file-data :filecontent])))
-
-;; (defn create-output-structure-week-one
-;;   [input-data]
-;;   (let [create-map (fn [input-csv]
-;;                     (let [lines      (clojure.string/split input-csv #"\r")
-;;                           headers    (map #(keyword %)(clojure.string/split (first lines) #","))
-;;                           rows      (rest lines)]
-;;                       (map #(zipmap headers (clojure.string/split % #","))rows)))
-;;                     input-data-map  (vec(create-map input-data))
-;;                     vendor          (:vendor_invoiceanalyzer (first input-data-map))
-;;                     invoice-number  (:invoicenumber_invoiceanalyzer (first input-data-map))
-;;                     invoice-amount  (:invoiceamount_invoiceanalyzer (first input-data-map))
-;;                     items            (filter (fn [x] (not (nil? x)))
-;;                                               (map #(if (not (= "" (:variance_invoiceanalyzer %)))
-;;                                                       (zipmap [:itemname
-;;                                                               :overpaymentpercentage]
-;;                                                               [(:description_invoiceanalyzer %)
-;;                                                               (int (* 100 (read-string (:variance_invoiceanalyzer %))))])) input-data-map))]
-;;     {;:vendor          vendor
-;;     :invoice_number  invoice-number
-;;     :invoice_amount  invoice-amount
-;;     :items        (vec items)}))
+(def input-data (get-in @antares/app-state [:active-file-data :filecontent]))
+(create-output-structure input-data)
 
 ;; REPL
 #_
