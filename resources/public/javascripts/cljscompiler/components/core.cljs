@@ -130,7 +130,7 @@
       (mapcat
        (fn [item]
          [[:p.item-name (-> item :item-name)]
-          [:p.overpayment (-> item :overpayment)]
+          [:p.overpayment (str (-> item :overpayment (* 100) Math.round) "% Overpayment")]
           [:div.overpayment-slider
            [:div.slider-segment.segment1
             [:p.segment-text "GREAT VALUE"]]
@@ -139,7 +139,7 @@
            [:div.slider-segment.segment3
             [:p.segment-text "OVERPAYING"]]
            [:div.slider-marker
-            {:style (str "left: " (min (+ (-> item :overpayment) 60) 90) "%")}]]
+            {:style (str "left: " (min (+ (-> item :overpayment (* 100) Math.round) 60) 90) "%")}]]
           [:hr]])
        (-> analyzed-data :items))]]))
 
