@@ -91,7 +91,7 @@
         matrix (-> filecontent antares/string->matrix)
         headers (first matrix)
         rows (rest matrix)]
-    [:table
+    [:table.ui.table.segment.celled
      [:thead
       [:tr
        (map-indexed (fn [index header]
