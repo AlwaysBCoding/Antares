@@ -25,4 +25,5 @@ goog.addDependency("../dommy/template.js", ['dommy.template'], ['cljs.core', 'do
 goog.addDependency("../dommy/utils.js", ['dommy.utils'], ['cljs.core']);
 goog.addDependency("../dommy/core.js", ['dommy.core'], ['dommy.template', 'cljs.core', 'dommy.attrs', 'dommy.utils', 'clojure.string']);
 goog.addDependency("../antares/core.js", ['antares.core'], ['antares.repl', 'cljs.core', 'cljs_http.client', 'cljs.core.async', 'antares.importers', 'dommy.core', 'clojure.string', 'cljs.reader']);
-goog.addDependency("../sandbox/core.js", ['sandbox.core'], ['hiccups.runtime', 'cljs.core', 'cljs_http.client', 'antares.core']);
+goog.addDependency("../components/core.js", ['components.core'], ['hiccups.runtime', 'cljs.core', 'cljs_http.client', 'antares.core']);
+goog.addDependency("../sandbox/core.js", ['sandbox.core'], ['components.core', 'cljs.core', 'antares.core']);

@@ -31,8 +31,10 @@
 
 (defn string->matrix
   [string]
-  (->> (str/split string #"\n")
-       (map (fn [string] (str/split string #",")))))
+  (if string
+    (let [formatted-string (str/replace string #"\r" "\n")]
+      (->> (str/split formatted-string #"\n")
+           (map (fn [string] (str/split string #",")))))))
 
 (defn cursor->value
   [cursor new-value]
@@ -92,7 +94,6 @@
                      (->> (importers/s3Bucket (-> self :data :bucket-name))
                           (<!)
                           (:body)
-                          (vec)
                           (cursor->value app-cursor)))
         "static" (go
                    (->> (-> self :data :initialize)
