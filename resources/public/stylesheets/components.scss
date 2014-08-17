@@ -1,13 +1,18 @@
 // File Container
 .files-container {
   .files-list {
-    li.active { color: blue; } }
+    .active { color: blue; } }
 }
 
 // Templates Container
 .templates-container {
   .templates-list {
-    li.active { color: blue; } }
+    display: block !important;
+    width: 90% !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    .active { color: blue; } }
 }
 
 // Active File Container
@@ -16,6 +21,10 @@
 }
 
 // Template
+.active-template-content {
+  margin-top: 25px;
+}
+
 .template.week1 {
   min-width: 465px;
   max-width: 465px;

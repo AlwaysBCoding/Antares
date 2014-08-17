@@ -1,11 +1,20 @@
-.files-container .files-list li.active {
+.files-container .files-list .active {
   color: blue; }
 
-.templates-container .templates-list li.active {
-  color: blue; }
+.templates-container .templates-list {
+  display: block !important;
+  width: 90% !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  cursor: pointer !important; }
+  .templates-container .templates-list .active {
+    color: blue; }
 
 .active-file-container {
   overflow-x: scroll; }
+
+.active-template-content {
+  margin-top: 25px; }
 
 .template.week1 {
   min-width: 465px;

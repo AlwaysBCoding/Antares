@@ -39,16 +39,17 @@
 (renderer/defhtml render-files-list
   [data]
   (map (fn [file-name]
-         [:li
+         [:a
           (if (= (get-in @antares/app-state [:active-file]) file-name)
-            {:data-file-name file-name :class "active file-name"}
-            {:data-file-name file-name :class "inactive file-name"})
+            {:data-file-name file-name :class "item file-name active"}
+            {:data-file-name file-name :class "item file-name inactive"})
+          [:i.right.triangle.icon]
            file-name]) data))
 
 (def files-list {:app-cursor [:files-list]
                  :dom-cursor ".files-list"
                  :interactions [{:event-type "click"
-                                 :event-selector "li.file-name"
+                                 :event-selector "a.file-name"
                                  :event-action activate-file}]
                  :render-fn render-files-list
                  :data {:source "s3Bucket"
@@ -65,16 +66,16 @@
 (renderer/defhtml render-templates-list
   [data]
   (map (fn [template-name]
-         [:li
+         [:div
           (if (= (get-in @antares/app-state [:active-template]) template-name)
-            {:data-template-name template-name :class "active template-name"}
-            {:data-template-name template-name :class "inactive template-name"})
+            {:data-template-name template-name :class "item template-name active"}
+            {:data-template-name template-name :class "item template-name inactive"})
            template-name]) data))
 
 (def templates-list {:app-cursor [:templates-list]
                      :dom-cursor ".templates-list"
                      :interactions [{:event-type "click"
-                                     :event-selector "li.template-name"
+                                     :event-selector "div.template-name"
                                      :event-action activate-template}]
                      :render-fn render-templates-list
                      :data {:source "static"
