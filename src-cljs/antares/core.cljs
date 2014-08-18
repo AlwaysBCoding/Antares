@@ -72,7 +72,7 @@
         (set! (.-innerText target-node) target-data)))))
 
 (defrecord Component
-  [app-cursor dom-cursor render-fn interactions data]
+  [app-cursor dom-cursor pre-render-fn render-fn post-render-fn interactions data]
 
   EventResponder
   (bind-events [self]
@@ -82,9 +82,13 @@
 
   Renderable
   (render [self]
+    (when (-> self :pre-render-fn) (pre-render-fn))
+    
     (let [target-node (.querySelector js/document dom-cursor)
           new-nodes-data (render-fn (get-in @app-state app-cursor))]
-      (set! (.-innerHTML target-node) new-nodes-data)))
+      (set! (.-innerHTML target-node) new-nodes-data))
+
+    (when (-> self :post-render-fn) (post-render-fn)))
 
   DataSource
   (load-data [self]

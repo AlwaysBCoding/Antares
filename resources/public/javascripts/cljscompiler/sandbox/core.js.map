@@ -2,10 +2,11 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/sandbox/core.js",
  "sources":["core.cljs"],
- "lineCount":13,
+ "lineCount":14,
  "mappings":
- ";AAAA;;;;;;AAIA,AAACA,wCAAyBC;AAC1B,AAACD,wCAAyBE;AAC1B,AAACF,wCAAyBG;AAC1B,AAACH,wCAAyBI",
+ ";AAAA;;;;;;AAIA,AAACA,wCAAyBC;AAC1B,AAACD,wCAAyBE;AAC1B,AAACF,wCAAyBG;AAC1B,AAACH,wCAAyBI;AAC1B,AAACJ,wCAAyBK",
  "names":
  ["antares.core/create-component", "components.core/files-list",
   "components.core/templates-list", "components.core/active-file",
-  "components.core/week1-template"]}
+  "components.core/week1-template",
+  "components.core/active-template-mapping-fn"]}

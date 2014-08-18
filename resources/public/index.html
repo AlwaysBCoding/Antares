@@ -2,6 +2,7 @@
   <head>
     <title>ClojureScript Test Project</title>
     <link href="stylesheets/semantic.css" rel="stylesheet" type="text/css" />
+    <link href="stylesheets/codemirror/codemirror.css" rel="stylesheet" type="text/css" />
     <link href="stylesheets/app.css" rel="stylesheet" type="text/css" />
     <link href="stylesheets/components.css" rel="stylesheet" type="text/css" />
   </head>
@@ -16,8 +17,13 @@
           <ul class="files-list ui list"></ul>
         </div>
 
-        <div class="active-file-container column wide nine">
-          <div class="active-file-content"></div>
+        <div class="intermediate-steps column wide nine">
+          <div class="active-file-container">
+            <div class="active-file-content"></div>
+          </div>
+          <div class="active-template-mapping-fn-container">
+            <div class="active-template-mapping-fn"></div>
+          </div>
         </div>
 
         <div class="active-template column wide five">
@@ -35,6 +41,8 @@
 
     <div class="footer-javascripts">
       <script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.12.min.js"></script>
+      <script src="javascripts/codemirror/lib/codemirror.js"></script>
+      <script src="javascripts/codemirror/modes/clojure.js"></script>
       <script src="javascripts/cljscompiler/goog/base.js" type="text/javascript"></script>
       <script src="javascripts/cljscompiler/dev.js" type="text/javascript"></script>
       <script type="text/javascript">goog.require("sandbox.core");</script>

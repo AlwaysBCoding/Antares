@@ -6,6 +6,7 @@
 (antares/create-component components/templates-list)
 (antares/create-component components/active-file)
 (antares/create-component components/week1-template)
+(antares/create-component components/active-template-mapping-fn)
 
 ;; REPL
 #_

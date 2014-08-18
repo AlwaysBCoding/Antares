@@ -61,16 +61,19 @@
   [event]
   (antares/update-cursor
    [:active-template]
-   (fn [old-value] (-> event .-target .-dataset .-templateName))))
+   (fn [old-value] (-> event .-target .-dataset .-templateName)))
+  (antares/update-cursor
+   [:active-template-mapping-fn]
+   (fn [old-value] (-> event .-target .-dataset .-mappingFn))))
 
 (renderer/defhtml render-templates-list
   [data]
-  (map (fn [template-name]
+  (map (fn [template-info]
          [:div
-          (if (= (get-in @antares/app-state [:active-template]) template-name)
-            {:data-template-name template-name :class "item template-name active"}
-            {:data-template-name template-name :class "item template-name inactive"})
-           template-name]) data))
+          (if (= (get-in @antares/app-state [:active-template]) (-> template-info :name))
+            {:data-template-name (-> template-info :name) :data-mapping-fn (-> template-info :mapping-fn) :class "item template-name active"}
+            {:data-template-name (-> template-info :name) :data-mapping-fn (-> template-info :mapping-fn) :class "item template-name inactive"})
+           (-> template-info :name)]) data))
 
 (def templates-list {:app-cursor [:templates-list]
                      :dom-cursor ".templates-list"
@@ -79,7 +82,12 @@
                                      :event-action activate-template}]
                      :render-fn render-templates-list
                      :data {:source "static"
-                            :initialize ["template1" "template2" "template3"]}})
+                            :initialize [{:name "template1"
+                                          :mapping-fn "(+ 1 2 3)"}
+                                         {:name "template2"
+                                          :mapping-fn "(+ 4 5 6)"}
+                                         {:name "template3"
+                                          :mapping-fn "(+ 7 8 9)"}]}})
 
 ;; 2) Active Collection Items
 ;; ===================================
@@ -108,10 +116,6 @@
 (def active-file {:app-cursor [:active-file-data]
                   :dom-cursor ".active-file-content"
                   :render-fn render-active-file-content})
-
-;; 2-2) Active Template
-
-;; 2-3) Active Analysis
 
 ;; 3) TEMP
 ;; ===================================
@@ -148,3 +152,16 @@
 (def week1-template {:app-cursor [:active-file-data]
                      :dom-cursor ".active-template-content"
                      :render-fn render-week1-template})
+
+
+;; 3-2) Active Template Mapping Fn
+(renderer/defhtml render-active-template-mapping-fn
+  [data]
+  (if (not-empty data)
+    [:textarea data]
+    [:textarea ""]))
+
+(def active-template-mapping-fn {:app-cursor [:active-template-mapping-fn]
+                                 :dom-cursor ".active-template-mapping-fn"
+                                 :render-fn render-active-template-mapping-fn
+                                 :post-render-fn (fn [] (.fromTextArea js/CodeMirror (.querySelector js/document ".active-template-mapping-fn textarea")))})

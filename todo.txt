@@ -1,2 +1,6 @@
 Add ng-show as a first class api method
 - as seen in the week1-template component, where it only renders if active-template == "value". There should be a first class api method that tests app-cursor value passes a condition... and if so then render this component or else don't...
+
+Add pre-render and post-render hooks to all antares components...
+
+i.e. render as a textarea but then have a post-render hook to convert the textarea into a Codemirror component
