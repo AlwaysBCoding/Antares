@@ -140,8 +140,8 @@
       (swap! app-state (fn [state]
                          (update-in state cursor (fn [old-value] response)))))))
 
-(defn update-app-state
-  [update-fn]
+(defn update-app-update
+  [state-fn]
   (reset! app-state (update-fn)))
 
 ;; CREATE COMPONENTS

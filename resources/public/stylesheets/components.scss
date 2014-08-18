@@ -26,22 +26,21 @@
 }
 
 .template.week1 {
-  min-width: 465px;
-  max-width: 465px;
-
-  .header {}
+    
+  .header {
+    img {
+      max-width: 447px; } }
   
   .subheader {
     background-color: rgb(213,214,217);
     width: 100%;
-    min-width: 465px;
     margin: 0;
     box-sizing: border-box;
     border: 2px solid rgb(65,70,77);
     position: relative;
     min-height: 80px;
 
-    p.invoice_number {
+    p.invoice-number {
       font-size: 30px;
       font-family: "futura";
       letter-spacing: -2px;
@@ -52,7 +51,7 @@
       left: 20px;
     }
 
-    p.invoice_amount {
+    p.invoice-amount {
       font-size: 30px;
       font-family: "futura";
       letter-spacing: -2px;

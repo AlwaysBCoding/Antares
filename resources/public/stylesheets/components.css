@@ -16,83 +16,81 @@
 .active-template-content {
   margin-top: 25px; }
 
-.template.week1 {
-  min-width: 465px;
-  max-width: 465px; }
-  .template.week1 .subheader {
-    background-color: #d5d6d9;
-    width: 100%;
-    min-width: 465px;
-    margin: 0;
-    box-sizing: border-box;
-    border: 2px solid #41464d;
-    position: relative;
-    min-height: 80px; }
-    .template.week1 .subheader p.invoice_number {
-      font-size: 30px;
-      font-family: "futura";
-      letter-spacing: -2px;
-      color: #41464d;
-      position: absolute;
-      margin: 0px;
-      top: 20px;
-      left: 20px; }
-    .template.week1 .subheader p.invoice_amount {
-      font-size: 30px;
-      font-family: "futura";
-      letter-spacing: -2px;
-      color: #0a5ab1;
-      position: absolute;
-      margin: 0px;
-      top: 20px;
-      right: 30px; }
-  .template.week1 .items p.item-name {
-    font-size: 24px;
-    color: #41464d;
+.template.week1 .header img {
+  max-width: 447px; }
+.template.week1 .subheader {
+  background-color: #d5d6d9;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  border: 2px solid #41464d;
+  position: relative;
+  min-height: 80px; }
+  .template.week1 .subheader p.invoice-number {
+    font-size: 30px;
     font-family: "futura";
-    letter-spacing: -1px;
-    text-align: center;
-    margin: 15px; }
-  .template.week1 .items p.overpayment {
-    font-size: 22px;
-    color: #969a99;
-    text-align: center;
-    font-family: "futura"; }
-  .template.week1 .items .overpayment-slider {
-    width: 95%;
-    margin: 0 auto;
-    position: relative;
-    height: 50px; }
-    .template.week1 .items .overpayment-slider .slider-marker {
-      width: 0;
-      height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-top: 20px solid #1e60ae;
-      position: absolute;
-      top: -12px;
-      left: 70%; }
-    .template.week1 .items .overpayment-slider .slider-segment {
-      height: 40px;
-      display: inline-block;
-      width: 33%;
-      float: left; }
-      .template.week1 .items .overpayment-slider .slider-segment p.segment-text {
-        font-family: "helvetica";
-        font-weight: bold;
-        color: white;
-        text-align: center;
-        margin-top: 13px;
-        font-size: 16px; }
-    .template.week1 .items .overpayment-slider .segment1 {
-      background: -webkit-linear-gradient(left, #3f922d, #2d5f33);
-      background: -moz-linear-gradient(right, #3f922d, #2d5f33);
-      background: linear-gradient(to right, #3f922d, #2d5f33); }
-    .template.week1 .items .overpayment-slider .segment2 {
-      background: -webkit-linear-gradient(left, #fabe17, #b38133);
-      background: -moz-linear-gradient(right, #fabe17, #b38133);
-      background: linear-gradient(to right, #fabe17, #b38133); }
-    .template.week1 .items .overpayment-slider .segment3 {
-      background: -webkit-linear-gradient(left, #be0e1e, #950118);
-      background: -moz-linear-gradient(right, #be0e1e, #950118);
-      background: linear-gradient(to right, #be0e1e, #950118); }
+    letter-spacing: -2px;
+    color: #41464d;
+    position: absolute;
+    margin: 0px;
+    top: 20px;
+    left: 20px; }
+  .template.week1 .subheader p.invoice-amount {
+    font-size: 30px;
+    font-family: "futura";
+    letter-spacing: -2px;
+    color: #0a5ab1;
+    position: absolute;
+    margin: 0px;
+    top: 20px;
+    right: 30px; }
+.template.week1 .items p.item-name {
+  font-size: 24px;
+  color: #41464d;
+  font-family: "futura";
+  letter-spacing: -1px;
+  text-align: center;
+  margin: 15px; }
+.template.week1 .items p.overpayment {
+  font-size: 22px;
+  color: #969a99;
+  text-align: center;
+  font-family: "futura"; }
+.template.week1 .items .overpayment-slider {
+  width: 95%;
+  margin: 0 auto;
+  position: relative;
+  height: 50px; }
+  .template.week1 .items .overpayment-slider .slider-marker {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid #1e60ae;
+    position: absolute;
+    top: -12px;
+    left: 70%; }
+  .template.week1 .items .overpayment-slider .slider-segment {
+    height: 40px;
+    display: inline-block;
+    width: 33%;
+    float: left; }
+    .template.week1 .items .overpayment-slider .slider-segment p.segment-text {
+      font-family: "helvetica";
+      font-weight: bold;
+      color: white;
+      text-align: center;
+      margin-top: 13px;
+      font-size: 16px; }
+  .template.week1 .items .overpayment-slider .segment1 {
+    background: -webkit-linear-gradient(left, #3f922d, #2d5f33);
+    background: -moz-linear-gradient(right, #3f922d, #2d5f33);
+    background: linear-gradient(to right, #3f922d, #2d5f33); }
+  .template.week1 .items .overpayment-slider .segment2 {
+    background: -webkit-linear-gradient(left, #fabe17, #b38133);
+    background: -moz-linear-gradient(right, #fabe17, #b38133);
+    background: linear-gradient(to right, #fabe17, #b38133); }
+  .template.week1 .items .overpayment-slider .segment3 {
+    background: -webkit-linear-gradient(left, #be0e1e, #950118);
+    background: -moz-linear-gradient(right, #be0e1e, #950118);
+    background: linear-gradient(to right, #be0e1e, #950118); }

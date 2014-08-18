@@ -123,7 +123,7 @@
   (let [analyzed-data (create-week1-output-structure (-> data :filecontent))]
     [:div.template.week1
      [:div.header
-      [:img {:src ""}]]
+      [:img {:src "images/viq-header.png"}]]
      [:div.subheader
       [:p.invoice-number (str "Invoice #: " (-> analyzed-data :invoice-number))]
       [:p.invoice-amount (str "$" (Math.round (-> analyzed-data :invoice-amount)))]]
