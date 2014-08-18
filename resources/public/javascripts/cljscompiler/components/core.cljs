@@ -120,29 +120,30 @@
 
 (renderer/defhtml render-week1-template
   [data]
-  (let [analyzed-data (create-week1-output-structure (-> data :filecontent))]
-    [:div.template.week1
-     [:div.header
-      [:img {:src "images/viq-header.png"}]]
-     [:div.subheader
-      [:p.invoice-number (str "Invoice #: " (-> analyzed-data :invoice-number))]
-      [:p.invoice-amount (str "$" (Math.round (-> analyzed-data :invoice-amount)))]]
-     [:div.items
-      (mapcat
-       (fn [item]
-         [[:p.item-name (-> item :item-name)]
-          [:p.overpayment (str (-> item :overpayment (* 100) Math.round) "% Overpayment")]
-          [:div.overpayment-slider
-           [:div.slider-segment.segment1
-            [:p.segment-text "GREAT VALUE"]]
-           [:div.slider-segment.segment2
-            [:p.segment-text "TARGET VALUE"]]
-           [:div.slider-segment.segment3
-            [:p.segment-text "OVERPAYING"]]
-           [:div.slider-marker
-            {:style (str "left: " (min (+ (-> item :overpayment (* 100) Math.round) 60) 90) "%")}]]
-          [:hr]])
-       (-> analyzed-data :items))]]))
+  (if (= (-> @antares/app-state :active-template) "template1")
+    (let [analyzed-data (create-week1-output-structure (-> data :filecontent))]
+      [:div.template.week1
+       [:div.header
+        [:img {:src "images/viq-header.png"}]]
+       [:div.subheader
+        [:p.invoice-number (str "Invoice #: " (-> analyzed-data :invoice-number))]
+        [:p.invoice-amount (str "$" (Math.round (-> analyzed-data :invoice-amount)))]]
+       [:div.items
+        (mapcat
+         (fn [item]
+           [[:p.item-name (-> item :item-name)]
+            [:p.overpayment (str (-> item :overpayment (* 100) Math.round) "% Overpayment")]
+            [:div.overpayment-slider
+             [:div.slider-segment.segment1
+              [:p.segment-text "GREAT VALUE"]]
+             [:div.slider-segment.segment2
+              [:p.segment-text "TARGET VALUE"]]
+             [:div.slider-segment.segment3
+              [:p.segment-text "OVERPAYING"]]
+             [:div.slider-marker
+              {:style (str "left: " (min (+ (-> item :overpayment (* 100) Math.round) 60) 90) "%")}]]
+            [:hr]])
+         (-> analyzed-data :items))]])))
 
 (def week1-template {:app-cursor [:active-file-data]
                      :dom-cursor ".active-template-content"
