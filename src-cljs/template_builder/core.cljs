@@ -6,8 +6,13 @@
 
 ;; Helper Functions
 (defn textarea->codemirror
-  [dom-cursor options]
-  (fn [] (.fromTextArea js/CodeMirror (.querySelector js/document dom-cursor) options)))
+  [app-cursor dom-cursor options]
+  (fn []
+    (let [codemirror (.fromTextArea js/CodeMirror (.querySelector js/document dom-cursor) options)]
+      (.on codemirror "blur" (fn [self event]
+                               (antares/update-cursor
+                                app-cursor
+                                (fn [old-value] (.getValue self))))))))
 
 ;; HTML Binding
 (renderer/defhtml render-dynamic-html
@@ -20,12 +25,7 @@
   {:app-cursor [:dynamic-html]
    :dom-cursor ".dynamic-html"
    :render-fn render-dynamic-html
-   :interactions [{:event-type "blur"
-                   :event-selector "textarea"
-                   :event-action (fn [event]
-                                   (antares/update-cursor
-                                    [:dynamic-html]
-                                    (fn [old-value] (-> event .-target .-value))))}]})
+   :post-render-fn (textarea->codemirror [:dynamic-html] ".dynamic-html textarea" {:mode "clojure"})})
 
 (antares/create-component dynamic-html)
 
