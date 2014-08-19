@@ -1,5 +1,5 @@
 (ns template-builder.core
-  (:require-macros [hiccups.core :as renderer])
+  (:require-macros [hiccups.core :as htmlrenderer])
   (:require [antares.core :as antares]
             [cljs-http.client :as http]
             [hiccups.runtime :as hiccupsrt]))
@@ -17,13 +17,12 @@
          (.setOption codemirror "matchBrackets" true)
          (.setOption codemirror "lineNumbers" true)
          (.on codemirror "blur" (fn [self event]
-                                  (.log js/console self)
                                   (antares/update-cursor
                                    app-cursor
                                    (fn [old-value] (.getValue self)))))))))
 
 ;; HTML Binding
-(renderer/defhtml render-dynamic-html
+(htmlrenderer/defhtml render-dynamic-html
   [data]
   (if (not-empty data)
     [:textarea data]
@@ -35,10 +34,8 @@
    :render-fn render-dynamic-html
    :post-render-fn (textarea->codemirror [:dynamic-html] ".dynamic-html textarea")})
 
-(antares/create-component dynamic-html)
-
 ;; CSS Binding
-(renderer/defhtml render-dynamic-css
+(htmlrenderer/defhtml render-dynamic-css
   [data]
   (if (not-empty data)
     [:textarea data]
@@ -50,10 +47,8 @@
    :render-fn render-dynamic-css
    :post-render-fn (textarea->codemirror [:dynamic-css] ".dynamic-css textarea")})
 
-(antares/create-component dynamic-css)
-
 ;; Input Data Structure Binding
-(renderer/defhtml render-dynamic-test-data
+(htmlrenderer/defhtml render-dynamic-test-data
   [data]
   (if (not-empty data)
     [:textarea data]
@@ -65,7 +60,18 @@
    :render-fn render-dynamic-test-data
    :post-render-fn (textarea->codemirror [:dynamic-test-data] ".dynamic-test-data textarea")})
 
+;; Arrange Components
+
+(antares/create-component dynamic-html)
+(antares/create-component dynamic-css)
 (antares/create-component dynamic-test-data)
+
+(antares/data-bind [:dynamic-html] ".template-render" (fn [template]
+                                                        (-> template
+                                                            (antares/pre-render-html (get-in @antares/app-state [:dynamic-test-data]))
+                                                            (antares/render-html))))
+(antares/data-bind [:dynamic-css] ".template-css-render" (fn [data]
+                                                           (antares/render-css data)))
 
 ;; REPL
 #_

@@ -12,6 +12,7 @@
                  
                  [cljs-http "0.1.15"]
                  [hiccups "0.3.0"]
+                 [garden "1.2.1"]
 
                  [prismatic/dommy "0.1.2"]]
 

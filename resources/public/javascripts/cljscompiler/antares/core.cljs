@@ -1,7 +1,8 @@
 (ns antares.core
   (:require-macros
     [cljs.core.async.macros :refer (go)]
-    [dommy.macros :refer [node]])
+    [dommy.macros :refer [node]]
+    [hiccups.core :as htmlrenderer])
   (:require
     [antares.importers :as importers]
     [antares.repl :as repl]
@@ -9,7 +10,9 @@
     [cljs.reader :as edn]
     [clojure.string :as str]
     [cljs-http.client :as http]
-    [cljs.core.async :refer (<!)]))
+    [cljs.core.async :refer (<!)]
+    [hiccups.runtime :as hiccupsrt]
+    [garden.core :as cssrenderer]))
 
 ;; GLOBAL ATOMS
 (def app-state (atom {}))
@@ -41,6 +44,20 @@
   (swap! app-state (fn [app-value]
                      (update-in app-value cursor (fn [old-value] new-value)))))
 
+;; RENDERER ENDPOINTS
+(defn render-css
+  [data]
+  (cssrenderer/css (read-data data)))
+
+(defn render-html
+  [template]
+  (.log js/console (pr-str template))
+  (htmlrenderer/html (read-data template)))
+
+(defn pre-render-html
+  [template data]
+  template)
+
 ;; PROTOCOLS
 (defprotocol Renderable
   (render [self]))
@@ -69,7 +86,7 @@
       (case (.-tagName target-node)
         "INPUT" (set! (.-value target-node) target-data)
         "TEXTAREA" (set! (.-value target-node) target-data)
-        (set! (.-innerText target-node) target-data)))))
+        (set! (.-innerHTML target-node) target-data)))))
 
 (defrecord Component
   [app-cursor dom-cursor pre-render-fn render-fn post-render-fn interactions data]
@@ -216,7 +233,8 @@
                                                             {:style
                                                              {:width "100%"
                                                               :height "80px"
-                                                              :font-size ".8rem"}}]]))
+                                                              :font-size ".8rem"
+                                                              }}]]))
 
 (data-bind
  []
