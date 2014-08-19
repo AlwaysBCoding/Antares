@@ -6,13 +6,21 @@
 
 ;; Helper Functions
 (defn textarea->codemirror
-  [app-cursor dom-cursor options]
-  (fn []
-    (let [codemirror (.fromTextArea js/CodeMirror (.querySelector js/document dom-cursor) options)]
-      (.on codemirror "blur" (fn [self event]
-                               (antares/update-cursor
-                                app-cursor
-                                (fn [old-value] (.getValue self))))))))
+  ([app-cursor dom-cursor]
+     (textarea->codemirror app-cursor dom-cursor {}))
+  ([app-cursor dom-cursor options]
+     (fn []
+       (let [codemirror
+             (.fromTextArea js/CodeMirror (.querySelector js/document dom-cursor) options)]
+         (.setOption codemirror "theme" "solarized light")
+         (.setOption codemirror "mode" "clojure")
+         (.setOption codemirror "matchBrackets" true)
+         (.setOption codemirror "lineNumbers" true)
+         (.on codemirror "blur" (fn [self event]
+                                  (.log js/console self)
+                                  (antares/update-cursor
+                                   app-cursor
+                                   (fn [old-value] (.getValue self)))))))))
 
 ;; HTML Binding
 (renderer/defhtml render-dynamic-html
@@ -25,13 +33,39 @@
   {:app-cursor [:dynamic-html]
    :dom-cursor ".dynamic-html"
    :render-fn render-dynamic-html
-   :post-render-fn (textarea->codemirror [:dynamic-html] ".dynamic-html textarea" {:mode "clojure"})})
+   :post-render-fn (textarea->codemirror [:dynamic-html] ".dynamic-html textarea")})
 
 (antares/create-component dynamic-html)
 
 ;; CSS Binding
+(renderer/defhtml render-dynamic-css
+  [data]
+  (if (not-empty data)
+    [:textarea data]
+    [:textarea ""]))
+
+(def dynamic-css
+  {:app-cursor [:dynamic-css]
+   :dom-cursor ".dynamic-css"
+   :render-fn render-dynamic-css
+   :post-render-fn (textarea->codemirror [:dynamic-css] ".dynamic-css textarea")})
+
+(antares/create-component dynamic-css)
 
 ;; Input Data Structure Binding
+(renderer/defhtml render-dynamic-test-data
+  [data]
+  (if (not-empty data)
+    [:textarea data]
+    [:textarea ""]))
+
+(def dynamic-test-data
+  {:app-cursor [:dynamic-test-data]
+   :dom-cursor ".dynamic-test-data"
+   :render-fn render-dynamic-test-data
+   :post-render-fn (textarea->codemirror [:dynamic-test-data] ".dynamic-test-data textarea")})
+
+(antares/create-component dynamic-test-data)
 
 ;; REPL
 #_
