@@ -11,7 +11,10 @@
     color: blue; }
 
 .active-file-container {
-  overflow-x: scroll; }
+  overflow-x: scroll;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid black; }
 
 .active-template-content {
   margin-top: 25px; }

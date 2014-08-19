@@ -22,6 +22,14 @@
                 :overpayment (-> item-row :variance_invoiceanalyzer)})
              (filter (fn [row] (not= "" (:variance_invoiceanalyzer row))) input-data-map))}))
 
+(defn create-week2-output-structure
+  [input-data]
+  {:return-value (fn [input-data] (+ 1 2 3))})
+
+(defn create-week3-output-structure
+  [input-data]
+  {:return-value (fn [input-data] (+ 4 5 6))})
+
 ;; 1) Collections
 ;;===================================
 
@@ -83,11 +91,11 @@
                      :render-fn render-templates-list
                      :data {:source "static"
                             :initialize [{:name "template1"
-                                          :mapping-fn "(+ 1 2 3)"}
+                                          :mapping-fn (str create-week1-output-structure)}
                                          {:name "template2"
-                                          :mapping-fn "(+ 4 5 6)"}
+                                          :mapping-fn "(fn [input-data] (+ 1 2 3))"}
                                          {:name "template3"
-                                          :mapping-fn "(+ 7 8 9)"}]}})
+                                          :mapping-fn "(fn [input-data] (+ 7 8 9))"}]}})
 
 ;; 2) Active Collection Items
 ;; ===================================
@@ -152,7 +160,6 @@
 (def week1-template {:app-cursor [:active-file-data]
                      :dom-cursor ".active-template-content"
                      :render-fn render-week1-template})
-
 
 ;; 3-2) Active Template Mapping Fn
 (renderer/defhtml render-active-template-mapping-fn

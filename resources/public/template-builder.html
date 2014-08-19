@@ -1,0 +1,39 @@
+<html>
+
+  <head>
+    <title>Antares Template Builder</title>
+    <link href="stylesheets/semantic.css" rel="stylesheet" type="text/css" />
+    <link href="stylesheets/codemirror/codemirror.css" rel="stylesheet" type="text/css" />
+    <link href="stylesheets/template-builder.css" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+    <div class="app-container ui grid">
+
+      <div class="dynamic-html-container">
+        <div class="dynamic-html">
+        </div>
+      </div>
+
+      <div class="dynamic-css-container">
+        <div class="dynamic-css">
+        </div>
+      </div>
+
+      <div class="dynamic-test-data-container">
+        <div class="dynamic-test-data">
+        </div>
+      </div>
+      
+    </div>
+
+    <div class="footer-javascripts">
+      <script src="javascripts/codemirror/lib/codemirror.js"></script>
+      <script src="javascripts/codemirror/modes/clojure.js"></script>
+      <script src="javascripts/cljscompiler/goog/base.js" type="text/javascript"></script>
+      <script src="javascripts/cljscompiler/dev.js" type="text/javascript"></script>
+      <script type="text/javascript">goog.require("template_builder.core");</script>
+    </div>
+  </body>
+  
+</html>

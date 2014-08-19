@@ -89,7 +89,7 @@
       (set! (.-innerHTML target-node) new-nodes-data))
 
     (when (-> self :post-render-fn) (post-render-fn)))
-
+  
   DataSource
   (load-data [self]
     (when (-> self :data)
@@ -144,8 +144,8 @@
       (swap! app-state (fn [state]
                          (update-in state cursor (fn [old-value] response)))))))
 
-(defn update-app-update
-  [state-fn]
+(defn update-app-state
+  [update-fn]
   (reset! app-state (update-fn)))
 
 ;; CREATE COMPONENTS
@@ -216,8 +216,7 @@
                                                             {:style
                                                              {:width "100%"
                                                               :height "80px"
-                                                              :font-size ".8rem"
-                                                              }}]]))
+                                                              :font-size ".8rem"}}]]))
 
 (data-bind
  []
