@@ -67,9 +67,10 @@
 (antares/create-component dynamic-test-data)
 
 (antares/data-bind [:dynamic-html] ".template-render" (fn [template]
-                                                        (-> template
-                                                            (antares/pre-render-html (get-in @antares/app-state [:dynamic-test-data]))
+                                                        (->> template
+                                                            (antares/compile-template (get-in @antares/app-state [:dynamic-test-data]))
                                                             (antares/render-html))))
+
 (antares/data-bind [:dynamic-css] ".template-css-render" (fn [data]
                                                            (antares/render-css data)))
 

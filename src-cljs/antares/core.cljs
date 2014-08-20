@@ -51,11 +51,10 @@
 
 (defn render-html
   [template]
-  (.log js/console (pr-str template))
   (htmlrenderer/html (read-data template)))
 
-(defn pre-render-html
-  [template data]
+(defn compile-template
+  [compile-data template]
   template)
 
 ;; PROTOCOLS

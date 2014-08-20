@@ -1,6 +1,17 @@
 .template-render-container {
+  position: relative;
   width: 320px;
   height: 568px;
   margin: 0 auto;
-  border: 2px solid black;
+  margin-top: 125px;
+  margin-bottom: 100px;
 }
+
+.iphone-wireframe {
+    position: absolute;
+    height: 137%;
+    width: 137%;
+    margin-top: -112px;
+    margin-left: -62px;
+}
+

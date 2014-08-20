@@ -16,8 +16,8 @@ var rules = null;if (arguments.length > 0) {
   rules = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0),0);} 
 return css__delegate.call(this,rules);};
 css.cljs$lang$maxFixedArity = 0;
-css.cljs$lang$applyTo = (function (arglist__10879){
-var rules = cljs.core.seq(arglist__10879);
+css.cljs$lang$applyTo = (function (arglist__147514){
+var rules = cljs.core.seq(arglist__147514);
 return css__delegate(rules);
 });
 css.cljs$core$IFn$_invoke$arity$variadic = css__delegate;
@@ -37,8 +37,8 @@ var maps = null;if (arguments.length > 0) {
   maps = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0),0);} 
 return style__delegate.call(this,maps);};
 style.cljs$lang$maxFixedArity = 0;
-style.cljs$lang$applyTo = (function (arglist__10880){
-var maps = cljs.core.seq(arglist__10880);
+style.cljs$lang$applyTo = (function (arglist__147515){
+var maps = cljs.core.seq(arglist__147515);
 return style__delegate(maps);
 });
 style.cljs$core$IFn$_invoke$arity$variadic = style__delegate;
