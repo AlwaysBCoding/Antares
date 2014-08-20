@@ -9,8 +9,15 @@
 
                  [com.cemerick/piggieback "0.1.3"]
                  [weasel "0.3.0"]
+
+                 [environ "0.5.0"]
+                 [http-kit "2.1.16"]
+                 [ring "1.3.0"]
+                 [fogus/ring-edn "0.2.0"]
+                 [compojure "1.1.8"]
                  
                  [cljs-http "0.1.15"]
+                 [cljs-ajax "0.2.6"]
                  [hiccups "0.3.0"]
                  [garden "1.2.1"]
 
@@ -18,7 +25,11 @@
 
   :plugins [[lein-cljsbuild "1.0.3"]]
 
+  :source-paths ["src-clj"]
+  
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
+
+  :main web.core
 
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src-cljs"]

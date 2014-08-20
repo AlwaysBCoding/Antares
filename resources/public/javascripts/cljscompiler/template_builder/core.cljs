@@ -68,8 +68,8 @@
 
 (antares/data-bind [:dynamic-html] ".template-render" (fn [template]
                                                         (->> template
-                                                            (antares/compile-template (get-in @antares/app-state [:dynamic-test-data]))
-                                                            (antares/render-html))))
+                                                             (antares/compile-template (get-in @antares/app-state [:dynamic-test-data]))
+                                                            #_(antares/render-html))))
 
 (antares/data-bind [:dynamic-css] ".template-css-render" (fn [data]
                                                            (antares/render-css data)))

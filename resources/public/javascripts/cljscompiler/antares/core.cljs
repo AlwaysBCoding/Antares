@@ -10,6 +10,7 @@
     [cljs.reader :as edn]
     [clojure.string :as str]
     [cljs-http.client :as http]
+    [ajax.core :as ajax]
     [cljs.core.async :refer (<!)]
     [hiccups.runtime :as hiccupsrt]
     [garden.core :as cssrenderer]))
@@ -55,7 +56,9 @@
 
 (defn compile-template
   [compile-data template]
-  template)
+  (ajax/POST "http://localhost:8989/compile-template" {:params {:compile-data compile-data
+                                                                :template template}
+                                                       :handler (fn [response] (.log js/console response))}))
 
 ;; PROTOCOLS
 (defprotocol Renderable
