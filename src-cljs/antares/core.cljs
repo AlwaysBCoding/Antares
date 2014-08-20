@@ -58,7 +58,9 @@
   [compile-data template]
   (ajax/POST "http://localhost:8989/compile-template" {:params {:compile-data compile-data
                                                                 :template template}
-                                                       :handler (fn [response] (.log js/console response))}))
+                                                       :handler (fn [response]
+                                                                  (.log js/console response)
+                                                                  (update-cursor [:compiled-html] (fn [old-value] response)))}))
 
 ;; PROTOCOLS
 (defprotocol Renderable
@@ -225,7 +227,9 @@
 
 ;; CREATE RENDER WATCHERS
 (add-watch app-state :render-bindings
-  (fn [k r old-state new-state] (render-bindings @registered-bindings)))
+ (fn [k r old-state new-state] (if (not= old-state new-state)
+                                (render-bindings @registered-bindings))))
+
 (add-watch app-state :render-components
   (fn [k r old-state new-state] (render-components @registered-components)))
 

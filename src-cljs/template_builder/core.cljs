@@ -66,13 +66,16 @@
 (antares/create-component dynamic-css)
 (antares/create-component dynamic-test-data)
 
-(antares/data-bind [:dynamic-html] ".template-render" (fn [template]
-                                                        (->> template
-                                                             (antares/compile-template (get-in @antares/app-state [:dynamic-test-data]))
-                                                            #_(antares/render-html))))
+(antares/data-bind [:dynamic-html] ".template-html-render" (fn [template]
+                                                             (->> template
+                                                                  (antares/compile-template (get-in @antares/app-state [:dynamic-test-data])))))
 
 (antares/data-bind [:dynamic-css] ".template-css-render" (fn [data]
                                                            (antares/render-css data)))
+
+(antares/data-bind [:compiled-html] ".template-render" (fn [template]
+                                                         (->> template
+                                                              (antares/render-html))))
 
 ;; REPL
 #_

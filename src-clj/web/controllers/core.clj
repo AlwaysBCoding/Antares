@@ -10,7 +10,9 @@
         template     (if (not-empty (-> request :params :template))
                        (-> request :params :template read-string)
                        "")]
-    (pr-str ((eval template) compile-data))))
+    (if (= template "")
+      (pr-str [:div.template])
+      (pr-str ((eval template) compile-data)))))
 
 (defn hello-world
   [request]
