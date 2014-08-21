@@ -2,11 +2,11 @@
   (:require [antares.core :as antares]
             [components.core :as components]))
 
-(antares/create-component components/files-list)
-(antares/create-component components/templates-list)
-(antares/create-component components/active-file)
-(antares/create-component components/week1-template)
-(antares/create-component components/active-template-mapping-fn)
+;; (antares/create-component components/files-list)
+;; (antares/create-component components/templates-list)
+;; (antares/create-component components/active-file)
+;; (antares/create-component components/week1-template)
+;; (antares/create-component components/active-template-mapping-fn)
 
 ;; REPL
 #_

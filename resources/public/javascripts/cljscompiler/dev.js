@@ -20,7 +20,6 @@ goog.addDependency("../clojure/browser/net.js", ['clojure.browser.net'], ['goog.
 goog.addDependency("../weasel/impls/websocket.js", ['weasel.impls.websocket'], ['cljs.core', 'clojure.browser.net', 'goog.net.WebSocket', 'clojure.browser.event']);
 goog.addDependency("../weasel/repl.js", ['weasel.repl'], ['weasel.impls.websocket', 'cljs.core', 'clojure.browser.net', 'cljs.reader', 'clojure.browser.event']);
 goog.addDependency("../antares/repl.js", ['antares.repl'], ['weasel.repl', 'cljs.core']);
-goog.addDependency("../antares/importers.js", ['antares.importers'], ['cljs.core', 'cljs_http.client']);
 goog.addDependency("../dommy/attrs.js", ['dommy.attrs'], ['cljs.core', 'clojure.string']);
 goog.addDependency("../dommy/template.js", ['dommy.template'], ['cljs.core', 'dommy.attrs', 'clojure.string']);
 goog.addDependency("../dommy/utils.js", ['dommy.utils'], ['cljs.core']);
@@ -33,7 +32,8 @@ goog.addDependency("../garden/color.js", ['garden.color'], ['cljs.core', 'garden
 goog.addDependency("../garden/compression.js", ['garden.compression'], ['cljs.core']);
 goog.addDependency("../garden/compiler.js", ['garden.compiler'], ['garden.units', 'garden.types', 'cljs.core', 'garden.util', 'garden.selectors', 'garden.color', 'clojure.string', 'garden.compression']);
 goog.addDependency("../garden/core.js", ['garden.core'], ['cljs.core', 'garden.compiler']);
-goog.addDependency("../antares/core.js", ['antares.core'], ['ajax.core', 'hiccups.runtime', 'antares.repl', 'cljs.core', 'cljs_http.client', 'cljs.core.async', 'antares.importers', 'dommy.core', 'clojure.string', 'cljs.reader', 'garden.core']);
+goog.addDependency("../antares/core.js", ['antares.core'], ['ajax.core', 'hiccups.runtime', 'antares.repl', 'cljs.core', 'cljs_http.client', 'cljs.core.async', 'dommy.core', 'clojure.string', 'cljs.reader', 'garden.core']);
 goog.addDependency("../template_builder/core.js", ['template_builder.core'], ['hiccups.runtime', 'cljs.core', 'cljs_http.client', 'antares.core']);
 goog.addDependency("../components/core.js", ['components.core'], ['hiccups.runtime', 'cljs.core', 'cljs_http.client', 'antares.core']);
 goog.addDependency("../sandbox/core.js", ['sandbox.core'], ['components.core', 'cljs.core', 'antares.core']);
+goog.addDependency("../antares/importers.js", ['antares.importers'], ['cljs.core', 'cljs_http.client']);
