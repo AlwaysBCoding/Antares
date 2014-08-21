@@ -4,6 +4,7 @@
             [web.controllers.core :as controllers]))
 
 (defroutes app-routes
-  (GET "/"                  [] controllers/hello-world)
-  (GET "/compile-template"  [] controllers/compile-template)
-  (POST "/compile-template" [] controllers/compile-template))
+  (GET "/" [] "HELLO WORLD!")
+  (GET "/compile-template"   [] controllers/compile-template)
+  (POST "/compile-template"  [] controllers/compile-template)
+  (POST "/template/:id/save" [] controllers/save-template))

@@ -12,3 +12,8 @@
   width: 137%;
   margin-top: -112px;
   margin-left: -62px; }
+
+#save-template {
+  display: block;
+  margin: 0 auto;
+  width: 200px; }

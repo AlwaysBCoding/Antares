@@ -59,7 +59,6 @@
   (ajax/POST "http://localhost:8989/compile-template" {:params {:compile-data compile-data
                                                                 :template template}
                                                        :handler (fn [response]
-                                                                  (.log js/console response)
                                                                   (update-cursor [:compiled-html] (fn [old-value] response)))}))
 
 ;; PROTOCOLS
@@ -232,6 +231,16 @@
 
 (add-watch app-state :render-components
   (fn [k r old-state new-state] (render-components @registered-components)))
+
+;; ASYNC HANDLING
+(defn async
+  [request]
+  (case (-> request :method)
+    "GET" '()
+    "POST" (ajax/POST
+            (-> request :uri)
+            {:params (-> request :params)
+             :handler (-> request :handler)})))
 
 ;; CREATE ATOM COMPONENTS
 (dommy/prepend! (.querySelector js/document "body") (node [:div.antares.app-state

@@ -60,6 +60,21 @@
    :render-fn render-dynamic-test-data
    :post-render-fn (textarea->codemirror [:dynamic-test-data] ".dynamic-test-data textarea")})
 
+;; Save Button
+(defn save-template
+  [event]
+  (let [template-id 17592186045418
+        html-fn (get-in @antares/app-state [:dynamic-html])
+        css-data (get-in @antares/app-state [:dynamic-css])
+        test-data (get-in @antares/app-state [:dynamic-test-data])]
+    (antares/async {:method "POST"
+                    :uri (str "http://localhost:8989/template/" template-id "/save")
+                    :params {:html-fn html-fn
+                             :css-data css-data
+                             :test-data test-data}
+                    :handler (fn [response]
+                               (.log js/console response))})))
+
 ;; Arrange Components
 
 (antares/create-component dynamic-html)
@@ -76,6 +91,9 @@
 (antares/data-bind [:compiled-html] ".template-render" (fn [template]
                                                          (->> template
                                                               (antares/render-html))))
+
+(antares/bind-event "#save-template" "click" (fn [event]
+                                               (save-template event)))
 
 ;; REPL
 #_
