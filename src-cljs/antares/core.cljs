@@ -86,7 +86,9 @@
      (-> self :ident)
      (fn [key reference old-state new-state]
        (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
-         (render self)))))
+         (pre-render self)
+         (render self)
+         (post-render self)))))
 
   Renderable
   (pre-render [self]
@@ -120,7 +122,9 @@
   (let [component (map->Component source-map)]
     (register-component component)
     (initialize component)
+    (pre-render component)
     (render component)
+    (post-render component)
     component))
 
 (defn destroy-component
@@ -134,14 +138,9 @@
       (.appendChild parent-node clone-node)
       (set! (.-innerHTML target-node) ""))))
 
-;; CREATE ATOM COMPONENTS
+;; DETECTIVE MODE
 (dommy/prepend! (.querySelector js/document "body") (node [:div.antares.app-state]))
-(.addEventListener (.querySelector js/document "body") "click" (fn [event]
-                                                                 (if-let [element (.querySelector js/document ".active-component")]
-                                                                   (.remove (.-classList element) "active-component"))
-                                                                 (.add (-> event .-target .-classList) "active-component")) true)
 
-;; SEED REPL
 (create-component
  {:ident :app-state-inspector
   :data-type "map"
@@ -154,22 +153,28 @@
                   :event-action (fn [event]
                                   (reset-app-state (-> event .-target .-value read-string)))}]})
 
-(def example {:ident :firstname
-              :data-type "string"
-              :app-cursor [:firstname]
-              :dom-cursor ".dynamic-html"
-              :initialize-fn (fn [] "Jordan")
-              :render-fn (fn [data] [:h1 data])})
+#_(.addEventListener (.querySelector js/document "body") "click" (fn [event]
+                                                                 (if-let [element (.querySelector js/document ".active-component")]
+                                                                   (.remove (.-classList element) "active-component"))
+                                                                 (.add (-> event .-target .-classList) "active-component")) true)
 
-(def example2 {:ident :lastname
-               :data-type "string"
-               :app-cursor [:lastname]
-               :dom-cursor ".dynamic-css"
-               :initialize-fn (fn [] "Leigh")
-               :render-fn (fn [data] [:h1 data])})
+;; SEED REPL
+;; (def example {:ident :firstname
+;;               :data-type "string"
+;;               :app-cursor [:firstname]
+;;               :dom-cursor ".dynamic-html"
+;;               :initialize-fn (fn [] "Jordan")
+;;               :render-fn (fn [data] [:h1 data])})
 
-(create-component example)
-(create-component example2)
+;; (def example2 {:ident :lastname
+;;                :data-type "string"
+;;                :app-cursor [:lastname]
+;;                :dom-cursor ".dynamic-css"
+;;                :initialize-fn (fn [] "Leigh")
+;;                :render-fn (fn [data] [:h1 data])})
+
+;; (create-component example)
+;; (create-component example2)
 
 ;; INTERACTIVE REPL
 #_(

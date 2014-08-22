@@ -4,22 +4,32 @@
             [cljs-http.client :as http]
             [hiccups.runtime :as hiccupsrt]))
 
-;; ;; Helper Functions
-;; (defn textarea->codemirror
-;;   ([app-cursor dom-cursor]
-;;      (textarea->codemirror app-cursor dom-cursor {}))
-;;   ([app-cursor dom-cursor options]
-;;      (fn []
-;;        (let [codemirror
-;;              (.fromTextArea js/CodeMirror (.querySelector js/document dom-cursor) options)]
-;;          (.setOption codemirror "theme" "solarized light")
-;;          (.setOption codemirror "mode" "clojure")
-;;          (.setOption codemirror "matchBrackets" true)
-;;          (.setOption codemirror "lineNumbers" true)
-;;          (.on codemirror "blur" (fn [self event]
-;;                                   (antares/update-cursor
-;;                                    app-cursor
-;;                                    (fn [old-value] (.getValue self)))))))))
+;; LIBRARY
+;; Post Render Functions
+(defn textarea->codemirror
+  ([app-cursor dom-cursor]
+     (textarea->codemirror app-cursor dom-cursor {"theme" "solarized light"
+                                                  "mode" "clojure"
+                                                  "matchBrackets" true
+                                                  "lineNumbers" true}))
+  ([app-cursor dom-cursor options]
+     (fn []
+       (let [codemirror (.fromTextArea js/CodeMirror (.querySelector js/document dom-cursor) {})]
+         (doseq [[option-key option-value] options]
+           (.setOption codemirror option-key option-value))
+         (.on codemirror "blur" (fn [self event]
+                                  (antares/update-cursor
+                                   app-cursor
+                                   (fn [old-value] (.getValue self)))))))))
+
+;; HTML FN
+(antares/create-component {:ident :html-fn
+                           :data-type "string"
+                           :app-cursor [:html-fn]
+                           :dom-cursor "#html-fn"
+                           :render-fn (fn [data]
+                                        [:textarea data])
+                           :post-render-fn (textarea->codemirror [:html-fn] "#html-fn textarea")})
 
 ;; ;; HTML Binding
 ;; (htmlrenderer/defhtml render-dynamic-html
