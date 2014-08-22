@@ -1,8 +1,14 @@
 goog.addDependency("base.js", ['goog'], []);
 goog.addDependency("../cljs/core.js", ['cljs.core'], ['goog.string', 'goog.object', 'goog.string.StringBuffer', 'goog.array']);
 goog.addDependency("../clojure/string.js", ['clojure.string'], ['goog.string', 'cljs.core', 'goog.string.StringBuffer']);
-goog.addDependency("../hiccups/runtime.js", ['hiccups.runtime'], ['cljs.core', 'clojure.string']);
 goog.addDependency("../cljs/reader.js", ['cljs.reader'], ['goog.string', 'cljs.core']);
+goog.addDependency("../ajax/core.js", ['ajax.core'], ['goog.net.XhrManager', 'goog.net.XhrIo', 'goog.Uri.QueryData', 'goog.Uri', 'cljs.core', 'goog.net.EventType', 'goog.structs', 'goog.json.Serializer', 'clojure.string', 'cljs.reader', 'goog.events', 'goog.net.ErrorCode']);
+goog.addDependency("../hiccups/runtime.js", ['hiccups.runtime'], ['cljs.core', 'clojure.string']);
+goog.addDependency("../clojure/browser/event.js", ['clojure.browser.event'], ['cljs.core', 'goog.events.EventTarget', 'goog.events.EventType', 'goog.events']);
+goog.addDependency("../clojure/browser/net.js", ['clojure.browser.net'], ['goog.net.xpc.CfgFields', 'goog.net.XhrIo', 'goog.json', 'cljs.core', 'goog.net.EventType', 'goog.net.xpc.CrossPageChannel', 'clojure.browser.event']);
+goog.addDependency("../weasel/impls/websocket.js", ['weasel.impls.websocket'], ['cljs.core', 'clojure.browser.net', 'goog.net.WebSocket', 'clojure.browser.event']);
+goog.addDependency("../weasel/repl.js", ['weasel.repl'], ['weasel.impls.websocket', 'cljs.core', 'clojure.browser.net', 'cljs.reader', 'clojure.browser.event']);
+goog.addDependency("../antares/repl.js", ['antares.repl'], ['weasel.repl', 'cljs.core']);
 goog.addDependency("../no/en/core.js", ['no.en.core'], ['cljs.core', 'goog.crypt.base64', 'clojure.string', 'cljs.reader']);
 goog.addDependency("../cljs_http/util.js", ['cljs_http.util'], ['no.en.core', 'goog.Uri', 'cljs.core', 'goog.userAgent', 'clojure.string']);
 goog.addDependency("../cljs/core/async/impl/protocols.js", ['cljs.core.async.impl.protocols'], ['cljs.core']);
@@ -14,12 +20,6 @@ goog.addDependency("../cljs/core/async/impl/timers.js", ['cljs.core.async.impl.t
 goog.addDependency("../cljs/core/async.js", ['cljs.core.async'], ['cljs.core.async.impl.channels', 'cljs.core.async.impl.dispatch', 'cljs.core', 'cljs.core.async.impl.buffers', 'cljs.core.async.impl.protocols', 'cljs.core.async.impl.ioc_helpers', 'cljs.core.async.impl.timers']);
 goog.addDependency("../cljs_http/core.js", ['cljs_http.core'], ['goog.net.XhrIo', 'cljs.core', 'cljs_http.util', 'cljs.core.async', 'goog.net.EventType']);
 goog.addDependency("../cljs_http/client.js", ['cljs_http.client'], ['cljs_http.core', 'no.en.core', 'goog.Uri', 'cljs.core', 'cljs_http.util', 'cljs.core.async', 'clojure.string', 'cljs.reader']);
-goog.addDependency("../ajax/core.js", ['ajax.core'], ['goog.net.XhrManager', 'goog.net.XhrIo', 'goog.Uri.QueryData', 'goog.Uri', 'cljs.core', 'goog.net.EventType', 'goog.structs', 'goog.json.Serializer', 'clojure.string', 'cljs.reader', 'goog.events', 'goog.net.ErrorCode']);
-goog.addDependency("../clojure/browser/event.js", ['clojure.browser.event'], ['cljs.core', 'goog.events.EventTarget', 'goog.events.EventType', 'goog.events']);
-goog.addDependency("../clojure/browser/net.js", ['clojure.browser.net'], ['goog.net.xpc.CfgFields', 'goog.net.XhrIo', 'goog.json', 'cljs.core', 'goog.net.EventType', 'goog.net.xpc.CrossPageChannel', 'clojure.browser.event']);
-goog.addDependency("../weasel/impls/websocket.js", ['weasel.impls.websocket'], ['cljs.core', 'clojure.browser.net', 'goog.net.WebSocket', 'clojure.browser.event']);
-goog.addDependency("../weasel/repl.js", ['weasel.repl'], ['weasel.impls.websocket', 'cljs.core', 'clojure.browser.net', 'cljs.reader', 'clojure.browser.event']);
-goog.addDependency("../antares/repl.js", ['antares.repl'], ['weasel.repl', 'cljs.core']);
 goog.addDependency("../dommy/attrs.js", ['dommy.attrs'], ['cljs.core', 'clojure.string']);
 goog.addDependency("../dommy/template.js", ['dommy.template'], ['cljs.core', 'dommy.attrs', 'clojure.string']);
 goog.addDependency("../dommy/utils.js", ['dommy.utils'], ['cljs.core']);
@@ -33,7 +33,8 @@ goog.addDependency("../garden/compression.js", ['garden.compression'], ['cljs.co
 goog.addDependency("../garden/compiler.js", ['garden.compiler'], ['garden.units', 'garden.types', 'cljs.core', 'garden.util', 'garden.selectors', 'garden.color', 'clojure.string', 'garden.compression']);
 goog.addDependency("../garden/core.js", ['garden.core'], ['cljs.core', 'garden.compiler']);
 goog.addDependency("../antares/core.js", ['antares.core'], ['ajax.core', 'hiccups.runtime', 'antares.repl', 'cljs.core', 'cljs_http.client', 'cljs.core.async', 'dommy.core', 'clojure.string', 'cljs.reader', 'garden.core']);
-goog.addDependency("../template_builder/core.js", ['template_builder.core'], ['hiccups.runtime', 'cljs.core', 'cljs_http.client', 'antares.core']);
+goog.addDependency("../antares/postrender.js", ['antares.postrender'], ['cljs.core', 'antares.core']);
+goog.addDependency("../template_builder/core.js", ['template_builder.core'], ['cljs.core', 'antares.postrender', 'antares.core']);
 goog.addDependency("../components/core.js", ['components.core'], ['hiccups.runtime', 'cljs.core', 'cljs_http.client', 'antares.core']);
 goog.addDependency("../sandbox/core.js", ['sandbox.core'], ['components.core', 'cljs.core', 'antares.core']);
 goog.addDependency("../antares/importers.js", ['antares.importers'], ['cljs.core', 'cljs_http.client']);

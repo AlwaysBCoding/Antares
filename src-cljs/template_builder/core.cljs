@@ -1,26 +1,6 @@
 (ns template-builder.core
-  (:require-macros [hiccups.core :as htmlrenderer])
   (:require [antares.core :as antares]
-            [cljs-http.client :as http]
-            [hiccups.runtime :as hiccupsrt]))
-
-;; LIBRARY
-;; Post Render Functions
-(defn textarea->codemirror
-  ([app-cursor dom-cursor]
-     (textarea->codemirror app-cursor dom-cursor {"theme" "solarized light"
-                                                  "mode" "clojure"
-                                                  "matchBrackets" true
-                                                  "lineNumbers" true}))
-  ([app-cursor dom-cursor options]
-     (fn []
-       (let [codemirror (.fromTextArea js/CodeMirror (.querySelector js/document dom-cursor) {})]
-         (doseq [[option-key option-value] options]
-           (.setOption codemirror option-key option-value))
-         (.on codemirror "blur" (fn [self event]
-                                  (antares/update-cursor
-                                   app-cursor
-                                   (fn [old-value] (.getValue self)))))))))
+            [antares.postrender :as postrender]))
 
 ;; HTML FN
 (antares/create-component {:ident :html-fn
@@ -29,46 +9,25 @@
                            :dom-cursor "#html-fn"
                            :render-fn (fn [data]
                                         [:textarea data])
-                           :post-render-fn (textarea->codemirror [:html-fn] "#html-fn textarea")})
+                           :post-render-fn (postrender/textarea->codemirror [:html-fn] "#html-fn textarea")})
 
-;; ;; HTML Binding
-;; (htmlrenderer/defhtml render-dynamic-html
-;;   [data]
-;;   (if (not-empty data)
-;;     [:textarea data]
-;;     [:textarea ""]))
+;; CSS DATA
+(antares/create-component {:ident :css-data
+                           :data-type "string"
+                           :app-cursor [:css-data]
+                           :dom-cursor "#css-data"
+                           :render-fn (fn [data]
+                                        [:textarea data])
+                           :post-render-fn (postrender/textarea->codemirror [:css-data] "#css-data textarea")})
 
-;; (def dynamic-html
-;;   {:app-cursor [:dynamic-html]
-;;    :dom-cursor ".dynamic-html"
-;;    :render-fn render-dynamic-html
-;;    :post-render-fn (textarea->codemirror [:dynamic-html] ".dynamic-html textarea")})
-
-;; ;; CSS Binding
-;; (htmlrenderer/defhtml render-dynamic-css
-;;   [data]
-;;   (if (not-empty data)
-;;     [:textarea data]
-;;     [:textarea ""]))
-
-;; (def dynamic-css
-;;   {:app-cursor [:dynamic-css]
-;;    :dom-cursor ".dynamic-css"
-;;    :render-fn render-dynamic-css
-;;    :post-render-fn (textarea->codemirror [:dynamic-css] ".dynamic-css textarea")})
-
-;; ;; Input Data Structure Binding
-;; (htmlrenderer/defhtml render-dynamic-test-data
-;;   [data]
-;;   (if (not-empty data)
-;;     [:textarea data]
-;;     [:textarea ""]))
-
-;; (def dynamic-test-data
-;;   {:app-cursor [:dynamic-test-data]
-;;    :dom-cursor ".dynamic-test-data"
-;;    :render-fn render-dynamic-test-data
-;;    :post-render-fn (textarea->codemirror [:dynamic-test-data] ".dynamic-test-data textarea")})
+;; TEST DATA
+(antares/create-component {:ident :test-data
+                           :data-type "string"
+                           :app-cursor [:test-data]
+                           :dom-cursor "#test-data"
+                           :render-fn (fn [data]
+                                        [:textarea data])
+                           :post-render-fn (postrender/textarea->codemirror [:test-data] "#test-data textarea")})
 
 ;; ;; Save Button
 ;; (defn save-template
@@ -86,10 +45,6 @@
 ;;                                (.log js/console response))})))
 
 ;; ;; Arrange Components
-
-;; (antares/create-component dynamic-html)
-;; (antares/create-component dynamic-css)
-;; (antares/create-component dynamic-test-data)
 
 ;; (antares/data-bind [:dynamic-html] ".template-html-render" (fn [template]
 ;;                                                              (->> template
