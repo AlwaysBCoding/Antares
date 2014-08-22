@@ -2,6 +2,31 @@
   (:require [antares.core :as antares]
             [antares.postrender :as postrender]))
 
+;; INITIALIZE FUNCTIONS
+(def load-html-fn
+  (fn []
+    (let [template-id 17592186045418]
+      (antares/get (str "http://localhost:8989/template/" template-id)
+                   {:handler (fn [response] (antares/update-cursor [:html-fn] (fn [old-data]
+                                                                               (-> response antares/read-string :html-fn))))})
+      "Loading...")))
+
+(def load-css-data
+  (fn []
+    (let [template-id 17592186045418]
+      (antares/get (str "http://localhost:8989/template/" template-id)
+                   {:handler (fn [response] (antares/update-cursor [:css-data] (fn [old-data]
+                                                                                (-> response antares/read-string :css-data))))})
+      "Loading...")))
+
+(def load-test-data
+  (fn []
+    (let [template-id 17592186045418]
+      (antares/get (str "http://localhost:8989/template/" template-id)
+                   {:handler (fn [response] (antares/update-cursor [:test-data] (fn [old-data]
+                                                                                 (-> response antares/read-string :test-data))))})
+      "Loading...")))
+
 ;; DATA WATCH FUNCTIONS
 (def compile-template!
   (fn []
@@ -19,11 +44,26 @@
           target-node (.querySelector js/document ".template-css-render")]
       (set! (.-innerHTML target-node) (antares/compile-css css-data)))))
 
+;; EVENT ACTIONS
+(def save-template!
+  (fn [event]
+    (let [template-id 17592186045418
+          html-fn (get-in @antares/app-state [:html-fn])
+          css-data (get-in @antares/app-state [:css-data])
+          test-data (get-in @antares/app-state [:test-data])]
+      (antares/post (str "http://localhost:8989/template/" template-id "/save")
+                    {:params {:eid template-id
+                              :html-fn html-fn
+                              :css-data css-data
+                              :test-data test-data}
+                     :handler (fn [response] (.log js/console response))}))))
+
 ;; HTML FN
 (antares/create-component {:ident :html-fn
                            :data-type "string"
                            :app-cursor [:html-fn]
                            :dom-cursor "#html-fn"
+                           :initialize-fn load-html-fn
                            :render-fn (fn [data]
                                         [:textarea data])
                            :post-render-fn (postrender/textarea->codemirror [:html-fn] "#html-fn textarea")})
@@ -33,6 +73,7 @@
                            :data-type "string"
                            :app-cursor [:css-data]
                            :dom-cursor "#css-data"
+                           :initialize-fn load-css-data
                            :render-fn (fn [data]
                                         [:textarea data])
                            :post-render-fn (postrender/textarea->codemirror [:css-data] "#css-data textarea")})
@@ -42,6 +83,7 @@
                            :data-type "string"
                            :app-cursor [:test-data]
                            :dom-cursor "#test-data"
+                           :initialize-fn load-test-data
                            :render-fn (fn [data]
                                         [:textarea data])
                            :post-render-fn (postrender/textarea->codemirror [:test-data] "#test-data textarea")})
@@ -51,9 +93,8 @@
                            :data-type "string"
                            :app-cursor [:compiled-template]
                            :dom-cursor "#compiled-template-render"
-                           :initialize-fn (fn [] [:div.template])
-                           :render-fn (fn [data]
-                                        (antares/read-string data))})
+                           :initialize-fn (fn [] "[:div.template]")
+                           :render-fn (fn [data] (antares/read-string data))})
 
 ;; Save Template Button
 (antares/create-component {:ident :save-template-button
@@ -62,7 +103,9 @@
                            :dom-cursor "#save-template-action"
                            :initialize-fn (fn [] "Save Template")
                            :render-fn (fn [data]
-                                        [:div {:class "ui button"} data])})
+                                        [:div {:class "ui button"} data])
+                           :interactions [{:event-type "click"
+                                           :event-action save-template!}]})
 
 (antares/create-data-watcher {:ident :compile-template-from-html
                               :app-cursor [:html-fn]
@@ -73,29 +116,8 @@
                               :watch-fn compile-template!})
 
 (antares/create-data-watcher {:ident :compile-css-data
-                             :app-cursor [:css-data]
-                             :watch-fn compile-css!})
-
-;; ;; Save Button
-;; (defn save-template
-;;   [event]
-;;   (let [template-id 17592186045418
-;;         html-fn (get-in @antares/app-state [:dynamic-html])
-;;         css-data (get-in @antares/app-state [:dynamic-css])
-;;         test-data (get-in @antares/app-state [:dynamic-test-data])]
-;;     (antares/async {:method "POST"
-;;                     :uri (str "http://localhost:8989/template/" template-id "/save")
-;;                     :params {:html-fn html-fn
-;;                              :css-data css-data
-;;                              :test-data test-data}
-;;                     :handler (fn [response]
-;;                                (.log js/console response))})))
-
-;; (antares/data-bind [:dynamic-css] ".template-css-render" (fn [data]
-;;                                                            (antares/render-css data)))
-
-;; (antares/bind-event "#save-template" "click" (fn [event]
-;;                                                (save-template event)))
+                              :app-cursor [:css-data]
+                              :watch-fn compile-css!})
 
 ;; REPL
 
