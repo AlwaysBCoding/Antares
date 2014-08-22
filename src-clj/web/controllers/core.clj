@@ -1,6 +1,4 @@
-(ns web.controllers.core
-  (:require [data.queries.core :as queries]
-            [data.transactions.core :as transactions]))
+(ns web.controllers.core)
 
 (defn compile-template
   [request]
@@ -17,14 +15,4 @@
       (pr-str ((eval template) compile-data)))))
 
 (defn save-template
-  [request]
-  (let [eid (-> request :params :eid)
-        html-fn (-> request :params :html-fn)
-        css-data (-> request :params :css-data)
-        test-data (-> request :params :test-data)]
-    (-> (transactions/save-template 
-         {:eid eid
-          :html-fn html-fn
-          :css-data css-data
-          :test-data test-data})))
-  "Save Successful")
+  [request])

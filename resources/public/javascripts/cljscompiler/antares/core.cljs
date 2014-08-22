@@ -18,6 +18,11 @@
 (def app-state (atom {}))
 (def registered-components (atom []))
 
+;; GLOBAL HELPERS
+(defn read-string
+  [data-string]
+  (edn/read-string data-string))
+
 ;; PROTOCOLS
 (defprotocol Renderable
   (pre-render [self])
@@ -26,6 +31,7 @@
 
 (defprotocol AntaresComponent
   (initial-cursor [self])
+  (initialize [self])
   (bind-events [self])
   (register-cursor [self])
   (register-watcher [self]))
@@ -35,6 +41,10 @@
   [cursor update-fn]
   (swap! app-state (fn [state]
                      (update-in state cursor update-fn))))
+
+(defn reset-app-state
+  [value]
+  (reset! app-state value))
 
 ;; COMPONENTS
 (defrecord Component
@@ -57,6 +67,10 @@
       "matrix"  [[]]
       "number"  0))
 
+  (initialize [self]
+    (if (-> self :initialize-fn)
+      (update-cursor (-> self :app-cursor) (-> self :initialize-fn))))
+
   (bind-events [self]
     (when-let [interactions (-> self :interactions)]
       (doseq [interaction interactions]
@@ -71,7 +85,9 @@
      app-state
      (-> self :ident)
      (fn [key reference old-state new-state]
-       (if (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
+       (.log js/console (str (pr-str key) " watcher called"))
+       (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
+         (.log js/console (str (pr-str key) " render called"))
          (render self)))))
 
   Renderable
@@ -99,14 +115,49 @@
   [source-map]
   (let [component (map->Component source-map)]
     (register-component component)
+    (initialize component)
     (render component)
     component))
 
-;; HELPER API ENDPOINTS
-;; (defn read-data
-;;   [data-string]
-;;   (edn/read-string data-string))
+;; CREATE ATOM COMPONENTS
+(dommy/prepend! (.querySelector js/document "body") (node [:div.antares.app-state]))
 
+;; SEED REPL
+(create-component
+ {:ident :app-state-inspector
+  :data-type "map"
+  :app-cursor []
+  :dom-cursor ".antares.app-state"
+  :render-fn (fn [data]
+               [:textarea.antares.app-state-inspector (pr-str data)])
+
+  :interactions [{:event-type "blur"
+                  :event-action (fn [event]
+                                  (reset-app-state (-> event .-target .-value read-string)))}]})
+
+(def example {:ident :firstname
+              :data-type "string"
+              :app-cursor [:firstname]
+              :dom-cursor ".dynamic-html"
+              :initialize-fn (fn [] "Jordan")
+              :render-fn (fn [data] [:h1 data])})
+
+(def example2 {:ident :lastname
+               :data-type "string"
+               :app-cursor [:lastname]
+               :dom-cursor ".dynamic-css"
+               :initialize-fn (fn [] "Leigh")
+               :render-fn (fn [data] [:h1 data])})
+
+(create-component example)
+(create-component example2)
+
+;; INTERACTIVE REPL
+#_(
+   (update-cursor [:firstname] (fn [old-value] "Jordan"))
+)
+
+;; HELPER API ENDPOINTS
 ;; (defn split-threadlast
 ;;   [regex data]
 ;;   (str/split data regex))
@@ -246,24 +297,3 @@
 ;;             (-> request :uri)
 ;;             {:params (-> request :params)
 ;;              :handler (-> request :handler)})))
-
-;; CREATE ATOM COMPONENTS
-;; (dommy/prepend! (.querySelector js/document "body") (node [:div.antares.app-state
-;;                                                            [:textarea.antares.app-state-inspector
-;;                                                             {:style
-;;                                                              {:width "100%"
-;;                                                               :height "80px"
-;;                                                               :font-size ".8rem"
-;;                                                               }}]]))
-
-;; (data-bind
-;;  []
-;;  ".antares.app-state-inspector"
-;;  (fn [data]
-;;    (pr-str data)))
-
-;; (bind-event
-;;   ".antares.app-state-inspector"
-;;   "input"
-;;   (fn [event]
-;;     (update-app-state (fn [] (read-data (-> event .-target .-value))))))
