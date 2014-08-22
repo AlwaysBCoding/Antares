@@ -85,9 +85,7 @@
      app-state
      (-> self :ident)
      (fn [key reference old-state new-state]
-       (.log js/console (str (pr-str key) " watcher called"))
        (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
-         (.log js/console (str (pr-str key) " render called"))
          (render self)))))
 
   Renderable
@@ -111,6 +109,12 @@
   (swap! registered-components conj component)
   (bind-events component))
 
+(defn unregister-component
+  [component]
+  (remove-watch app-state (-> component :ident))
+  (swap! registered-components (fn [components]
+                                 (remove #(= (-> % :ident) (-> component :ident)) components))))
+
 (defn create-component
   [source-map]
   (let [component (map->Component source-map)]
@@ -118,6 +122,17 @@
     (initialize component)
     (render component)
     component))
+
+(defn destroy-component
+  [ident]
+  (let [component (first (filter #(= (-> % :ident) ident) @registered-components))]
+    (unregister-component component)
+    (let [target-node (.querySelector js/document (-> component :dom-cursor))
+          clone-node (.cloneNode target-node false)
+          parent-node (.-parentNode target-node)]
+      (.remove target-node)
+      (.appendChild parent-node clone-node)
+      (set! (.-innerHTML target-node) ""))))
 
 ;; CREATE ATOM COMPONENTS
 (dommy/prepend! (.querySelector js/document "body") (node [:div.antares.app-state]))
@@ -155,6 +170,7 @@
 ;; INTERACTIVE REPL
 #_(
    (update-cursor [:firstname] (fn [old-value] "Jordan"))
+   (destroy-component :firstname)
 )
 
 ;; HELPER API ENDPOINTS
