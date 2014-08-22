@@ -2,6 +2,23 @@
   (:require [antares.core :as antares]
             [antares.postrender :as postrender]))
 
+;; DATA WATCH FUNCTIONS
+(def compile-template!
+  (fn []
+    (let [template (get-in @antares/app-state [:html-fn])
+          test-data (get-in @antares/app-state [:test-data])]
+      (antares/post "http://localhost:8989/compile-template"
+                    {:params {:compile-data test-data
+                              :template template}
+                     :handler (fn [response]
+                                (antares/update-cursor [:compiled-template] (fn [old-value] response)))}))))
+
+(def compile-css!
+  (fn []
+    (let [css-data (get-in @antares/app-state [:css-data])
+          target-node (.querySelector js/document ".template-css-render")]
+      (set! (.-innerHTML target-node) (antares/compile-css css-data)))))
+
 ;; HTML FN
 (antares/create-component {:ident :html-fn
                            :data-type "string"
@@ -29,6 +46,36 @@
                                         [:textarea data])
                            :post-render-fn (postrender/textarea->codemirror [:test-data] "#test-data textarea")})
 
+;; Compiled Template HTML
+(antares/create-component {:ident :compiled-template
+                           :data-type "string"
+                           :app-cursor [:compiled-template]
+                           :dom-cursor "#compiled-template-render"
+                           :initialize-fn (fn [] [:div.template])
+                           :render-fn (fn [data]
+                                        (antares/read-string data))})
+
+;; Save Template Button
+(antares/create-component {:ident :save-template-button
+                           :data-type "string"
+                           :app-cursor [:save-template-button-text]
+                           :dom-cursor "#save-template-action"
+                           :initialize-fn (fn [] "Save Template")
+                           :render-fn (fn [data]
+                                        [:div {:class "ui button"} data])})
+
+(antares/create-data-watcher {:ident :compile-template-from-html
+                              :app-cursor [:html-fn]
+                              :watch-fn compile-template!})
+
+(antares/create-data-watcher {:ident :compile-template-from-test-data
+                              :app-cursor [:test-data]
+                              :watch-fn compile-template!})
+
+(antares/create-data-watcher {:ident :compile-css-data
+                             :app-cursor [:css-data]
+                             :watch-fn compile-css!})
+
 ;; ;; Save Button
 ;; (defn save-template
 ;;   [event]
@@ -44,18 +91,8 @@
 ;;                     :handler (fn [response]
 ;;                                (.log js/console response))})))
 
-;; ;; Arrange Components
-
-;; (antares/data-bind [:dynamic-html] ".template-html-render" (fn [template]
-;;                                                              (->> template
-;;                                                                   (antares/compile-template (get-in @antares/app-state [:dynamic-test-data])))))
-
 ;; (antares/data-bind [:dynamic-css] ".template-css-render" (fn [data]
 ;;                                                            (antares/render-css data)))
-
-;; (antares/data-bind [:compiled-html] ".template-render" (fn [template]
-;;                                                          (->> template
-;;                                                               (antares/render-html))))
 
 ;; (antares/bind-event "#save-template" "click" (fn [event]
 ;;                                                (save-template event)))

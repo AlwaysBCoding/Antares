@@ -15,8 +15,9 @@
     margin-left: -62px;
 }
 
-#save-template {
-  display: block;
-  margin: 0 auto;
-  width: 200px;
+#save-template-action {
+    .button {
+        display: block;
+        margin: 0 auto;
+        width: 200px; }
 }

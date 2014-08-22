@@ -8,7 +8,6 @@
     [dommy.core :as dommy]
     [cljs.reader :as edn]
     [clojure.string :as str]
-    [cljs-http.client :as http]
     [ajax.core :as ajax]
     [cljs.core.async :refer (<!)]
     [hiccups.runtime :as hiccupsrt]
@@ -17,6 +16,7 @@
 ;; GLOBAL ATOMS
 (def app-state (atom {}))
 (def registered-components (atom []))
+(def registered-data-watchers (atom []))
 
 ;; GLOBAL HELPERS
 (defn read-string
@@ -36,6 +36,9 @@
   (register-cursor [self])
   (register-watcher [self]))
 
+(defprotocol AntaresDataWatcher
+  (register-data-watcher [self]))
+
 ;; API METHODS
 (defn update-cursor
   [cursor update-fn]
@@ -45,6 +48,21 @@
 (defn reset-app-state
   [value]
   (reset! app-state value))
+
+;; DATA WATCHERS
+(defrecord DataWatcher
+  [ident
+   app-cursor
+   watch-fn]
+
+  AntaresDataWatcher
+  (register-data-watcher [self]
+    (add-watch
+     app-state
+     (-> self :ident)
+     (fn [key reference old-state new-state]
+       (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
+         ((-> self :watch-fn)))))))
 
 ;; COMPONENTS
 (defrecord Component
@@ -138,6 +156,27 @@
       (.appendChild parent-node clone-node)
       (set! (.-innerHTML target-node) ""))))
 
+;; DATA WATCHER
+(defn create-data-watcher
+  [source-map]
+  (let [data-watcher (map->DataWatcher source-map)]
+    (register-data-watcher data-watcher)
+    data-watcher))
+
+;; ASYNC
+(defn get
+  [uri options]
+  (ajax/GET uri options))
+
+(defn post
+  [uri options]
+  (ajax/POST uri options))
+
+;; COMPILE SERVICES
+(defn compile-css
+  [css-data]
+  (cssrenderer/css (read-string css-data)))
+
 ;; DETECTIVE MODE
 (dommy/prepend! (.querySelector js/document "body") (node [:div.antares.app-state]))
 
@@ -202,22 +241,6 @@
 ;;   [cursor new-value]
 ;;   (swap! app-state (fn [app-value]
 ;;                      (update-in app-value cursor (fn [old-value] new-value)))))
-
-;; RENDERER ENDPOINTS
-;; (defn render-css
-;;   [data]
-;;   (cssrenderer/css (read-data data)))
-
-;; (defn render-html
-;;   [template]
-;;   (htmlrenderer/html (read-data template)))
-
-;; (defn compile-template
-;;   [compile-data template]
-;;   (ajax/POST "http://localhost:8989/compile-template" {:params {:compile-data compile-data
-;;                                                                 :template template}
-;;                                                        :handler (fn [response]
-;;                                                                   (update-cursor [:compiled-html] (fn [old-value] response)))}))
 
 ;; CORE RECORDS
 ;; (defrecord DataBinding
