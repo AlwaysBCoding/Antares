@@ -136,6 +136,10 @@
 
 ;; CREATE ATOM COMPONENTS
 (dommy/prepend! (.querySelector js/document "body") (node [:div.antares.app-state]))
+(.addEventListener (.querySelector js/document "body") "click" (fn [event]
+                                                                 (if-let [element (.querySelector js/document ".active-component")]
+                                                                   (.remove (.-classList element) "active-component"))
+                                                                 (.add (-> event .-target .-classList) "active-component")) true)
 
 ;; SEED REPL
 (create-component
