@@ -7,6 +7,11 @@
   margin-bottom: 100px;
 }
 
+#compiled-template-render {
+    max-height: 568px;
+    overflow: auto;
+}
+
 .iphone-wireframe {
     position: absolute;
     height: 137%;
