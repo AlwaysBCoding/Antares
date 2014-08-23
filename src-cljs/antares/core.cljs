@@ -24,21 +24,122 @@
   [data-string]
   (edn/read-string data-string))
 
+;; COMPILE SERVICES
+(defn compile-css!
+  [css-data]
+  (cssrenderer/css css-data))
+
+(defn compile-html!
+  [html-data]
+  (htmlrenderer/html html-data))
+
 ;; PROTOCOLS
 (defprotocol Renderable
-  (pre-render [self])
-  (render [self])
+  (pre-render  [self])
+  (render-data [self data])
   (post-render [self]))
 
-(defprotocol AntaresComponent
-  (initial-cursor [self])
-  (initialize [self])
-  (bind-events [self])
-  (register-cursor [self])
-  (register-watcher [self]))
+(defrecord Component
+  [ident
+   data-type
+   pre-render-fn
+   render-data-fn
+   post-render-fn]
 
-(defprotocol AntaresDataWatcher
-  (register-data-watcher [self]))
+  Renderable
+  (pre-render [self]
+    (if-let [pre-render-fn (-> self :pre-render-fn)]
+      (pre-render-fn)))
+
+  (render-data [self data]
+    (if-let [render-data-fn (-> self :render-data-fn)]
+      (render-data-fn data)))
+
+  (post-render [self]
+    (if-let [post-render-fn (-> self :post-render-fn)]
+      (post-render-fn))))
+
+(defn build-component
+  [source-map]
+  (let [component (map->Component source-map)]
+    component))
+
+(defn bind-component
+  [component app-cursor dom-cursor]
+  {:component component
+   :app-cursor app-cursor
+   :dom-cursor dom-cursor})
+
+;; COMPONENTS
+;; (defrecord Component
+;;   [ident
+;;    data-type
+;;    app-cursor
+;;    dom-cursor
+;;    initialize-fn
+;;    pre-render-fn
+;;    render-fn
+;;    post-render-fn
+;;    interactions]
+
+;;   AntaresComponent
+;;   (initial-cursor [self]
+;;     (case (-> self :data-type)
+;;       :string  ""
+;;       :map     {}
+;;       :vector  []
+;;       :matrix  [[]]
+;;       :number  0))
+
+;;   (initialize [self]
+;;     (if (-> self :initialize-fn)
+;;       (cursor->fn (-> self :app-cursor) (-> self :initialize-fn))))
+
+;;   (bind-events [self]
+;;     (when-let [interactions (-> self :interactions)]
+;;       (doseq [interaction interactions]
+;;         (gcc-events/listen (.querySelector js/document dom-cursor) (-> interaction :event-type) (-> interaction :event-action)))))
+
+;;   (register-cursor [self]
+;;     (if (nil? (get-in @app-state (-> self :app-cursor)))
+;;       (cursor->value (-> self :app-cursor) (initial-cursor self))))
+
+;;   (register-watcher [self]
+;;     (add-watch
+;;      app-state
+;;      (-> self :ident)
+;;      (fn [key reference old-state new-state]
+;;        (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
+;;          (pre-render self)
+;;          (render self)
+;;          (post-render self)))))
+
+;;   Renderable
+;;   (pre-render [self data]
+;;     (if (-> self :pre-render-fn)
+;;       (pre-render-fn data)))
+
+;;   (render [self data]
+;;     (render-fn data))
+  
+;;   #_(render [self data]
+;;     (let [target-node (.querySelector js/document dom-cursor)
+;;           new-nodes-data (render-fn (get-in @app-state app-cursor))]
+;;       (set! (.-innerHTML target-node) (htmlrenderer/html new-nodes-data))))
+
+;;   (post-render [self data]
+;;     (if (-> self :post-render-fn)
+;;       (post-render-fn))))
+
+;; (defprotocol AntaresComponent
+;;   (initial-cursor [self])
+;;   (initialize [self])
+;;   (bind-events [self])
+;;   (register-cursor [self])
+;;   (register-watcher [self]))
+
+;; (defprotocol AntaresDataWatcher
+;;   (register-data-watcher [self]))
 
 ;; API METHODS
 (defn cursor->fn
@@ -51,123 +152,70 @@
   (swap! app-state (fn [app-value]
                      (update-in app-value cursor (fn [old-value] new-value)))))
 
-(defn reset-app-state
+(defn app-state->value
   [value]
   (reset! app-state value))
 
 ;; DATA WATCHERS
-(defrecord DataWatcher
-  [ident
-   app-cursor
-   watch-fn]
+;; (defrecord DataWatcher
+;;   [ident
+;;    app-cursor
+;;    watch-fn]
 
-  AntaresDataWatcher
-  (register-data-watcher [self]
-    (add-watch
-     app-state
-     (-> self :ident)
-     (fn [key reference old-state new-state]
-       (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
-         ((-> self :watch-fn)))))))
-
-;; COMPONENTS
-(defrecord Component
-  [ident
-   data-type
-   app-cursor
-   dom-cursor
-   initialize-fn
-   pre-render-fn
-   render-fn
-   post-render-fn
-   interactions]
-
-  AntaresComponent
-  (initial-cursor [self]
-    (case (-> self :data-type)
-      "string"  ""
-      "map"     {}
-      "vector"  []
-      "matrix"  [[]]
-      "number"  0))
-
-  (initialize [self]
-    (if (-> self :initialize-fn)
-      (cursor->fn (-> self :app-cursor) (-> self :initialize-fn))))
-
-  (bind-events [self]
-    (when-let [interactions (-> self :interactions)]
-      (doseq [interaction interactions]
-        (gcc-events/listen (.querySelector js/document dom-cursor) (-> interaction :event-type) (-> interaction :event-action)))))
-
-  (register-cursor [self]
-    (if (nil? (get-in @app-state (-> self :app-cursor)))
-      (cursor->value (-> self :app-cursor) (initial-cursor self))))
-
-  (register-watcher [self]
-    (add-watch
-     app-state
-     (-> self :ident)
-     (fn [key reference old-state new-state]
-       (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
-         (pre-render self)
-         (render self)
-         (post-render self)))))
-
-  Renderable
-  (pre-render [self]
-    (if (-> self :pre-render-fn)
-      (pre-render-fn)))
+;;   AntaresDataWatcher
+;;   (register-data-watcher [self]
+;;     (add-watch
+;;      app-state
+;;      (-> self :ident)
+;;      (fn [key reference old-state new-state]
+;;        (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
+;;          ((-> self :watch-fn)))))))
   
-  (render [self]
-    (let [target-node (.querySelector js/document dom-cursor)
-          new-nodes-data (render-fn (get-in @app-state app-cursor))]
-      (set! (.-innerHTML target-node) (htmlrenderer/html new-nodes-data))))
+;; (defn register-component
+;;   [component]
+;;   (register-cursor component)
+;;   (register-watcher component)
+;;   (swap! registered-components conj component)
+;;   (bind-events component))
 
-  (post-render [self]
-    (if (-> self :post-render-fn)
-      (post-render-fn))))
-  
-(defn register-component
-  [component]
-  (register-cursor component)
-  (register-watcher component)
-  (swap! registered-components conj component)
-  (bind-events component))
+;; (defn unregister-component
+;;   [component]
+;;   (remove-watch app-state (-> component :ident))
+;;   (swap! registered-components (fn [components]
+;;                                  (remove #(= (-> % :ident) (-> component :ident)) components))))
 
-(defn unregister-component
-  [component]
-  (remove-watch app-state (-> component :ident))
-  (swap! registered-components (fn [components]
-                                 (remove #(= (-> % :ident) (-> component :ident)) components))))
+;; #_(defn create-component
+;;   [source-map]
+;;   (let [component (map->Component source-map)]
+;;     (register-component component)
+;;     (initialize component)
+;;     (pre-render component)
+;;     (render component)
+;;     (post-render component)
+;;     component))
 
-(defn create-component
-  [source-map]
-  (let [component (map->Component source-map)]
-    (register-component component)
-    (initialize component)
-    (pre-render component)
-    (render component)
-    (post-render component)
-    component))
+;; (defn destroy-component
+;;   [ident]
+;;   (let [component (first (filter #(= (-> % :ident) ident) @registered-components))]
+;;     (unregister-component component)
+;;     (let [target-node (.querySelector js/document (-> component :dom-cursor))
+;;           clone-node (.cloneNode target-node false)
+;;           parent-node (.-parentNode target-node)]
+;;       (.remove target-node)
+;;       (.appendChild parent-node clone-node)
+;;       (set! (.-innerHTML target-node) ""))))
 
-(defn destroy-component
-  [ident]
-  (let [component (first (filter #(= (-> % :ident) ident) @registered-components))]
-    (unregister-component component)
-    (let [target-node (.querySelector js/document (-> component :dom-cursor))
-          clone-node (.cloneNode target-node false)
-          parent-node (.-parentNode target-node)]
-      (.remove target-node)
-      (.appendChild parent-node clone-node)
-      (set! (.-innerHTML target-node) ""))))
+;; (defn build-component
+;;   [source-map]
+;;   (let [component (map->Component source-map)]
+;;     component))
 
 ;; DATA WATCHER
-(defn create-data-watcher
-  [source-map]
-  (let [data-watcher (map->DataWatcher source-map)]
-    (register-data-watcher data-watcher)
-    data-watcher))
+;; (defn create-data-watcher
+;;   [source-map]
+;;   (let [data-watcher (map->DataWatcher source-map)]
+;;     (register-data-watcher data-watcher)
+;;     data-watcher))
 
 ;; ASYNC
 (defn http-get
@@ -178,22 +226,17 @@
   [uri options]
   (ajax/POST uri options))
 
-;; COMPILE SERVICES
-(defn compile-css
-  [css-data]
-  (cssrenderer/css (read-string css-data)))
-
 ;; DETECTIVE MODE
-(create-component
+#_(create-component
  {:ident :app-state-inspector
-  :data-type "map"
+  :data-type :map
   :app-cursor []
   :dom-cursor ".antares.app-state"
   :render-fn (fn [data]
                [:textarea.antares.app-state-inspector (pr-str data)])
   :interactions [{:event-type "blur"
                   :event-action (fn [event]
-                                  (reset-app-state (-> event .-target .-value read-string)))}]})
+                                  (app-state->value (-> event .-target .-value read-string)))}]})
 
 ;; (gcc-events/listen (.querySelector js/document "body") "click" (fn [event]
 ;;                                                                  (if-let [element (.querySelector js/document ".active-component")]
@@ -202,7 +245,7 @@
 
 ;; INTERACTIVE REPL
 #_(
-   (update-cursor [:firstname] (fn [old-value] "Jordan"))
+   (cursor->value [:firstname] "Jordan")
    (destroy-component :firstname)
 )
 
