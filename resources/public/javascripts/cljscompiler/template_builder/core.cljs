@@ -6,25 +6,23 @@
 (def load-html-fn
   (fn []
     (let [template-id 17592186045418]
-      (antares/get (str "http://localhost:8989/template/" template-id)
-                   {:handler (fn [response] (antares/update-cursor [:html-fn] (fn [old-data]
-                                                                               (-> response antares/read-string :html-fn))))})
+      (antares/http-get (str "http://localhost:8989/template/" template-id)
+                        {:handler (fn [response]
+                                    (antares/cursor->value [:html-fn] (-> response antares/read-string :html-fn)))})
       "Loading...")))
 
 (def load-css-data
   (fn []
     (let [template-id 17592186045418]
-      (antares/get (str "http://localhost:8989/template/" template-id)
-                   {:handler (fn [response] (antares/update-cursor [:css-data] (fn [old-data]
-                                                                                (-> response antares/read-string :css-data))))})
+      (antares/http-get (str "http://localhost:8989/template/" template-id)
+                        {:handler (fn [response] (antares/cursor->value [:css-data] (-> response antares/read-string :css-data)))})
       "Loading...")))
 
 (def load-test-data
   (fn []
     (let [template-id 17592186045418]
-      (antares/get (str "http://localhost:8989/template/" template-id)
-                   {:handler (fn [response] (antares/update-cursor [:test-data] (fn [old-data]
-                                                                                 (-> response antares/read-string :test-data))))})
+      (antares/http-get (str "http://localhost:8989/template/" template-id)
+                        {:handler (fn [response] (antares/cursor->value [:test-data] (-> response antares/read-string :test-data)))})
       "Loading...")))
 
 ;; DATA WATCH FUNCTIONS
@@ -32,11 +30,11 @@
   (fn []
     (let [template (get-in @antares/app-state [:html-fn])
           test-data (get-in @antares/app-state [:test-data])]
-      (antares/post "http://localhost:8989/compile-template"
-                    {:params {:compile-data test-data
-                              :template template}
-                     :handler (fn [response]
-                                (antares/update-cursor [:compiled-template] (fn [old-value] response)))}))))
+      (antares/http-post "http://localhost:8989/compile-template"
+                         {:params {:compile-data test-data
+                                   :template template}
+                          :handler (fn [response]
+                                     (antares/cursor->value [:compiled-template] response))}))))
 
 (def compile-css!
   (fn []
@@ -51,12 +49,31 @@
           html-fn (get-in @antares/app-state [:html-fn])
           css-data (get-in @antares/app-state [:css-data])
           test-data (get-in @antares/app-state [:test-data])]
-      (antares/post (str "http://localhost:8989/template/" template-id "/save")
-                    {:params {:eid template-id
-                              :html-fn html-fn
-                              :css-data css-data
-                              :test-data test-data}
-                     :handler (fn [response] (.log js/console response))}))))
+      (antares/http-post (str "http://localhost:8989/template/" template-id "/save")
+                         {:params {:eid template-id
+                                   :html-fn html-fn
+                                   :css-data css-data
+                                   :test-data test-data}
+                          :handler (fn [response] (.log js/console response))}))))
+
+;; COMPONENTS
+
+;; Tab List
+
+;; Template Data Editor
+(antares/create-component {:ident :template-data-editor
+                           :data-type "map"
+                           :app-cursor [:template-data-editor]
+                           :dom-cursor "#template-data-editor"
+                           :initialize-fn (fn [] {:tabs [{:display "HTML"}
+                                                        {:display "CSS"}
+                                                        {:display "TEST DATA"}]
+                                                 :active-tab {}})
+                           :render-fn (fn [data] [:div.ui.horizontal.list
+                                                 (map (fn [tab]
+                                                        [:div.item
+                                                         [:div.content
+                                                          [:div.header (-> tab :display)]]]) (-> data :tabs))])})
 
 ;; HTML FN
 (antares/create-component {:ident :html-fn

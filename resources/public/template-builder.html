@@ -7,54 +7,42 @@
     <link href="stylesheets/codemirror/codemirror.css" rel="stylesheet" type="text/css" />
     <link href="stylesheets/codemirror/themes/solarized.css" rel="stylesheet" type="text/css" />
     <link href="stylesheets/template-builder.css" rel="stylesheet" type="text/css" />
+    <style class="template-css-render"></style>
   </head>
 
   <body>
     <div class="app-container ui grid">
-
+      <div class="antares app-state"></div>
+     
       <div class="row">
-
-        <div class="left-side column wide five">
+        <div class="left-side column wide eight">
+          <div id="template-data-editor"></div>
+          
           <div class="html-fn-container">
             <h1>HTML FN</h1>
-            <div id="html-fn">
-            </div>
+            <div id="html-fn"></div>
           </div>
-        </div>
-
-        <div class="middle-side column wide six">
+          
           <div class="css-data-container">
             <h1>CSS Data Structure</h1>
-            <div id="css-data">
-            </div>
+            <div id="css-data"></div>
           </div>
-        </div>
-
-        <div class="right-side column wide five">
+          
           <div class="test-data-container">
             <h1>HTML FN Test Data</h1>
-            <div id="test-data">
-            </div>
+            <div id="test-data"></div>
           </div>
+          
         </div>
-        
-      </div>
 
-      <div class="row">
-        <div class="all-content column wide sixteen">
-          <style class="template-css-render"></style>
-          <div class="template-html-render" style="display: none;"></div>
+        <div class="right-side column wide eight">
           <div class="template-render-container">
             <img class="iphone-wireframe" src="images/iphone-5s.svg"/>
             <div id="compiled-template-render"></div>
-          </div>
+          </div>  
+          <div id="save-template-action"></div>
         </div>
-      </div>
-      <div class="row">
-        <div class="actions column wide sixteen">
-          <div id="save-template-action">
-          </div>
-        </div>
+        
       </div>
       
     </div>
@@ -67,6 +55,7 @@
       <script src="javascripts/cljscompiler/dev.js" type="text/javascript"></script>
       <script type="text/javascript">goog.require("template_builder.core");</script>
     </div>
+
   </body>
   
 </html>

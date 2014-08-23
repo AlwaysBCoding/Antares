@@ -1,18 +1,18 @@
-// Compiled by ClojureScript 0.0-2277
+// Compiled by ClojureScript 0.0-2311
 goog.provide('garden.compression');
 goog.require('cljs.core');
 /**
 * Return a function which when given a string will return a map
 * containing the chunk of text matched by re, it's size, and tag.
 */
-garden.compression.token_fn = (function token_fn(p__16000){var vec__16002 = p__16000;var tag = cljs.core.nth.call(null,vec__16002,(0),null);var re = cljs.core.nth.call(null,vec__16002,(1),null);return ((function (vec__16002,tag,re){
+garden.compression.token_fn = (function token_fn(p__14706){var vec__14708 = p__14706;var tag = cljs.core.nth.call(null,vec__14708,(0),null);var re = cljs.core.nth.call(null,vec__14708,(1),null);return ((function (vec__14708,tag,re){
 return (function (s){var temp__4126__auto__ = cljs.core.re_find.call(null,re,s);if(cljs.core.truth_(temp__4126__auto__))
 {var chunk = temp__4126__auto__;return new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"tag","tag",-1290361223),tag,new cljs.core.Keyword(null,"chunk","chunk",-1191159620),chunk,new cljs.core.Keyword(null,"size","size",1098693007),cljs.core.count.call(null,chunk)], null);
 } else
 {return null;
 }
 });
-;})(vec__16002,tag,re))
+;})(vec__14708,tag,re))
 });
 /**
 * Given an arbitrary number of [tag regex] pairs, return a function
@@ -24,7 +24,7 @@ return (function (s){var temp__4126__auto__ = cljs.core.re_find.call(null,re,s);
 garden.compression.tokenizer = (function() { 
 var tokenizer__delegate = function (tags_PLUS_regexes){var fs = cljs.core.map.call(null,garden.compression.token_fn,tags_PLUS_regexes);return ((function (fs){
 return (function (s){return cljs.core.some.call(null,((function (fs){
-return (function (p1__16003_SHARP_){return p1__16003_SHARP_.call(null,s);
+return (function (p1__14709_SHARP_){return p1__14709_SHARP_.call(null,s);
 });})(fs))
 ,fs);
 });
@@ -35,8 +35,8 @@ var tags_PLUS_regexes = null;if (arguments.length > 0) {
   tags_PLUS_regexes = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0),0);} 
 return tokenizer__delegate.call(this,tags_PLUS_regexes);};
 tokenizer.cljs$lang$maxFixedArity = 0;
-tokenizer.cljs$lang$applyTo = (function (arglist__16004){
-var tags_PLUS_regexes = cljs.core.seq(arglist__16004);
+tokenizer.cljs$lang$applyTo = (function (arglist__14710){
+var tags_PLUS_regexes = cljs.core.seq(arglist__14710);
 return tokenizer__delegate(tags_PLUS_regexes);
 });
 tokenizer.cljs$core$IFn$_invoke$arity$variadic = tokenizer__delegate;
@@ -52,9 +52,9 @@ garden.compression.stylesheet_tokenizer = garden.compression.tokenizer.call(null
 */
 garden.compression.compress_stylesheet = (function compress_stylesheet(stylesheet){var s1 = stylesheet;var s2 = "";while(true){
 var temp__4124__auto__ = garden.compression.stylesheet_tokenizer.call(null,s1);if(cljs.core.truth_(temp__4124__auto__))
-{var map__16007 = temp__4124__auto__;var map__16007__$1 = ((cljs.core.seq_QMARK_.call(null,map__16007))?cljs.core.apply.call(null,cljs.core.hash_map,map__16007):map__16007);var size = cljs.core.get.call(null,map__16007__$1,new cljs.core.Keyword(null,"size","size",1098693007));var chunk = cljs.core.get.call(null,map__16007__$1,new cljs.core.Keyword(null,"chunk","chunk",-1191159620));var tag = cljs.core.get.call(null,map__16007__$1,new cljs.core.Keyword(null,"tag","tag",-1290361223));{
-var G__16009 = cljs.core.subs.call(null,s1,size);
-var G__16010 = (''+cljs.core.str.cljs$core$IFn$_invoke$arity$1(s2)+cljs.core.str.cljs$core$IFn$_invoke$arity$1((function (){var G__16008 = (((tag instanceof cljs.core.Keyword))?tag.fqn:null);switch (G__16008) {
+{var map__14713 = temp__4124__auto__;var map__14713__$1 = ((cljs.core.seq_QMARK_.call(null,map__14713))?cljs.core.apply.call(null,cljs.core.hash_map,map__14713):map__14713);var size = cljs.core.get.call(null,map__14713__$1,new cljs.core.Keyword(null,"size","size",1098693007));var chunk = cljs.core.get.call(null,map__14713__$1,new cljs.core.Keyword(null,"chunk","chunk",-1191159620));var tag = cljs.core.get.call(null,map__14713__$1,new cljs.core.Keyword(null,"tag","tag",-1290361223));{
+var G__14715 = cljs.core.subs.call(null,s1,size);
+var G__14716 = (''+cljs.core.str.cljs$core$IFn$_invoke$arity$1(s2)+cljs.core.str.cljs$core$IFn$_invoke$arity$1((function (){var G__14714 = (((tag instanceof cljs.core.Keyword))?tag.fqn:null);switch (G__14714) {
 case "l-brace":
 return "}";
 
@@ -100,8 +100,8 @@ return chunk;
 
 }
 })()));
-s1 = G__16009;
-s2 = G__16010;
+s1 = G__14715;
+s2 = G__14716;
 continue;
 }
 } else

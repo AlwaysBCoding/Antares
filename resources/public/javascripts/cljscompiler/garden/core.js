@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 0.0-2277
+// Compiled by ClojureScript 0.0-2311
 goog.provide('garden.core');
 goog.require('cljs.core');
 goog.require('garden.compiler');
@@ -16,8 +16,8 @@ var rules = null;if (arguments.length > 0) {
   rules = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0),0);} 
 return css__delegate.call(this,rules);};
 css.cljs$lang$maxFixedArity = 0;
-css.cljs$lang$applyTo = (function (arglist__15918){
-var rules = cljs.core.seq(arglist__15918);
+css.cljs$lang$applyTo = (function (arglist__14624){
+var rules = cljs.core.seq(arglist__14624);
 return css__delegate(rules);
 });
 css.cljs$core$IFn$_invoke$arity$variadic = css__delegate;
@@ -37,8 +37,8 @@ var maps = null;if (arguments.length > 0) {
   maps = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0),0);} 
 return style__delegate.call(this,maps);};
 style.cljs$lang$maxFixedArity = 0;
-style.cljs$lang$applyTo = (function (arglist__15919){
-var maps = cljs.core.seq(arglist__15919);
+style.cljs$lang$applyTo = (function (arglist__14625){
+var maps = cljs.core.seq(arglist__14625);
 return style__delegate(maps);
 });
 style.cljs$core$IFn$_invoke$arity$variadic = style__delegate;

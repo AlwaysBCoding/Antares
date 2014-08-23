@@ -7,7 +7,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2277"]
+                 [org.clojure/clojurescript "0.0-2311"]
                  [org.clojure/core.async "0.1.303.0-886421-alpha"]
                  [com.datomic/datomic-pro "0.9.4815.12"]
 
@@ -25,9 +25,7 @@
                  [cljs-http "0.1.15"]
                  [cljs-ajax "0.2.6"]
                  [hiccups "0.3.0"]
-                 [garden "1.2.1"]
-
-                 [prismatic/dommy "0.1.2"]]
+                 [garden "1.2.1"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]]
 

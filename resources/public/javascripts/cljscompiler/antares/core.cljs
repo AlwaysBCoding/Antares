@@ -1,11 +1,12 @@
 (ns antares.core
   (:require-macros
     [cljs.core.async.macros :refer (go)]
-    [dommy.macros :refer [node]]
     [hiccups.core :as htmlrenderer])
   (:require
+    [goog.dom :as gcc-dom]
+    [goog.events :as gcc-events]
+    [goog.dom.classes :as gcc-classes]
     [antares.repl :as repl]
-    [dommy.core :as dommy]
     [cljs.reader :as edn]
     [clojure.string :as str]
     [ajax.core :as ajax]
@@ -40,10 +41,15 @@
   (register-data-watcher [self]))
 
 ;; API METHODS
-(defn update-cursor
+(defn cursor->fn
   [cursor update-fn]
   (swap! app-state (fn [state]
                      (update-in state cursor update-fn))))
+
+(defn cursor->value
+  [cursor new-value]
+  (swap! app-state (fn [app-value]
+                     (update-in app-value cursor (fn [old-value] new-value)))))
 
 (defn reset-app-state
   [value]
@@ -87,16 +93,16 @@
 
   (initialize [self]
     (if (-> self :initialize-fn)
-      (update-cursor (-> self :app-cursor) (-> self :initialize-fn))))
+      (cursor->fn (-> self :app-cursor) (-> self :initialize-fn))))
 
   (bind-events [self]
     (when-let [interactions (-> self :interactions)]
       (doseq [interaction interactions]
-        (.addEventListener (.querySelector js/document dom-cursor) (-> interaction :event-type) (-> interaction :event-action) true))))
+        (gcc-events/listen (.querySelector js/document dom-cursor) (-> interaction :event-type) (-> interaction :event-action)))))
 
   (register-cursor [self]
     (if (nil? (get-in @app-state (-> self :app-cursor)))
-      (update-cursor (-> self :app-cursor) (fn [old-value] (initial-cursor self)))))
+      (cursor->value (-> self :app-cursor) (initial-cursor self))))
 
   (register-watcher [self]
     (add-watch
@@ -164,11 +170,11 @@
     data-watcher))
 
 ;; ASYNC
-(defn get
+(defn http-get
   [uri options]
   (ajax/GET uri options))
 
-(defn post
+(defn http-post
   [uri options]
   (ajax/POST uri options))
 
@@ -178,8 +184,6 @@
   (cssrenderer/css (read-string css-data)))
 
 ;; DETECTIVE MODE
-(dommy/prepend! (.querySelector js/document "body") (node [:div.antares.app-state]))
-
 (create-component
  {:ident :app-state-inspector
   :data-type "map"
@@ -187,33 +191,14 @@
   :dom-cursor ".antares.app-state"
   :render-fn (fn [data]
                [:textarea.antares.app-state-inspector (pr-str data)])
-
   :interactions [{:event-type "blur"
                   :event-action (fn [event]
                                   (reset-app-state (-> event .-target .-value read-string)))}]})
 
-#_(.addEventListener (.querySelector js/document "body") "click" (fn [event]
-                                                                 (if-let [element (.querySelector js/document ".active-component")]
-                                                                   (.remove (.-classList element) "active-component"))
-                                                                 (.add (-> event .-target .-classList) "active-component")) true)
-
-;; SEED REPL
-;; (def example {:ident :firstname
-;;               :data-type "string"
-;;               :app-cursor [:firstname]
-;;               :dom-cursor ".dynamic-html"
-;;               :initialize-fn (fn [] "Jordan")
-;;               :render-fn (fn [data] [:h1 data])})
-
-;; (def example2 {:ident :lastname
-;;                :data-type "string"
-;;                :app-cursor [:lastname]
-;;                :dom-cursor ".dynamic-css"
-;;                :initialize-fn (fn [] "Leigh")
-;;                :render-fn (fn [data] [:h1 data])})
-
-;; (create-component example)
-;; (create-component example2)
+;; (gcc-events/listen (.querySelector js/document "body") "click" (fn [event]
+;;                                                                  (if-let [element (.querySelector js/document ".active-component")]
+;;                                                                    (gcc-classes/remove element "active-component"))
+;;                                                                  (gcc-classes/add (-> event .-target) "active-component")))
 
 ;; INTERACTIVE REPL
 #_(
@@ -237,40 +222,6 @@
 ;;       (->> (str/split formatted-string #"\n")
 ;;            (map (fn [string] (str/split string #",")))))))
 
-;; (defn cursor->value
-;;   [cursor new-value]
-;;   (swap! app-state (fn [app-value]
-;;                      (update-in app-value cursor (fn [old-value] new-value)))))
-
-;; CORE RECORDS
-;; (defrecord DataBinding
-;;   [app-cursor dom-cursor render-fn]
-  
-;;   Renderable
-;;   (render [self]
-;;     (let [target-node (.querySelector js/document dom-cursor)
-;;           target-data (if (= (type app-cursor) cljs.core/List)
-;;                         (render-fn (map (fn [cursor]
-;;                                           (if-let [app-data (get-in @app-state cursor)]
-;;                                             app-data
-;;                                             "")) app-cursor))
-;;                         (render-fn (if-let [app-data (get-in @app-state app-cursor)]
-;;                                      app-data
-;;                                      "")))]
-;;       (case (.-tagName target-node
-;;         "INPUT" (set! (.-value target-node) target-data)
-;;         "TEXTAREA" (set! (.-value target-node) target-data)
-;;         (set! (.-innerHTML target-node) target-data)))))
-
-;; (defn register-binding
-;;   [data-binding]
-;;   (swap! registered-bindings conj data-binding))
-
-;; (defn render-bindings
-;;   [data-bindings]
-;;   (doseq [data-binding data-bindings]
-;;     (render data-binding)))
-
 ;; CURSOR API ENDPOINTS
 ;; (defn update-cursor-async
 ;;   [cursor resource-url]
@@ -281,67 +232,3 @@
 ;;                (:body))]
 ;;       (swap! app-state (fn [state]
 ;;                          (update-in state cursor (fn [old-value] response)))))))
-
-;; (defn update-app-state
-;;   [update-fn]
-;;   (reset! app-state (update-fn)))
-
-;; CREATE DATA BINDINGS [can take lists for app-cursor or dom-cursor]
-;; (defmulti create-data-binding (fn [app-cursor dom-cursor render-fn]
-;;                                 (= (type app-cursor) cljs.core/List)))
-
-;; (defmethod create-data-binding false [app-cursor dom-cursor render-fn]
-;;   (let [data-binding (map->DataBinding
-;;                       {:app-cursor app-cursor
-;;                        :dom-cursor dom-cursor
-;;                        :render-fn  render-fn})]
-;;     (register-app-state-cursor app-cursor "")
-;;     (register-binding data-binding)
-;;     (render data-binding)
-;;     data-binding))
-
-;; (defmethod create-data-binding true [app-cursor dom-cursor render-fn]
-;;   (let [data-binding (map->DataBinding
-;;                       {:app-cursor app-cursor
-;;                        :dom-cursor dom-cursor
-;;                        :render-fn render-fn})]
-;;     (doseq [cursor app-cursor]
-;;       (register-app-state-cursor cursor ""))
-;;     (register-binding data-binding)
-;;     (render data-binding)
-;;     data-binding))
-
-;; (defmulti data-bind (fn [app-cursor dom-cursors render-fn]
-;;                       (= (type dom-cursors) cljs.core/List)))
-
-;; (defmethod data-bind false [app-cursor dom-cursor render-fn]
-;;   (create-data-binding app-cursor dom-cursor render-fn))
-
-;; (defmethod data-bind true [app-cursor dom-cursors render-fn]
-;;   (doseq [dom-cursor dom-cursors]
-;;     (create-data-binding app-cursor dom-cursor render-fn)))
-
-;; CREATE EVENT BINDINGS
-;; (defn bind-event [dom-cursor event-type action]
-;;   (.addEventListener (.querySelector js/document dom-cursor) event-type action))
-
-;; CREATE TWO WAY BINDINGS (Data Binding + Event Binding)
-;; (defn two-way-bind
-;;   [app-cursor dom-cursor]
-;;   (data-bind app-cursor dom-cursor (fn [data] data))
-;;   (bind-event dom-cursor "input" (fn [event] (update-cursor app-cursor (fn [old-value] (-> event .-target .-value))))))
-
-;; CREATE RENDER WATCHERS
-;; (add-watch app-state :render-bindings
-;;  (fn [k r old-state new-state] (if (not= old-state new-state)
-;;                                 (render-bindings @registered-bindings))))
-
-;; ASYNC HANDLING
-;; (defn async
-;;   [request]
-;;   (case (-> request :method)
-;;     "GET" '()
-;;     "POST" (ajax/POST
-;;             (-> request :uri)
-;;             {:params (-> request :params)
-;;              :handler (-> request :handler)})))
