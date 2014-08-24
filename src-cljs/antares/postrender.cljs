@@ -15,4 +15,4 @@
        (doseq [[option-key option-value] options]
          (.setOption codemirror option-key option-value))
        (.on codemirror "blur" (fn [self event]
-                                (antares/cursor->value (-> component-binding :app-cursor) (.getValue self)))))))
+                                (antares/cursor->value (conj (-> component-binding :app-cursor) :code-editor) (.getValue self)))))))

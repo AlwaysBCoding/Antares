@@ -38,7 +38,7 @@
     :style-data [:div.template-editor
                  (antares/get-attr tab-list :style-data)]}))
 
-(antares/bind-component
+(antares/component-binding
  {:ident :template-editor-binding
   :component template-editor
   :app-cursor [:template-editor]

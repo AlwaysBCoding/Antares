@@ -133,7 +133,7 @@
       (gcc-dom/appendChild style-node text-node)
       (gcc-dom/appendChild head-node style-node))))
 
-(defn bind-component
+(defn component-binding
   [source-map]
   (let [component-binding (map->ComponentBinding source-map)]
     (register-app-cursor component-binding)
@@ -149,6 +149,29 @@
 (defn http-post
   [uri options]
   (ajax/POST uri options))
+
+;; DETECTIVE MODE
+(component-binding
+ {:ident :app-state-inspector-binding
+  :app-cursor []
+  :dom-cursor ".antares#app-state"
+  :component (component
+              {:ident :app-state-inspector
+               :data-type :map
+               :render-data-fn (fn [data]
+                                 [:textarea (pr-str data)])})})
+
+;; (create-component
+;;  {:ident :app-state-inspector
+;;   :data-type :map
+;;   :app-cursor []
+;;   :dom-cursor ".antares.app-state"
+;;   :render-fn (fn [data]
+;;                [:textarea.antares.app-state-inspector (pr-str data)])
+;;   :interactions [{:event-type "blur"
+;;                   :event-action (fn [event]
+;;                                   (app-state->value (-> event .-target .-value read-string)))}]})
+
 
 ;; (defrecord Component
 ;;   [ident
@@ -289,17 +312,6 @@
 ;;     data-watcher))
 
 ;; DETECTIVE MODE
-#_(create-component
- {:ident :app-state-inspector
-  :data-type :map
-  :app-cursor []
-  :dom-cursor ".antares.app-state"
-  :render-fn (fn [data]
-               [:textarea.antares.app-state-inspector (pr-str data)])
-  :interactions [{:event-type "blur"
-                  :event-action (fn [event]
-                                  (app-state->value (-> event .-target .-value read-string)))}]})
-
 ;; (gcc-events/listen (.querySelector js/document "body") "click" (fn [event]
 ;;                                                                  (if-let [element (.querySelector js/document ".active-component")]
 ;;                                                                    (gcc-classes/remove element "active-component"))
