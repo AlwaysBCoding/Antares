@@ -24,6 +24,30 @@
   [data-string]
   (edn/read-string data-string))
 
+(defn keyword->data-structure
+  [keyword]  
+  (cond
+   (= keyword :string)  ""
+   (= keyword :map)     {}
+   (= keyword :vector)  []
+   (= keyword :matrix)  [[]]
+   (= keyword :number)  0))
+
+;; APP-STATE INTERACTIONS
+(defn cursor->fn
+  [cursor update-fn]
+  (swap! app-state (fn [state]
+                     (update-in state cursor update-fn))))
+
+(defn cursor->value
+  [cursor new-value]
+  (swap! app-state (fn [app-value]
+                     (update-in app-value cursor (fn [old-value] new-value)))))
+
+(defn app-state->value
+  [value]
+  (reset! app-state value))
+
 ;; COMPILE SERVICES
 (defn compile-css!
   [css-data]
@@ -34,41 +58,97 @@
   (htmlrenderer/html html-data))
 
 ;; PROTOCOLS
-(defprotocol Renderable
-  (pre-render  [self])
-  (render-data [self data])
-  (post-render [self]))
+(defprotocol Queryable
+  (get-attr [self attr]))
 
+(defprotocol Renderable
+  (render [self data])
+  (render-to-dom [self data dom-cursor]))
+
+(defprotocol Bindable
+  (register-app-cursor [self app-cursor])
+  (register-render-watcher [self app-cursor dom-cursor]))
+
+;; RECORDS
 (defrecord Component
   [ident
    data-type
-   pre-render-fn
-   render-data-fn
-   post-render-fn]
+   subcomponents
+   style-data
+   render-data-fn]
+
+  Queryable
+  (get-attr [self attr]
+    (-> self attr))
 
   Renderable
-  (pre-render [self]
-    (if-let [pre-render-fn (-> self :pre-render-fn)]
-      (pre-render-fn)))
-
-  (render-data [self data]
+  (render [self data]
     (if-let [render-data-fn (-> self :render-data-fn)]
       (render-data-fn data)))
 
-  (post-render [self]
-    (if-let [post-render-fn (-> self :post-render-fn)]
-      (post-render-fn))))
+  (render-to-dom [self data dom-cursor]
+    (->> (render self data)
+         (compile-html!)
+         (set! (.-innerHTML (.querySelector js/document dom-cursor)))))
 
-(defn build-component
+  Bindable
+  (register-app-cursor [self app-cursor]
+    (when (nil? (get-in @app-state app-cursor))
+      (cursor->value app-cursor (keyword->data-structure (-> self :data-type)))))
+
+  (register-render-watcher [self app-cursor dom-cursor]
+    (add-watch
+      app-state
+      (-> self :ident)
+      (fn [key reference old-state new-state]
+        (when (not= (get-in old-state app-cursor) (get-in new-state app-cursor))          
+          (render-to-dom self (get-in new-state app-cursor) dom-cursor))))))
+  
+(defn component
   [source-map]
   (let [component (map->Component source-map)]
     component))
 
 (defn bind-component
   [component app-cursor dom-cursor]
-  {:component component
-   :app-cursor app-cursor
-   :dom-cursor dom-cursor})
+  (register-app-cursor component app-cursor)
+  (register-render-watcher component app-cursor dom-cursor))
+
+;; ASYNC
+(defn http-get
+  [uri options]
+  (ajax/GET uri options))
+
+(defn http-post
+  [uri options]
+  (ajax/POST uri options))
+
+;; (defrecord Component
+;;   [ident
+;;    data-type
+;;    pre-render-fn
+;;    render-data-fn
+;;    post-render-fn]
+
+;;   Renderable
+;;   (pre-render [self]
+;;     (if-let [pre-render-fn (-> self :pre-render-fn)]
+;;       (pre-render-fn)))
+
+;;   (render-data [self data]
+;;     (if-let [render-data-fn (-> self :render-data-fn)]
+;;       (render-data-fn data)))
+
+;;   (post-render [self]
+;;     (if-let [post-render-fn (-> self :post-render-fn)]
+;;       (post-render-fn))))
+
+;; (defn molecule
+;;   [component app-cursor dom-cursor interactions]
+;;   {:component component
+;;    :app-cursor app-cursor
+;;    :dom-cursor dom-cursor
+;;    :interactions interactions})
 
 ;; COMPONENTS
 ;; (defrecord Component
@@ -83,13 +163,6 @@
 ;;    interactions]
 
 ;;   AntaresComponent
-;;   (initial-cursor [self]
-;;     (case (-> self :data-type)
-;;       :string  ""
-;;       :map     {}
-;;       :vector  []
-;;       :matrix  [[]]
-;;       :number  0))
 
 ;;   (initialize [self]
 ;;     (if (-> self :initialize-fn)
@@ -99,20 +172,6 @@
 ;;     (when-let [interactions (-> self :interactions)]
 ;;       (doseq [interaction interactions]
 ;;         (gcc-events/listen (.querySelector js/document dom-cursor) (-> interaction :event-type) (-> interaction :event-action)))))
-
-;;   (register-cursor [self]
-;;     (if (nil? (get-in @app-state (-> self :app-cursor)))
-;;       (cursor->value (-> self :app-cursor) (initial-cursor self))))
-
-;;   (register-watcher [self]
-;;     (add-watch
-;;      app-state
-;;      (-> self :ident)
-;;      (fn [key reference old-state new-state]
-;;        (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
-;;          (pre-render self)
-;;          (render self)
-;;          (post-render self)))))
 
 ;;   Renderable
 ;;   (pre-render [self data]
@@ -140,21 +199,6 @@
 
 ;; (defprotocol AntaresDataWatcher
 ;;   (register-data-watcher [self]))
-
-;; API METHODS
-(defn cursor->fn
-  [cursor update-fn]
-  (swap! app-state (fn [state]
-                     (update-in state cursor update-fn))))
-
-(defn cursor->value
-  [cursor new-value]
-  (swap! app-state (fn [app-value]
-                     (update-in app-value cursor (fn [old-value] new-value)))))
-
-(defn app-state->value
-  [value]
-  (reset! app-state value))
 
 ;; DATA WATCHERS
 ;; (defrecord DataWatcher
@@ -216,15 +260,6 @@
 ;;   (let [data-watcher (map->DataWatcher source-map)]
 ;;     (register-data-watcher data-watcher)
 ;;     data-watcher))
-
-;; ASYNC
-(defn http-get
-  [uri options]
-  (ajax/GET uri options))
-
-(defn http-post
-  [uri options]
-  (ajax/POST uri options))
 
 ;; DETECTIVE MODE
 #_(create-component

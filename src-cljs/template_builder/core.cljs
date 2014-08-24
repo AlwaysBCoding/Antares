@@ -7,31 +7,43 @@
 ;; CREATE is a macro for doing both of these...
 
 (def tab-list
-  (antares/build-component
+  (antares/component
    {:ident :tab-list
     :data-type :vector
     :render-data-fn (fn [data]
-                      [:div.ui.horizontal.list
+                      [:div.ui.horizontal.list.tab-list
                        (map (fn [tab]
                               [:div.item
                                [:div.content
-                                [:div.header (-> tab :display)]]]) data)])}))
+                                [:div.header (-> tab :display)]]]) data)])
+    :style-data [:div.tab-list
+                 [:div.item
+                  [:div.content
+                   [:div.header {:color "red"}]]]]}))
 
 (def template-editor
-  (antares/build-component
+  (antares/component
    {:ident :template-editor
     :data-type :map
+    :subcomponents [tab-list]
     :render-data-fn (fn [data]
                       [:div.template-editor
                        [:h1 "Template Editor"]
-                       (antares/render-data tab-list (-> data :tab-list))])}))
+                       (antares/render tab-list (-> data :tab-list))])
+    :style-data [:div.template-editor
+                 [:h1 {:color "blue"}]
+                 (antares/get-attr tab-list :style-data)]}))
 
-(->>
- (antares/render-data template-editor {:tab-list [{:display "HTML"}
-                                                  {:display "CSS"}
-                                                  {:display "TEST DATA"}]})
- (antares/compile-html!)
- (set! (.-innerHTML (.querySelector js/document "#test-area"))))
+(antares/bind-component template-editor [:template-editor] "#test-area")
+(antares/app-state->value {:template-editor {:tab-list [{:display "HTML"}
+                                                        {:display "CSS"}
+                                                        {:display "TEST DATA"}]}})
+;; (->>
+;;  (antares/render-data template-editor {:tab-list [{:display "HTML"}
+;;                                                   {:display "CSS"}
+;;                                                   {:display "TEST DATA"}]})
+;;  (antares/compile-html!)
+;;  (set! (.-innerHTML (.querySelector js/document "#test-area"))))
 
 ;; Interpolate Render FN with Data
 ;; Compile HTML Data to HTML String

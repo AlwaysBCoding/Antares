@@ -2,11 +2,11 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/template_builder/core.js",
  "sources":["core.cljs"],
- "lineCount":15,
+ "lineCount":16,
  "mappings":
- ";AAAA;;;;;;AAQA,AAAKA,iCACH,uCAAA,2CAAA,oDAAA,4DAAA,+DAAA,yDAAA,1TAACC,oYAGiB,iBAAA,AAAA,0FAAA,hGAAKC,wLAEF,AAACC,wBAAI,gBAAA,AAAA,0FAAA,4DAAA,mFAAA,mEAAA,mFAAA,pYAAKC,qcAGY,AAAA,wFAAIA;GAAkBF;;AAEnE,AAAKG,wCACH,uCAAA,2CAAA,oDAAA,2EAAA,+DAAA,mDAAA,nUAACJ,6YAGiB,iBAAA,AAAA,0FAAA,mFAAA,mFAAA,kDAAA,xTAAKC,kVAGF,AAACI,mCAAoBN,+BAAS,AAAA,0FAAIE;;2FAGxD,yEAAA,2CAAA,4DAAA,mFAAA,2CAAA,0DAAA,eAAA,2CAAA,0DAAA,cAAA,2CAAA,0DAAA,/kBAACI,mCAAoBD,7EAGrB,AAACE,jDACD,AAAM,AAAa,uBAAA,vBAAgBC",
+ ";AAAA;;;;;;AAQA,AAAKA,iCACH,iCAAA,2CAAA,oDAAA,4DAAA,+DAAA,yDAAA,pTAACC,8XAGiB,iBAAA,AAAA,0FAAA,hGAAKC,2MAEF,AAACC,wBAAI,gBAAA,AAAA,0FAAA,4DAAA,mFAAA,mEAAA,mFAAA,pYAAKC,qcAGY,AAAA,wFAAIA;GAAkBF;GARjE,gEAAA,mFAAA,sEAAA,mFAAA,4DAAA,mFAAA,mEAAA,mFAAA,iEAAA,2CAAA,uDAAA;AAcF,AAAKG,wCACH,iCAAA,2CAAA,oDAAA,2EAAA,+DAAA,mDAAA,wEAAA,0HAAA,/fAACJ,wdAGiBD,iHACA,iBAAA,AAAA,0FAAA,mFAAA,mFAAA,kDAAA,xTAAKE,kVAGF,AAACI,8BAAeN,+BAAS,AAAA,0FAAIE;GAPlD,gEAAA,mFAAA,mFAAA,mFAAA,kDAAA,2CAAA,uDAAA,uBAUe,+DAAA,/DAACK,gCAAiBP;AAEnC,4EAAA,mFAAA,mFAAA,lPAACQ,sCAAuBH;AACxB,2CAAA,2CAAA,2EAAA,2CAAA,4DAAA,mFAAA,2CAAA,0DAAA,eAAA,2CAAA,0DAAA,cAAA,2CAAA,0DAAA,vqBAACI",
  "names":
- ["template-builder.core/tab-list", "antares.core/build-component",
-  "data", "cljs.core/map", "tab",
-  "template-builder.core/template-editor", "antares.core/render-data",
-  "antares.core/compile-html!", "js/document"]}
+ ["template-builder.core/tab-list", "antares.core/component", "data",
+  "cljs.core/map", "tab", "template-builder.core/template-editor",
+  "antares.core/render", "antares.core/get-attr",
+  "antares.core/bind-component", "antares.core/app-state->value"]}
