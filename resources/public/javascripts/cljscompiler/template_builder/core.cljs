@@ -1,6 +1,7 @@
 (ns template-builder.core
   (:require [antares.core :as antares]
-            [antares.postrender :as postrender]))
+            [antares.postrender :as postrender]
+            [antares.interactions :as interactions]))
 
 (def tab-list
   (antares/component
@@ -11,10 +12,15 @@
                        (map (fn [tab]
                               [:div.item
                                [:div.content
-                                [:div.header (-> tab :display)]]]) data)])
+                                (if (= (-> tab :name) (-> data :active-tab))
+                                  [:div.header.active
+                                   {:data-name (-> tab :name)} (-> tab :display)]
+                                  [:div.header.inactive
+                                   {:data-name (-> tab :name)} (-> tab :display)])]]) (-> data :tabs))])
     :style-data [:div.tab-list
                  [:div.item
                   [:div.content
+                   [:div.header {:color "green"}]
                    [:div.header.active {:color "red"}]]]]}))
 
 (def code-editor
@@ -36,31 +42,31 @@
                        (antares/render tab-list (-> data :tab-list))
                        (antares/render code-editor (-> data :code-editor))])
     :style-data [:div.template-editor
-                 (antares/get-attr tab-list :style-data)]}))
+                 (antares/get-attr tab-list :style-data)
+                 (antares/get-attr code-editor :style-data)]}))
 
-(antares/component-binding
- {:ident :template-editor-binding
-  :component template-editor
-  :app-cursor [:template-editor]
-  :dom-cursor "#test-area"
-  :post-render-fn (fn [component-binding]
-                    (postrender/textarea->codemirror component-binding))})
+(def template-editor-binding
+  (antares/component-binding
+   {:ident :template-editor-binding
+    :component template-editor
+    :app-cursor [:template-editor]
+    :dom-cursor "#test-area"
+    :post-render-fn (fn [component-binding]
+                      (postrender/textarea->codemirror component-binding))}))
 
-(antares/app-state->value {:template-editor {:tab-list [{:display "HTML"}
-                                                        {:display "CSS"}
-                                                        {:display "TEST DATA"}]
+(antares/app-state->value {:template-editor {:tab-list {:tabs [{:name "html"
+                                                                :display "HTML"}
+                                                               {:name "css"
+                                                                :display "CSS"}
+                                                               {:name "test-data"
+                                                                :display "TEST DATA"}]
+                                                        :active-tab "html"}
                                              :code-editor "(+ 1 2 3)"}})
-;; (->>
-;;  (antares/render-data template-editor {:tab-list [{:display "HTML"}
-;;                                                   {:display "CSS"}
-;;                                                   {:display "TEST DATA"}]})
-;;  (antares/compile-html!)
-;;  (set! (.-innerHTML (.querySelector js/document "#test-area"))))
 
-;; Interpolate Render FN with Data
-;; Compile HTML Data to HTML String
-;; Append HTML Data to the DOM
-;; Add Event to Re-Render when the state changes
+
+(interactions/listen template-editor-binding "click" (fn [event]
+                                                       (if-let [name (interactions/get-data (.-target event) "name")]
+                                                         (antares/cursor->value [:template-editor :tab-list :active-tab] name))))
 
 ;; ;; INITIALIZE FUNCTIONS
 ;; (def load-html-fn

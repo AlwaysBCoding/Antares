@@ -2,13 +2,18 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/template_builder/core.js",
  "sources":["core.cljs"],
- "lineCount":19,
+ "lineCount":27,
  "mappings":
- "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",
+ "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",
  "names":
  ["template-builder.core/tab-list", "antares.core/component", "data",
-  "cljs.core/map", "tab", "template-builder.core/code-editor",
+  "cljs.core/map", "tab", "cljs.core/=",
+  "template-builder.core/code-editor",
   "template-builder.core/template-editor", "antares.core/render",
-  "antares.core/get-attr", "antares.core/component-binding",
-  "component-binding", "antares.postrender/textarea->codemirror",
-  "antares.core/app-state->value"]}
+  "antares.core/get-attr",
+  "template-builder.core/template-editor-binding",
+  "antares.core/component-binding", "component-binding",
+  "antares.postrender/textarea->codemirror",
+  "antares.core/app-state->value", "antares.interactions/listen",
+  "event", "temp__4124__auto__", "name",
+  "antares.interactions/get-data", "antares.core/cursor->value"]}

@@ -17,6 +17,7 @@ goog.addDependency("math/coordinate.js", ['goog.math.Coordinate'], ['goog.math']
 goog.addDependency("math/size.js", ['goog.math.Size'], []);
 goog.addDependency("dom/dom.js", ['goog.dom', 'goog.dom.Appendable', 'goog.dom.DomHelper'], ['goog.array', 'goog.asserts', 'goog.dom.BrowserFeature', 'goog.dom.NodeType', 'goog.dom.TagName', 'goog.functions', 'goog.math.Coordinate', 'goog.math.Size', 'goog.object', 'goog.string', 'goog.userAgent']);
 goog.addDependency("dom/classes.js", ['goog.dom.classes'], ['goog.array']);
+goog.addDependency("dom/dataset.js", ['goog.dom.dataset'], ['goog.string']);
 goog.addDependency("debug/entrypointregistry.js", ['goog.debug.EntryPointMonitor', 'goog.debug.entryPointRegistry'], ['goog.asserts']);
 goog.addDependency("events/browserfeature.js", ['goog.events.BrowserFeature'], ['goog.userAgent']);
 goog.addDependency("disposable/idisposable.js", ['goog.disposable.IDisposable'], []);
