@@ -67,7 +67,8 @@
 
 (defprotocol Bindable
   (register-app-cursor [self app-cursor])
-  (register-render-watcher [self app-cursor dom-cursor]))
+  (register-render-watcher [self app-cursor dom-cursor])
+  (register-styles [self]))
 
 ;; RECORDS
 (defrecord Component
@@ -101,8 +102,18 @@
       app-state
       (-> self :ident)
       (fn [key reference old-state new-state]
-        (when (not= (get-in old-state app-cursor) (get-in new-state app-cursor))          
-          (render-to-dom self (get-in new-state app-cursor) dom-cursor))))))
+        (when (not= (get-in old-state app-cursor) (get-in new-state app-cursor))
+          (render-to-dom self (get-in new-state app-cursor) dom-cursor)))))
+
+  (register-styles [self]
+    (let [head-node (.querySelector js/document "head")
+          style-node (gcc-dom/createElement "style")
+          text-node (->> (-> self :style-data)
+                         (compile-css!)
+                         (gcc-dom/createTextNode))]
+
+      (gcc-dom/appendChild style-node text-node)
+      (gcc-dom/appendChild head-node style-node))))
   
 (defn component
   [source-map]
@@ -112,7 +123,8 @@
 (defn bind-component
   [component app-cursor dom-cursor]
   (register-app-cursor component app-cursor)
-  (register-render-watcher component app-cursor dom-cursor))
+  (register-render-watcher component app-cursor dom-cursor)
+  (register-styles component))
 
 ;; ASYNC
 (defn http-get

@@ -35,6 +35,7 @@
                  (antares/get-attr tab-list :style-data)]}))
 
 (antares/bind-component template-editor [:template-editor] "#test-area")
+
 (antares/app-state->value {:template-editor {:tab-list [{:display "HTML"}
                                                         {:display "CSS"}
                                                         {:display "TEST DATA"}]}})

@@ -61,7 +61,7 @@ antares.core.compile_css_BANG_ = (function compile_css_BANG_(css_data){return ga
 });
 antares.core.compile_html_BANG_ = (function compile_html_BANG_(html_data){return (''+cljs.core.str.cljs$core$IFn$_invoke$arity$1(hiccups.runtime.render_html.call(null,html_data)));
 });
-antares.core.Queryable = (function (){var obj16330 = {};return obj16330;
+antares.core.Queryable = (function (){var obj16591 = {};return obj16591;
 })();
 antares.core.get_attr = (function get_attr(self,attr){if((function (){var and__3556__auto__ = self;if(and__3556__auto__)
 {return self.antares$core$Queryable$get_attr$arity$2;
@@ -83,7 +83,7 @@ antares.core.get_attr = (function get_attr(self,attr){if((function (){var and__3
 })().call(null,self,attr);
 }
 });
-antares.core.Renderable = (function (){var obj16332 = {};return obj16332;
+antares.core.Renderable = (function (){var obj16593 = {};return obj16593;
 })();
 antares.core.render = (function render(self,data){if((function (){var and__3556__auto__ = self;if(and__3556__auto__)
 {return self.antares$core$Renderable$render$arity$2;
@@ -125,7 +125,7 @@ antares.core.render_to_dom = (function render_to_dom(self,data,dom_cursor){if((f
 })().call(null,self,data,dom_cursor);
 }
 });
-antares.core.Bindable = (function (){var obj16334 = {};return obj16334;
+antares.core.Bindable = (function (){var obj16595 = {};return obj16595;
 })();
 antares.core.register_app_cursor = (function register_app_cursor(self,app_cursor){if((function (){var and__3556__auto__ = self;if(and__3556__auto__)
 {return self.antares$core$Bindable$register_app_cursor$arity$2;
@@ -165,6 +165,26 @@ antares.core.register_render_watcher = (function register_render_watcher(self,ap
 }
 }
 })().call(null,self,app_cursor,dom_cursor);
+}
+});
+antares.core.register_styles = (function register_styles(self){if((function (){var and__3556__auto__ = self;if(and__3556__auto__)
+{return self.antares$core$Bindable$register_styles$arity$1;
+} else
+{return and__3556__auto__;
+}
+})())
+{return self.antares$core$Bindable$register_styles$arity$1(self);
+} else
+{var x__4195__auto__ = (((self == null))?null:self);return (function (){var or__3568__auto__ = (antares.core.register_styles[goog.typeOf(x__4195__auto__)]);if(or__3568__auto__)
+{return or__3568__auto__;
+} else
+{var or__3568__auto____$1 = (antares.core.register_styles["_"]);if(or__3568__auto____$1)
+{return or__3568__auto____$1;
+} else
+{throw cljs.core.missing_protocol.call(null,"Bindable.register-styles",self);
+}
+}
+})().call(null,self);
 }
 });
 
@@ -216,11 +236,15 @@ return (function (key,reference,old_state,new_state){if(cljs.core.not_EQ_.call(n
 });})(self__$1))
 );
 });
+antares.core.Component.prototype.antares$core$Bindable$register_styles$arity$1 = (function (self){var self__ = this;
+var self__$1 = this;var head_node = document.querySelector("head");var style_node = goog.dom.createElement("style");var text_node = goog.dom.createTextNode(antares.core.compile_css_BANG_.call(null,new cljs.core.Keyword(null,"style-data","style-data",383253160).cljs$core$IFn$_invoke$arity$1(self__$1)));goog.dom.appendChild(style_node,text_node);
+return goog.dom.appendChild(head_node,style_node);
+});
 antares.core.Component.prototype.cljs$core$ILookup$_lookup$arity$2 = (function (this__4154__auto__,k__4155__auto__){var self__ = this;
 var this__4154__auto____$1 = this;return cljs.core._lookup.call(null,this__4154__auto____$1,k__4155__auto__,null);
 });
-antares.core.Component.prototype.cljs$core$ILookup$_lookup$arity$3 = (function (this__4156__auto__,k16336,else__4157__auto__){var self__ = this;
-var this__4156__auto____$1 = this;var G__16338 = (((k16336 instanceof cljs.core.Keyword))?k16336.fqn:null);switch (G__16338) {
+antares.core.Component.prototype.cljs$core$ILookup$_lookup$arity$3 = (function (this__4156__auto__,k16597,else__4157__auto__){var self__ = this;
+var this__4156__auto____$1 = this;var G__16599 = (((k16597 instanceof cljs.core.Keyword))?k16597.fqn:null);switch (G__16599) {
 case "render-data-fn":
 return self__.render_data_fn;
 
@@ -242,7 +266,7 @@ return self__.ident;
 
 break;
 default:
-return cljs.core.get.call(null,self__.__extmap,k16336,else__4157__auto__);
+return cljs.core.get.call(null,self__.__extmap,k16597,else__4157__auto__);
 
 }
 });
@@ -288,23 +312,23 @@ var this__4163__auto____$1 = this;if(cljs.core.contains_QMARK_.call(null,new clj
 {return (new antares.core.Component(self__.ident,self__.data_type,self__.subcomponents,self__.style_data,self__.render_data_fn,self__.__meta,cljs.core.not_empty.call(null,cljs.core.dissoc.call(null,self__.__extmap,k__4164__auto__)),null));
 }
 });
-antares.core.Component.prototype.cljs$core$IAssociative$_assoc$arity$3 = (function (this__4161__auto__,k__4162__auto__,G__16335){var self__ = this;
-var this__4161__auto____$1 = this;var pred__16339 = cljs.core.keyword_identical_QMARK_;var expr__16340 = k__4162__auto__;if(cljs.core.truth_(pred__16339.call(null,new cljs.core.Keyword(null,"ident","ident",-742346),expr__16340)))
-{return (new antares.core.Component(G__16335,self__.data_type,self__.subcomponents,self__.style_data,self__.render_data_fn,self__.__meta,self__.__extmap,null));
+antares.core.Component.prototype.cljs$core$IAssociative$_assoc$arity$3 = (function (this__4161__auto__,k__4162__auto__,G__16596){var self__ = this;
+var this__4161__auto____$1 = this;var pred__16600 = cljs.core.keyword_identical_QMARK_;var expr__16601 = k__4162__auto__;if(cljs.core.truth_(pred__16600.call(null,new cljs.core.Keyword(null,"ident","ident",-742346),expr__16601)))
+{return (new antares.core.Component(G__16596,self__.data_type,self__.subcomponents,self__.style_data,self__.render_data_fn,self__.__meta,self__.__extmap,null));
 } else
-{if(cljs.core.truth_(pred__16339.call(null,new cljs.core.Keyword(null,"data-type","data-type",-326421468),expr__16340)))
-{return (new antares.core.Component(self__.ident,G__16335,self__.subcomponents,self__.style_data,self__.render_data_fn,self__.__meta,self__.__extmap,null));
+{if(cljs.core.truth_(pred__16600.call(null,new cljs.core.Keyword(null,"data-type","data-type",-326421468),expr__16601)))
+{return (new antares.core.Component(self__.ident,G__16596,self__.subcomponents,self__.style_data,self__.render_data_fn,self__.__meta,self__.__extmap,null));
 } else
-{if(cljs.core.truth_(pred__16339.call(null,new cljs.core.Keyword(null,"subcomponents","subcomponents",-1115692349),expr__16340)))
-{return (new antares.core.Component(self__.ident,self__.data_type,G__16335,self__.style_data,self__.render_data_fn,self__.__meta,self__.__extmap,null));
+{if(cljs.core.truth_(pred__16600.call(null,new cljs.core.Keyword(null,"subcomponents","subcomponents",-1115692349),expr__16601)))
+{return (new antares.core.Component(self__.ident,self__.data_type,G__16596,self__.style_data,self__.render_data_fn,self__.__meta,self__.__extmap,null));
 } else
-{if(cljs.core.truth_(pred__16339.call(null,new cljs.core.Keyword(null,"style-data","style-data",383253160),expr__16340)))
-{return (new antares.core.Component(self__.ident,self__.data_type,self__.subcomponents,G__16335,self__.render_data_fn,self__.__meta,self__.__extmap,null));
+{if(cljs.core.truth_(pred__16600.call(null,new cljs.core.Keyword(null,"style-data","style-data",383253160),expr__16601)))
+{return (new antares.core.Component(self__.ident,self__.data_type,self__.subcomponents,G__16596,self__.render_data_fn,self__.__meta,self__.__extmap,null));
 } else
-{if(cljs.core.truth_(pred__16339.call(null,new cljs.core.Keyword(null,"render-data-fn","render-data-fn",-1862520485),expr__16340)))
-{return (new antares.core.Component(self__.ident,self__.data_type,self__.subcomponents,self__.style_data,G__16335,self__.__meta,self__.__extmap,null));
+{if(cljs.core.truth_(pred__16600.call(null,new cljs.core.Keyword(null,"render-data-fn","render-data-fn",-1862520485),expr__16601)))
+{return (new antares.core.Component(self__.ident,self__.data_type,self__.subcomponents,self__.style_data,G__16596,self__.__meta,self__.__extmap,null));
 } else
-{return (new antares.core.Component(self__.ident,self__.data_type,self__.subcomponents,self__.style_data,self__.render_data_fn,self__.__meta,cljs.core.assoc.call(null,self__.__extmap,k__4162__auto__,G__16335),null));
+{return (new antares.core.Component(self__.ident,self__.data_type,self__.subcomponents,self__.style_data,self__.render_data_fn,self__.__meta,cljs.core.assoc.call(null,self__.__extmap,k__4162__auto__,G__16596),null));
 }
 }
 }
@@ -318,8 +342,8 @@ antares.core.Component.prototype.antares$core$Queryable$ = true;
 antares.core.Component.prototype.antares$core$Queryable$get_attr$arity$2 = (function (self,attr){var self__ = this;
 var self__$1 = this;return attr.call(null,self__$1);
 });
-antares.core.Component.prototype.cljs$core$IWithMeta$_with_meta$arity$2 = (function (this__4153__auto__,G__16335){var self__ = this;
-var this__4153__auto____$1 = this;return (new antares.core.Component(self__.ident,self__.data_type,self__.subcomponents,self__.style_data,self__.render_data_fn,G__16335,self__.__extmap,self__.__hash));
+antares.core.Component.prototype.cljs$core$IWithMeta$_with_meta$arity$2 = (function (this__4153__auto__,G__16596){var self__ = this;
+var this__4153__auto____$1 = this;return (new antares.core.Component(self__.ident,self__.data_type,self__.subcomponents,self__.style_data,self__.render_data_fn,G__16596,self__.__extmap,self__.__hash));
 });
 antares.core.Component.prototype.cljs$core$ICollection$_conj$arity$2 = (function (this__4159__auto__,entry__4160__auto__){var self__ = this;
 var this__4159__auto____$1 = this;if(cljs.core.vector_QMARK_.call(null,entry__4160__auto__))
@@ -346,12 +370,13 @@ antares.core.Component.cljs$lang$ctorPrWriter = (function (this__4188__auto__,wr
 });
 antares.core.__GT_Component = (function __GT_Component(ident,data_type,subcomponents,style_data,render_data_fn){return (new antares.core.Component(ident,data_type,subcomponents,style_data,render_data_fn));
 });
-antares.core.map__GT_Component = (function map__GT_Component(G__16337){return (new antares.core.Component(new cljs.core.Keyword(null,"ident","ident",-742346).cljs$core$IFn$_invoke$arity$1(G__16337),new cljs.core.Keyword(null,"data-type","data-type",-326421468).cljs$core$IFn$_invoke$arity$1(G__16337),new cljs.core.Keyword(null,"subcomponents","subcomponents",-1115692349).cljs$core$IFn$_invoke$arity$1(G__16337),new cljs.core.Keyword(null,"style-data","style-data",383253160).cljs$core$IFn$_invoke$arity$1(G__16337),new cljs.core.Keyword(null,"render-data-fn","render-data-fn",-1862520485).cljs$core$IFn$_invoke$arity$1(G__16337),null,cljs.core.dissoc.call(null,G__16337,new cljs.core.Keyword(null,"ident","ident",-742346),new cljs.core.Keyword(null,"data-type","data-type",-326421468),new cljs.core.Keyword(null,"subcomponents","subcomponents",-1115692349),new cljs.core.Keyword(null,"style-data","style-data",383253160),new cljs.core.Keyword(null,"render-data-fn","render-data-fn",-1862520485))));
+antares.core.map__GT_Component = (function map__GT_Component(G__16598){return (new antares.core.Component(new cljs.core.Keyword(null,"ident","ident",-742346).cljs$core$IFn$_invoke$arity$1(G__16598),new cljs.core.Keyword(null,"data-type","data-type",-326421468).cljs$core$IFn$_invoke$arity$1(G__16598),new cljs.core.Keyword(null,"subcomponents","subcomponents",-1115692349).cljs$core$IFn$_invoke$arity$1(G__16598),new cljs.core.Keyword(null,"style-data","style-data",383253160).cljs$core$IFn$_invoke$arity$1(G__16598),new cljs.core.Keyword(null,"render-data-fn","render-data-fn",-1862520485).cljs$core$IFn$_invoke$arity$1(G__16598),null,cljs.core.dissoc.call(null,G__16598,new cljs.core.Keyword(null,"ident","ident",-742346),new cljs.core.Keyword(null,"data-type","data-type",-326421468),new cljs.core.Keyword(null,"subcomponents","subcomponents",-1115692349),new cljs.core.Keyword(null,"style-data","style-data",383253160),new cljs.core.Keyword(null,"render-data-fn","render-data-fn",-1862520485))));
 });
 antares.core.component = (function component(source_map){var component__$1 = antares.core.map__GT_Component.call(null,source_map);return component__$1;
 });
 antares.core.bind_component = (function bind_component(component,app_cursor,dom_cursor){antares.core.register_app_cursor.call(null,component,app_cursor);
-return antares.core.register_render_watcher.call(null,component,app_cursor,dom_cursor);
+antares.core.register_render_watcher.call(null,component,app_cursor,dom_cursor);
+return antares.core.register_styles.call(null,component);
 });
 antares.core.http_get = (function http_get(uri,options){return ajax.core.GET.call(null,uri,options);
 });
