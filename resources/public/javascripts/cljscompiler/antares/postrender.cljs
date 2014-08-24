@@ -5,18 +5,14 @@
 ;; Takes a cursor + a dom-cursor that must be a textarea
 ;; Takes an optional map of codemirror options
 (defn textarea->codemirror
-  ([app-cursor dom-cursor]
-     (textarea->codemirror app-cursor dom-cursor {"theme" "solarized light"
-                                                  "mode" "clojure"
-                                                  "matchBrackets" true
-                                                  "lineNumbers" true}))
-  ([app-cursor dom-cursor options]
-     (fn []
-       (let [codemirror (.fromTextArea js/CodeMirror (.querySelector js/document dom-cursor) {})]
-         (doseq [[option-key option-value] options]
-           (.setOption codemirror option-key option-value))
-         (.on codemirror "blur" (fn [self event]
-                                  (antares/update-cursor
-                                   app-cursor
-                                   (fn [old-value] (.getValue self)))))))))
-
+  ([component-binding]
+     (textarea->codemirror component-binding {"theme" "solarized light"
+                                              "mode" "clojure"
+                                              "matchBrackets" true
+                                              "lineNumbers" true}))
+  ([component-binding options]
+     (let [codemirror (.fromTextArea js/CodeMirror (.querySelector js/document (str (-> component-binding :dom-cursor) " .code-editor textarea")) {})]
+       (doseq [[option-key option-value] options]
+         (.setOption codemirror option-key option-value))
+       (.on codemirror "blur" (fn [self event]
+                                (antares/cursor->value (-> component-binding :app-cursor) (.getValue self)))))))

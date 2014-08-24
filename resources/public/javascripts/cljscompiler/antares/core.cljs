@@ -66,9 +66,10 @@
   (render-to-dom [self data dom-cursor]))
 
 (defprotocol Bindable
-  (register-app-cursor [self app-cursor])
-  (register-render-watcher [self app-cursor dom-cursor])
-  (register-styles [self]))
+  (register-app-cursor [self])
+  (register-render-watcher [self])
+  (register-styles [self])
+  (post-render [self]))
 
 ;; RECORDS
 (defrecord Component
@@ -90,20 +91,37 @@
   (render-to-dom [self data dom-cursor]
     (->> (render self data)
          (compile-html!)
-         (set! (.-innerHTML (.querySelector js/document dom-cursor)))))
+         (set! (.-innerHTML (.querySelector js/document dom-cursor))))))
+  
+(defn component
+  [source-map]
+  (let [component (map->Component source-map)]
+    component))
+
+(defrecord ComponentBinding
+  [ident
+   component
+   app-cursor
+   dom-cursor
+   post-render-fn]
 
   Bindable
-  (register-app-cursor [self app-cursor]
-    (when (nil? (get-in @app-state app-cursor))
-      (cursor->value app-cursor (keyword->data-structure (-> self :data-type)))))
+  (post-render [self]
+    (if-let [post-render-fn (-> self :post-render-fn)]
+      (post-render-fn self)))
+  
+  (register-app-cursor [self]
+    (when (nil? (get-in @app-state (-> self :app-cursor)))
+      (cursor->value (-> self :app-cursor) (keyword->data-structure (-> self :component (get-attr :data-type))))))
 
-  (register-render-watcher [self app-cursor dom-cursor]
+  (register-render-watcher [self]
     (add-watch
       app-state
       (-> self :ident)
       (fn [key reference old-state new-state]
-        (when (not= (get-in old-state app-cursor) (get-in new-state app-cursor))
-          (render-to-dom self (get-in new-state app-cursor) dom-cursor)))))
+        (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
+          (render-to-dom (-> self :component) (get-in new-state (-> self :app-cursor)) (-> self :dom-cursor))
+          (post-render self)))))
 
   (register-styles [self]
     (let [head-node (.querySelector js/document "head")
@@ -114,17 +132,14 @@
 
       (gcc-dom/appendChild style-node text-node)
       (gcc-dom/appendChild head-node style-node))))
-  
-(defn component
-  [source-map]
-  (let [component (map->Component source-map)]
-    component))
 
 (defn bind-component
-  [component app-cursor dom-cursor]
-  (register-app-cursor component app-cursor)
-  (register-render-watcher component app-cursor dom-cursor)
-  (register-styles component))
+  [source-map]
+  (let [component-binding (map->ComponentBinding source-map)]
+    (register-app-cursor component-binding)
+    (register-render-watcher component-binding)
+    (register-styles component-binding)
+    #_(initialize-binding component-binding)))
 
 ;; ASYNC
 (defn http-get

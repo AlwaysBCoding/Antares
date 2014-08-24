@@ -2,10 +2,6 @@
   (:require [antares.core :as antares]
             [antares.postrender :as postrender]))
 
-;; BUILD COMPONENT
-;; BIND COMPONENT
-;; CREATE is a macro for doing both of these...
-
 (def tab-list
   (antares/component
    {:ident :tab-list
@@ -19,26 +15,41 @@
     :style-data [:div.tab-list
                  [:div.item
                   [:div.content
-                   [:div.header {:color "red"}]]]]}))
+                   [:div.header.active {:color "red"}]]]]}))
+
+(def code-editor
+  (antares/component
+   {:ident :code-editor
+    :data-type :string
+    :render-data-fn (fn [data]
+                      [:div.code-editor
+                       [:textarea data]])}))
 
 (def template-editor
   (antares/component
    {:ident :template-editor
     :data-type :map
-    :subcomponents [tab-list]
+    :subcomponents [tab-list code-editor]
     :render-data-fn (fn [data]
                       [:div.template-editor
                        [:h1 "Template Editor"]
-                       (antares/render tab-list (-> data :tab-list))])
+                       (antares/render tab-list (-> data :tab-list))
+                       (antares/render code-editor (-> data :code-editor))])
     :style-data [:div.template-editor
-                 [:h1 {:color "blue"}]
                  (antares/get-attr tab-list :style-data)]}))
 
-(antares/bind-component template-editor [:template-editor] "#test-area")
+(antares/bind-component
+ {:ident :template-editor-binding
+  :component template-editor
+  :app-cursor [:template-editor]
+  :dom-cursor "#test-area"
+  :post-render-fn (fn [component-binding]
+                    (postrender/textarea->codemirror component-binding))})
 
 (antares/app-state->value {:template-editor {:tab-list [{:display "HTML"}
                                                         {:display "CSS"}
-                                                        {:display "TEST DATA"}]}})
+                                                        {:display "TEST DATA"}]
+                                             :code-editor "(+ 1 2 3)"}})
 ;; (->>
 ;;  (antares/render-data template-editor {:tab-list [{:display "HTML"}
 ;;                                                   {:display "CSS"}
@@ -104,47 +115,6 @@
 ;;                                    :css-data css-data
 ;;                                    :test-data test-data}
 ;;                           :handler (fn [response] (.log js/console response))}))))
-
-;; ;; COMPONENTS
-
-;; ;; Tab List
-;; (def tab-list
-;;   (antares/create-component-template
-;;    {:ident :tab-list
-;;     :data-type :vector
-;;     :render-fn (fn [data]
-;;                  [:div.ui.horizontal.list
-;;                   (map (fn [tab]
-;;                          [:div.item
-;;                           [:div.content
-;;                            [:div.header (-> tab :display)]]]) data)])}))
-
-;; ;; Template Data Editor
-;; #_(antares/create-component
-;;  {:ident :template-data-editor
-;;   :data-type :map
-;;   :app-cursor [:template-data-editor]
-;;   :dom-cursor "#template-data-editor"
-;;   :initialize-fn (fn [] {:tabs [{:display "HTML"}
-;;                                {:display "CSS"}
-;;                                {:display "TEST DATA"}]
-;;                         :active-tab {}})
-;;   :render-fn (-> tab-list :render-fn)})
-
-
-;; #_(antares/create-component {:ident :template-data-editor
-;;                            :data-type :map
-;;                            :app-cursor [:template-data-editor]
-;;                            :dom-cursor "#template-data-editor"
-;;                            :initialize-fn (fn [] {:tabs [{:display "HTML"}
-;;                                                         {:display "CSS"}
-;;                                                         {:display "TEST DATA"}]
-;;                                                  :active-tab {}})
-;;                            :render-fn (fn [data] [:div.ui.horizontal.list
-;;                                                  (map (fn [tab]
-;;                                                         [:div.item
-;;                                                          [:div.content
-;;                                                           [:div.header (-> tab :display)]]]) (-> data :tabs))])})
 
 ;; ;; HTML FN
 ;; (antares/create-component
