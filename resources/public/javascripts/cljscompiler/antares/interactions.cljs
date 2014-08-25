@@ -18,7 +18,8 @@
   (gcc-events/listen
    (.querySelector js/document (antares/get-attr component-binding :dom-cursor))
    event-type
-   handler))
+   handler
+   true))
 
 (defn get-data
   [element attr]

@@ -69,7 +69,11 @@
   (register-app-cursor [self])
   (register-render-watcher [self])
   (register-styles [self])
+  (initialize [self])
   (post-render [self]))
+
+(defprotocol Watchable
+  (register-watcher [self]))
 
 ;; RECORDS
 (defrecord Component
@@ -103,13 +107,18 @@
    component
    app-cursor
    dom-cursor
-   post-render-fn]
+   post-render-fn
+   initialize]
 
   Queryable
   (get-attr [self attr]
     (-> self attr))
 
   Bindable
+  (initialize [self]
+    (if-let [initialize-fn (-> self :initialize-fn)]
+      (initialize-fn)))
+  
   (post-render [self]
     (if-let [post-render-fn (-> self :post-render-fn)]
       (post-render-fn self)))
@@ -120,12 +129,13 @@
 
   (register-render-watcher [self]
     (add-watch
-      app-state
-      (-> self :ident)
-      (fn [key reference old-state new-state]
-        (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
-          (render-to-dom (-> self :component) (get-in new-state (-> self :app-cursor)) (-> self :dom-cursor))
-          (post-render self)))))
+     app-state
+     (-> self :ident)
+     (fn [key reference old-state new-state]
+       (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
+         (render-to-dom (-> self :component) (get-in new-state (-> self :app-cursor)) (-> self :dom-cursor))
+         (post-render self))))
+    (swap! registered-components conj self))
 
   (register-styles [self]
     (let [head-node (.querySelector js/document "head")
@@ -143,7 +153,30 @@
     (register-app-cursor component-binding)
     (register-render-watcher component-binding)
     (register-styles component-binding)
+    (initialize component-binding)
     component-binding))
+
+;; WATCHERS
+(defrecord DataWatcher
+  [ident
+   app-cursor
+   watch-fn]
+
+  Watchable
+  (register-watcher [self]
+    (add-watch
+     app-state
+     (-> self :ident)
+     (fn [key reference old-state new-state]
+       (when (not= (get-in old-state (-> self :app-cursor)) (get-in new-state (-> self :app-cursor)))
+         ((-> self :watch-fn) (get-in new-state (-> self :app-cursor))))))
+    (swap! registered-data-watchers conj self)))
+
+(defn data-watcher
+  [source-map]
+  (let [data-watcher (map->DataWatcher source-map)]
+    (register-watcher data-watcher)
+    data-watcher))
 
 ;; ASYNC
 (defn http-get
@@ -155,30 +188,20 @@
   (ajax/POST uri options))
 
 ;; DETECTIVE MODE
-(component-binding
- {:ident :app-state-inspector-binding
-  :app-cursor []
-  :dom-cursor ".antares#app-state"
-  :component (component
-              {:ident :app-state-inspector
-               :data-type :map
-               :style-data [:div.antares#app-state
-                            [:textarea {:width "100%"
-                                        :height "80px"
-                                        :font-size ".8rem"}]]
-               :render-data-fn (fn [data]
-                                 [:textarea (pr-str data)])})})
-
-;; (create-component
-;;  {:ident :app-state-inspector
-;;   :data-type :map
-;;   :app-cursor []
-;;   :dom-cursor ".antares.app-state"
-;;   :render-fn (fn [data]
-;;                [:textarea.antares.app-state-inspector (pr-str data)])
-;;   :interactions [{:event-type "blur"
-;;                   :event-action (fn [event]
-;;                                   (app-state->value (-> event .-target .-value read-string)))}]})
+(def app-state-inspector-binding
+  (component-binding
+   {:ident :app-state-inspector-binding
+    :app-cursor []
+    :dom-cursor ".antares#app-state"
+    :component (component
+                {:ident :app-state-inspector
+                 :data-type :map
+                 :style-data [:div.antares#app-state
+                              [:textarea {:width "100%"
+                                          :height "80px"
+                                          :font-size ".8rem"}]]
+                 :render-data-fn (fn [data]
+                                   [:textarea (pr-str data)])})}))
 
 ;;   AntaresDataWatcher
 ;;   (register-data-watcher [self]

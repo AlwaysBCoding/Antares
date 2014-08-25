@@ -15,7 +15,7 @@ antares.interactions.add_class = (function add_class(element,class$){return goog
 });
 antares.interactions.remove_class = (function remove_class(element,class$){return goog.dom.classes.remove(element,class$);
 });
-antares.interactions.listen = (function listen(component_binding,event_type,handler){return goog.events.listen(document.querySelector(antares.core.get_attr.call(null,component_binding,new cljs.core.Keyword(null,"dom-cursor","dom-cursor",-1375555677))),event_type,handler);
+antares.interactions.listen = (function listen(component_binding,event_type,handler){return goog.events.listen(document.querySelector(antares.core.get_attr.call(null,component_binding,new cljs.core.Keyword(null,"dom-cursor","dom-cursor",-1375555677))),event_type,handler,true);
 });
 antares.interactions.get_data = (function get_data(element,attr){return goog.dom.dataset.get(element,attr);
 });

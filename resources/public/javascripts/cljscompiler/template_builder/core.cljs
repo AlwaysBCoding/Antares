@@ -18,6 +18,7 @@
                                   [:div.header.inactive
                                    {:data-name (-> tab :name)} (-> tab :display)])]]) (-> data :tabs))])
     :style-data [:div.tab-list
+                 {:cursor "pointer"}
                  [:div.item
                   [:div.content
                    [:div.header {:color "green"}]
@@ -51,45 +52,61 @@
     :component template-editor
     :app-cursor [:template-editor]
     :dom-cursor "#test-area"
+    :initialize-fn (fn []
+                     (antares/cursor->value [:template-editor] {:tab-list {:tabs [{:name "html" :display "HTML"}
+                                                                                  {:name "css" :display "CSS"}
+                                                                                  {:name "test-data" :display "TEST DATA"}]
+                                                                           :active-tab ""}
+                                                                :code-editor ""}))
     :post-render-fn (fn [component-binding]
                       (postrender/textarea->codemirror component-binding))}))
 
-(antares/app-state->value {:template-editor {:tab-list {:tabs [{:name "html"
-                                                                :display "HTML"}
-                                                               {:name "css"
-                                                                :display "CSS"}
-                                                               {:name "test-data"
-                                                                :display "TEST DATA"}]
-                                                        :active-tab "html"}
-                                             :code-editor "(+ 1 2 3)"}})
-
+;; EVENT HANDLING
+(interactions/listen antares/app-state-inspector-binding "blur" (fn [event]
+                                                                  (antares/app-state->value (-> event .-target .-value antares/read-string))))
 
 (interactions/listen template-editor-binding "click" (fn [event]
                                                        (if-let [name (interactions/get-data (.-target event) "name")]
                                                          (antares/cursor->value [:template-editor :tab-list :active-tab] name))))
 
-;; ;; INITIALIZE FUNCTIONS
-;; (def load-html-fn
-;;   (fn []
-;;     (let [template-id 17592186045418]
-;;       (antares/http-get (str "http://localhost:8989/template/" template-id)
-;;                         {:handler (fn [response]
-;;                                     (antares/cursor->value [:html-fn] (-> response antares/read-string :html-fn)))})
-;;       "Loading...")))
+;; ;; DATA WATCHERS
+;; (antares/data-watcher
+;;  {:ident :activate-template-editor-tab
+;;   :app-cursor [:template-editor :tab-list :active-tab]
+;;   :watch-fn (fn [value]
+;;               (let [new-value (cond
+;;                                (= value "html") (get-in @antares/app-state [:html-fn])
+;;                                (= value "css") (get-in @antares/app-state [:css-data])
+;;                                (= value "test-data") (get-in @antares/app-state [:test-data]))]
+;;                 (antares/cursor->value [:template-editor :code-editor] new-value)))})
 
-;; (def load-css-data
-;;   (fn []
-;;     (let [template-id 17592186045418]
-;;       (antares/http-get (str "http://localhost:8989/template/" template-id)
-;;                         {:handler (fn [response] (antares/cursor->value [:css-data] (-> response antares/read-string :css-data)))})
-;;       "Loading...")))
+;; (antares/http-get "http://localhost:8989/template/17592186045418"
+;;                   {:handler (fn [response]
+;;                               (antares/cursor->value [:html-fn] (-> response antares/read-string :html-fn))
+;;                               (antares/cursor->value [:css-data] (-> response antares/read-string :css-data))
+;;                               (antares/cursor->value [:test-data] (-> response antares/read-string :test-data))
+;;                               (antares/cursor->value [:template-editor :tab-list :active-tab] "html"))})
 
-;; (def load-test-data
-;;   (fn []
-;;     (let [template-id 17592186045418]
-;;       (antares/http-get (str "http://localhost:8989/template/" template-id)
-;;                         {:handler (fn [response] (antares/cursor->value [:test-data] (-> response antares/read-string :test-data)))})
-;;       "Loading...")))
+;; ;; DATA INITIALIZATION
+;; (antares/app-state->value {:template-editor {:tab-list {:tabs [{:name "html"
+;;                                                                 :display "HTML"}
+;;                                                                {:name "css"
+;;                                                                 :display "CSS"}
+;;                                                                {:name "test-data"
+;;                                                                 :display "TEST DATA"}]
+;;                                                         :active-tab ""}
+;;                                              :code-editor ""}
+;;                            :html-fn "Loading..."
+;;                            :css-data "Loading..."
+;;                            :test-data "Loading..."})
+
+
+;; Five Factors
+;; 1/ Rendering (down)
+;; 2/ Event Handling (up)
+;; 3/ Data Watching (horizontal)
+;; 4/ Loading Data (3d)
+;; 5/ Action Layer (3d)
 
 ;; ;; DATA WATCH FUNCTIONS
 ;; (def compile-template!
