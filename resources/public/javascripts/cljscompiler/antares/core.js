@@ -26,7 +26,7 @@ antares.core.string__GT_data = (function string__GT_data(string){return cljs.rea
 antares.core.app_state = cljs.core.atom.call(null,cljs.core.PersistentArrayMap.EMPTY);
 antares.core.registered_components = cljs.core.atom.call(null,cljs.core.PersistentVector.EMPTY);
 antares.core.mounted_components = cljs.core.atom.call(null,cljs.core.PersistentVector.EMPTY);
-antares.core.LifeCycle = (function (){var obj10961 = {};return obj10961;
+antares.core.LifeCycle = (function (){var obj11081 = {};return obj11081;
 })();
 antares.core.initialize_state = (function initialize_state(self,app_cursor){if((function (){var and__3541__auto__ = self;if(and__3541__auto__)
 {return self.antares$core$LifeCycle$initialize_state$arity$2;
@@ -68,13 +68,13 @@ antares.core.component_will_mount = (function component_will_mount(self){if((fun
 })().call(null,self);
 }
 });
-antares.core.component_did_mount = (function component_did_mount(self){if((function (){var and__3541__auto__ = self;if(and__3541__auto__)
-{return self.antares$core$LifeCycle$component_did_mount$arity$1;
+antares.core.component_did_mount = (function component_did_mount(self,app_cursor,dom_cursor){if((function (){var and__3541__auto__ = self;if(and__3541__auto__)
+{return self.antares$core$LifeCycle$component_did_mount$arity$3;
 } else
 {return and__3541__auto__;
 }
 })())
-{return self.antares$core$LifeCycle$component_did_mount$arity$1(self);
+{return self.antares$core$LifeCycle$component_did_mount$arity$3(self,app_cursor,dom_cursor);
 } else
 {var x__4180__auto__ = (((self == null))?null:self);return (function (){var or__3553__auto__ = (antares.core.component_did_mount[goog.typeOf(x__4180__auto__)]);if(or__3553__auto__)
 {return or__3553__auto__;
@@ -85,7 +85,7 @@ antares.core.component_did_mount = (function component_did_mount(self){if((funct
 {throw cljs.core.missing_protocol.call(null,"LifeCycle.component-did-mount",self);
 }
 }
-})().call(null,self);
+})().call(null,self,app_cursor,dom_cursor);
 }
 });
 antares.core.component_will_update = (function component_will_update(self){if((function (){var and__3541__auto__ = self;if(and__3541__auto__)
@@ -148,7 +148,7 @@ antares.core.component_will_unmount = (function component_will_unmount(self){if(
 })().call(null,self);
 }
 });
-antares.core.Registerable = (function (){var obj10963 = {};return obj10963;
+antares.core.Registerable = (function (){var obj11083 = {};return obj11083;
 })();
 antares.core.register_component = (function register_component(self){if((function (){var and__3541__auto__ = self;if(and__3541__auto__)
 {return self.antares$core$Registerable$register_component$arity$1;
@@ -170,7 +170,7 @@ antares.core.register_component = (function register_component(self){if((functio
 })().call(null,self);
 }
 });
-antares.core.Renderable = (function (){var obj10965 = {};return obj10965;
+antares.core.Renderable = (function (){var obj11085 = {};return obj11085;
 })();
 antares.core.render_html = (function render_html(self,data){if((function (){var and__3541__auto__ = self;if(and__3541__auto__)
 {return self.antares$core$Renderable$render_html$arity$2;
@@ -212,7 +212,7 @@ antares.core.render_css = (function render_css(self){if((function (){var and__35
 })().call(null,self);
 }
 });
-antares.core.Mountable = (function (){var obj10967 = {};return obj10967;
+antares.core.Mountable = (function (){var obj11087 = {};return obj11087;
 })();
 antares.core.mount_component = (function mount_component(self,component_data,dom_cursor){if((function (){var and__3541__auto__ = self;if(and__3541__auto__)
 {return self.antares$core$Mountable$mount_component$arity$3;
@@ -284,8 +284,8 @@ this.__extmap=null;
 antares.core.Component.prototype.cljs$core$ILookup$_lookup$arity$2 = (function (this__4139__auto__,k__4140__auto__){var self__ = this;
 var this__4139__auto____$1 = this;return cljs.core._lookup.call(null,this__4139__auto____$1,k__4140__auto__,null);
 });
-antares.core.Component.prototype.cljs$core$ILookup$_lookup$arity$3 = (function (this__4141__auto__,k10969,else__4142__auto__){var self__ = this;
-var this__4141__auto____$1 = this;var G__10971 = (((k10969 instanceof cljs.core.Keyword))?k10969.fqn:null);switch (G__10971) {
+antares.core.Component.prototype.cljs$core$ILookup$_lookup$arity$3 = (function (this__4141__auto__,k11089,else__4142__auto__){var self__ = this;
+var this__4141__auto____$1 = this;var G__11091 = (((k11089 instanceof cljs.core.Keyword))?k11089.fqn:null);switch (G__11091) {
 case "css-data":
 return self__.css_data;
 
@@ -299,7 +299,7 @@ return self__.ident;
 
 break;
 default:
-return cljs.core.get.call(null,self__.__extmap,k10969,else__4142__auto__);
+return cljs.core.get.call(null,self__.__extmap,k11089,else__4142__auto__);
 
 }
 });
@@ -349,8 +349,12 @@ var self__$1 = this;return cljs.core.get_in.call(null,cljs.core.deref.call(null,
 antares.core.Component.prototype.antares$core$LifeCycle$component_will_mount$arity$1 = (function (self){var self__ = this;
 var self__$1 = this;return null;
 });
-antares.core.Component.prototype.antares$core$LifeCycle$component_did_mount$arity$1 = (function (self){var self__ = this;
-var self__$1 = this;return null;
+antares.core.Component.prototype.antares$core$LifeCycle$component_did_mount$arity$3 = (function (self,app_cursor,dom_cursor){var self__ = this;
+var self__$1 = this;var temp__4124__auto__ = new cljs.core.Keyword(null,"component-did-mount","component-did-mount",-1126910518).cljs$core$IFn$_invoke$arity$1(self__$1);if(cljs.core.truth_(temp__4124__auto__))
+{var component_did_mount_fn = temp__4124__auto__;return component_did_mount_fn.call(null,self__$1,app_cursor,dom_cursor);
+} else
+{return null;
+}
 });
 antares.core.Component.prototype.antares$core$LifeCycle$component_will_update$arity$1 = (function (self){var self__ = this;
 var self__$1 = this;return null;
@@ -364,7 +368,7 @@ var self__$1 = this;return null;
 antares.core.Component.prototype.antares$core$Mountable$ = true;
 antares.core.Component.prototype.antares$core$Mountable$mount_component$arity$3 = (function (self,component_data,dom_cursor){var self__ = this;
 var self__$1 = this;goog.dom.appendChild(document.querySelector(dom_cursor),goog.dom.htmlToDocumentFragment(antares.core.render_html.call(null,self__$1,component_data)));
-var text_node_10976 = goog.dom.createTextNode(antares.core.render_css.call(null,self__$1));var style_node_10977 = goog.dom.createDom("style",text_node_10976);goog.dom.appendChild(document.querySelector("#antares-styles"),style_node_10977);
+var text_node_11096 = goog.dom.createTextNode(antares.core.render_css.call(null,self__$1));var style_node_11097 = goog.dom.createDom("style",text_node_11096);goog.dom.appendChild(document.querySelector("#antares-styles"),style_node_11097);
 return cljs.core.swap_BANG_.call(null,antares.core.mounted_components,cljs.core.conj,self__$1);
 });
 antares.core.Component.prototype.antares$core$Mountable$unmount_component$arity$1 = (function (self){var self__ = this;
@@ -377,17 +381,17 @@ var this__4148__auto____$1 = this;if(cljs.core.contains_QMARK_.call(null,new clj
 {return (new antares.core.Component(self__.ident,self__.render_fn,self__.css_data,self__.__meta,cljs.core.not_empty.call(null,cljs.core.dissoc.call(null,self__.__extmap,k__4149__auto__)),null));
 }
 });
-antares.core.Component.prototype.cljs$core$IAssociative$_assoc$arity$3 = (function (this__4146__auto__,k__4147__auto__,G__10968){var self__ = this;
-var this__4146__auto____$1 = this;var pred__10972 = cljs.core.keyword_identical_QMARK_;var expr__10973 = k__4147__auto__;if(cljs.core.truth_(pred__10972.call(null,new cljs.core.Keyword(null,"ident","ident",-742346),expr__10973)))
-{return (new antares.core.Component(G__10968,self__.render_fn,self__.css_data,self__.__meta,self__.__extmap,null));
+antares.core.Component.prototype.cljs$core$IAssociative$_assoc$arity$3 = (function (this__4146__auto__,k__4147__auto__,G__11088){var self__ = this;
+var this__4146__auto____$1 = this;var pred__11092 = cljs.core.keyword_identical_QMARK_;var expr__11093 = k__4147__auto__;if(cljs.core.truth_(pred__11092.call(null,new cljs.core.Keyword(null,"ident","ident",-742346),expr__11093)))
+{return (new antares.core.Component(G__11088,self__.render_fn,self__.css_data,self__.__meta,self__.__extmap,null));
 } else
-{if(cljs.core.truth_(pred__10972.call(null,new cljs.core.Keyword(null,"render-fn","render-fn",398796518),expr__10973)))
-{return (new antares.core.Component(self__.ident,G__10968,self__.css_data,self__.__meta,self__.__extmap,null));
+{if(cljs.core.truth_(pred__11092.call(null,new cljs.core.Keyword(null,"render-fn","render-fn",398796518),expr__11093)))
+{return (new antares.core.Component(self__.ident,G__11088,self__.css_data,self__.__meta,self__.__extmap,null));
 } else
-{if(cljs.core.truth_(pred__10972.call(null,new cljs.core.Keyword(null,"css-data","css-data",2133231584),expr__10973)))
-{return (new antares.core.Component(self__.ident,self__.render_fn,G__10968,self__.__meta,self__.__extmap,null));
+{if(cljs.core.truth_(pred__11092.call(null,new cljs.core.Keyword(null,"css-data","css-data",2133231584),expr__11093)))
+{return (new antares.core.Component(self__.ident,self__.render_fn,G__11088,self__.__meta,self__.__extmap,null));
 } else
-{return (new antares.core.Component(self__.ident,self__.render_fn,self__.css_data,self__.__meta,cljs.core.assoc.call(null,self__.__extmap,k__4147__auto__,G__10968),null));
+{return (new antares.core.Component(self__.ident,self__.render_fn,self__.css_data,self__.__meta,cljs.core.assoc.call(null,self__.__extmap,k__4147__auto__,G__11088),null));
 }
 }
 }
@@ -395,8 +399,8 @@ var this__4146__auto____$1 = this;var pred__10972 = cljs.core.keyword_identical_
 antares.core.Component.prototype.cljs$core$ISeqable$_seq$arity$1 = (function (this__4151__auto__){var self__ = this;
 var this__4151__auto____$1 = this;return cljs.core.seq.call(null,cljs.core.concat.call(null,new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [(new cljs.core.PersistentVector(null,2,(5),cljs.core.PersistentVector.EMPTY_NODE,[new cljs.core.Keyword(null,"ident","ident",-742346),self__.ident],null)),(new cljs.core.PersistentVector(null,2,(5),cljs.core.PersistentVector.EMPTY_NODE,[new cljs.core.Keyword(null,"render-fn","render-fn",398796518),self__.render_fn],null)),(new cljs.core.PersistentVector(null,2,(5),cljs.core.PersistentVector.EMPTY_NODE,[new cljs.core.Keyword(null,"css-data","css-data",2133231584),self__.css_data],null))], null),self__.__extmap));
 });
-antares.core.Component.prototype.cljs$core$IWithMeta$_with_meta$arity$2 = (function (this__4138__auto__,G__10968){var self__ = this;
-var this__4138__auto____$1 = this;return (new antares.core.Component(self__.ident,self__.render_fn,self__.css_data,G__10968,self__.__extmap,self__.__hash));
+antares.core.Component.prototype.cljs$core$IWithMeta$_with_meta$arity$2 = (function (this__4138__auto__,G__11088){var self__ = this;
+var this__4138__auto____$1 = this;return (new antares.core.Component(self__.ident,self__.render_fn,self__.css_data,G__11088,self__.__extmap,self__.__hash));
 });
 antares.core.Component.prototype.cljs$core$ICollection$_conj$arity$2 = (function (this__4144__auto__,entry__4145__auto__){var self__ = this;
 var this__4144__auto____$1 = this;if(cljs.core.vector_QMARK_.call(null,entry__4145__auto__))
@@ -410,7 +414,11 @@ antares.core.Component.prototype.antares$core$Renderable$render_html$arity$2 = (
 var self__$1 = this;return (''+cljs.core.str.cljs$core$IFn$_invoke$arity$1(hiccups.runtime.render_html.call(null,new cljs.core.Keyword(null,"render-fn","render-fn",398796518).cljs$core$IFn$_invoke$arity$1(self__$1).call(null,data))));
 });
 antares.core.Component.prototype.antares$core$Renderable$render_css$arity$1 = (function (self){var self__ = this;
-var self__$1 = this;return garden.core.css.call(null,new cljs.core.Keyword(null,"css-data","css-data",2133231584).cljs$core$IFn$_invoke$arity$1(self__$1));
+var self__$1 = this;var temp__4124__auto__ = new cljs.core.Keyword(null,"css-data","css-data",2133231584).cljs$core$IFn$_invoke$arity$1(self__$1);if(cljs.core.truth_(temp__4124__auto__))
+{var css_data__$1 = temp__4124__auto__;return garden.core.css.call(null,css_data__$1);
+} else
+{return null;
+}
 });
 antares.core.Component.cljs$lang$type = true;
 antares.core.Component.cljs$lang$ctorPrSeq = (function (this__4173__auto__){return cljs.core._conj.call(null,cljs.core.List.EMPTY,"antares.core/Component");
@@ -419,14 +427,14 @@ antares.core.Component.cljs$lang$ctorPrWriter = (function (this__4173__auto__,wr
 });
 antares.core.__GT_Component = (function __GT_Component(ident,render_fn,css_data){return (new antares.core.Component(ident,render_fn,css_data));
 });
-antares.core.map__GT_Component = (function map__GT_Component(G__10970){return (new antares.core.Component(new cljs.core.Keyword(null,"ident","ident",-742346).cljs$core$IFn$_invoke$arity$1(G__10970),new cljs.core.Keyword(null,"render-fn","render-fn",398796518).cljs$core$IFn$_invoke$arity$1(G__10970),new cljs.core.Keyword(null,"css-data","css-data",2133231584).cljs$core$IFn$_invoke$arity$1(G__10970),null,cljs.core.dissoc.call(null,G__10970,new cljs.core.Keyword(null,"ident","ident",-742346),new cljs.core.Keyword(null,"render-fn","render-fn",398796518),new cljs.core.Keyword(null,"css-data","css-data",2133231584))));
+antares.core.map__GT_Component = (function map__GT_Component(G__11090){return (new antares.core.Component(new cljs.core.Keyword(null,"ident","ident",-742346).cljs$core$IFn$_invoke$arity$1(G__11090),new cljs.core.Keyword(null,"render-fn","render-fn",398796518).cljs$core$IFn$_invoke$arity$1(G__11090),new cljs.core.Keyword(null,"css-data","css-data",2133231584).cljs$core$IFn$_invoke$arity$1(G__11090),null,cljs.core.dissoc.call(null,G__11090,new cljs.core.Keyword(null,"ident","ident",-742346),new cljs.core.Keyword(null,"render-fn","render-fn",398796518),new cljs.core.Keyword(null,"css-data","css-data",2133231584))));
 });
 antares.core.component = (function component(source_map){var component__$1 = antares.core.map__GT_Component.call(null,source_map);antares.core.register_component.call(null,component__$1);
 return component__$1;
 });
 antares.core.bind = (function bind(component,app_cursor,dom_cursor){var component_data = antares.core.initialize_state.call(null,component,app_cursor);antares.core.component_will_mount.call(null,component);
 antares.core.mount_component.call(null,component,component_data,dom_cursor);
-return antares.core.component_did_mount.call(null,component);
+return antares.core.component_did_mount.call(null,component,app_cursor,dom_cursor);
 });
 
 //# sourceMappingURL=core.js.map

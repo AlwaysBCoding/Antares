@@ -23,7 +23,7 @@
 (defprotocol LifeCycle
   (initialize-state [self app-cursor])
   (component-will-mount [self])
-  (component-did-mount [self])
+  (component-did-mount [self app-cursor dom-cursor])
   (component-will-update [self])
   (component-did-update [self])
   (component-will-unmount [self]))
@@ -53,7 +53,8 @@
     (html-renderer/html ((-> self :render-fn) data)))
 
   (render-css [self]
-    (css-renderer/css (-> self :css-data)))
+    (if-let [css-data (-> self :css-data)]
+      (css-renderer/css css-data)))
 
   Mountable
   (mount-component [self component-data dom-cursor]
@@ -71,7 +72,9 @@
 
   (component-will-mount [self])
 
-  (component-did-mount [self])
+  (component-did-mount [self app-cursor dom-cursor]
+    (if-let [component-did-mount-fn (-> self :component-did-mount)]
+      (component-did-mount-fn self app-cursor dom-cursor)))
 
   (component-will-update [self])
 
@@ -90,4 +93,4 @@
   (let [component-data (initialize-state component app-cursor)]
     (component-will-mount component)
     (mount-component component component-data dom-cursor)
-    (component-did-mount component)))
+    (component-did-mount component app-cursor dom-cursor)))
