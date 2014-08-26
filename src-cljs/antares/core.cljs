@@ -50,10 +50,10 @@
 
   Renderable
   (render-html [self data]
-    (html-renderer/html ((-> self :render-fn) data)))
+    (html-renderer/html ((-> self :render) data)))
 
   (render-css [self]
-    (if-let [css-data (-> self :css-data)]
+    (if-let [css-data (-> self :styles)]
       (css-renderer/css css-data)))
 
   Mountable
@@ -94,3 +94,34 @@
     (component-will-mount component)
     (mount-component component component-data dom-cursor)
     (component-did-mount component app-cursor dom-cursor)))
+
+;; DETECTIVE MODE
+(reset! app-state {:nav-list {:items [{:header "Item 1" :content "Content 1"}
+                                      {:header "Item 2" :content "Content 2"}
+                                      {:header "Item 3" :content "Content 3"}]}
+                   :code-editor "(+ 1 2 3)"})
+
+(def app-state-detective
+  (component {:ident :app-state-detective
+              :render (fn [data]
+                        [:textarea (pr-str data)])
+              :styles [:div#app-state-detective
+                       [:textarea
+                        {:width "100%"
+                         :font-size "1rem"}]]}))
+
+(def registered-components-detective
+  (component {:ident :registered-components-detective
+              :render (fn [data]
+                        [:div.registered-components
+                         [:h3 "Registered Components"]
+                         (for [component (map #(:ident %) @registered-components)]
+                           [:pre (pr-str component)])])}))
+
+(def mounted-components-detective
+  (component {:ident :mounted-components-detective
+              :render (fn [data]
+                        [:div.mounted-components
+                         [:h3 "Mounted Components"]
+                         (for [component (map #(:ident %) @mounted-components)]
+                           [:pre (pr-str component)])])}))
