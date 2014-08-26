@@ -18,11 +18,12 @@
 
 (def app-state (atom {}))
 (def registered-components (atom []))
+(def mounted-components (atom []))
 
 (defprotocol LifeCycle
-  (initialize-state [self])
+  (initialize-state [self app-cursor])
   (component-will-mount [self])
-  (componnet-did-mount [self])
+  (component-did-mount [self])
   (component-will-update [self])
   (component-did-update [self])
   (component-will-unmount [self]))
@@ -35,7 +36,7 @@
   (render-css [self]))
 
 (defprotocol Mountable
-  (mount-component [self dom-cursor])
+  (mount-component [self component-data dom-cursor])
   (unmount-component [self]))
 
 (defrecord Component
@@ -50,23 +51,32 @@
   Renderable
   (render-html [self data]
     (html-renderer/html ((-> self :render-fn) data)))
+
   (render-css [self]
     (css-renderer/css (-> self :css-data)))
 
   Mountable
-  (mount-component [self dom-cursor]
-    (dom/appendChild (.querySelector js/document dom-cursor) (dom/htmlToDocumentFragment (render-html self {})))
+  (mount-component [self component-data dom-cursor]
+    (dom/appendChild (.querySelector js/document dom-cursor) (dom/htmlToDocumentFragment (render-html self component-data)))
     (let [text-node (dom/createTextNode (render-css self))
           style-node (dom/createDom "style" text-node)]
-      (dom/appendChild (.querySelector js/document "#antares-styles") style-node)))
+      (dom/appendChild (.querySelector js/document "#antares-styles") style-node))
+    (swap! mounted-components conj self))
+
   (unmount-component [self])
 
   LifeCycle
-  (initialize-state [self])
+  (initialize-state [self app-cursor]
+    (get-in @app-state app-cursor))
+
   (component-will-mount [self])
+
   (component-did-mount [self])
+
   (component-will-update [self])
+
   (component-did-update [self])
+
   (component-will-unmount [self]))
 
 (defn component
@@ -74,3 +84,10 @@
  (let [component (map->Component source-map)]
    (register-component component)
    component))
+
+(defn bind
+  [component app-cursor dom-cursor]
+  (let [component-data (initialize-state component app-cursor)]
+    (component-will-mount component)
+    (mount-component component component-data dom-cursor)
+    (component-did-mount component)))

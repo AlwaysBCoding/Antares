@@ -2,9 +2,16 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/antares/dev.js",
  "sources":["antares-dev.cljs"],
- "lineCount":10,
+ "lineCount":42,
  "mappings":
- ";AAAA;;;;AAGA,AAAKA,oBACH,iCAAA,2CAAA,oDAAA,sDAAA,tLAACC,oPAC8B,iBAAA,AAAA,0FAAA,kDAAA,lJAAKC;GADpC,6DAAA,mFAAA,kDAAA,2CAAA,uDAAA;AAKF,yDAAA,zDAACC,uCAAwBH",
+ ";AAAA;;;;AAGA,uDAAA,2CAAA,8DAAA,2CAAA,uDAAA,mFAAA,2CAAA,wDAAA,SAAA,yDAAA,oBAAA,2CAAA,wDAAA,SAAA,yDAAA,oBAAA,2CAAA,wDAAA,SAAA,yDAAA,52BAACA,gCAAOC;AAIR,AAAKC,uBACH,iCAAA,2CAAA,oDAAA,sDAAA,tLAACC,oPAC8B,iBAAA,AAAA,0FAAA,oEAAA,mFAAA,vPAAKC,+UAGD,iBAAAC,qBAAA,sBAAAC,UAAA,AAAA,YAAAC,kBAAA,KAAA,aAAA,AAAA,IAAAD,eAAAA;AAAA,AAAA,IAAAE,qBAAA,AAAAC,wBAAAH,cAAA,AAAA,GAAAE;CAAA,AAAA,IAAAF,eAAAE,mBAAA,AAAA,GAAA,AAAAE,uCAAAJ;CAAA,IAAAK,oEAAAC,qBAAA,AAAAC,0BAAAF,qBAAAG,WAAA,AAAAC,iCAAAH,oBAAA,AAAA,GAAA,AAAA,iBAAAI,WAAA,rNAmwCS,AAAAY,gCAAAtB;AAnwCT,AAAA,GAAA,CAAAU,WAAAJ;CAAA,WAAA,AAAAK,yBAAAN,gBAAAK,UAAA,AAAA,AAAA,AAAAE,iCAAAJ,SAAA,mFAAA,4DAAA,mFAAA,mEAAA,mFAAA,5dAAMY,6hBAGW,eAAA,fAAYA,gFACzB,eAAA,fAAaA;AAJjB;eAAA,CAAAV,WAAA;;;;;CAAA;;;;;CAAA,OAAAG,+BAAA,AAAAC,0BAAAN,UAAA,AAAAO,sBAAA,AAAAC,+BAAAhB;;CAAA,OAAAa,+BAAA,AAAAC,0BAAAN,UAAA;;;CAAA,WAAA,AAAAS,0BAAAjB,cAAA,AAAA,OAAAkB,yBAAA,mFAAA,4DAAA,mFAAA,mEAAA,mFAAA,0OAAA,AAAAH,sBAAA,AAAAI,yBAAAnB,huBAAMoB,wgBAGW,eAAA,fAAYA,gFACzB,eAAA,fAAaA;;;CAJjB;;;;GAAA,KAAA;GAAA,AAAA,OAAArB,6BAAW,AAAA,qFAAID;;GAJlD,6DAAA,mFAAA,6DAAA,mFAAA,kDAAA,2CAAA,uDAAA;AAYF,iDAAA,mFAAA,sEAAA,1MAACuB,4BAAazB",
  "names":
- ["antares.dev/comp1", "antares.core/component", "data",
-  "antares.core/mount-component"]}
+ ["cljs.core/reset!", "antares.core/app-state", "antares.dev/nav-list",
+  "antares.core/component", "data", "iter__4278__auto__", "s__10812",
+  "cljs.core/LazySeq", "temp__4126__auto__", "cljs.core/seq",
+  "cljs.core/chunked-seq?", "c__4276__auto__", "size__4277__auto__",
+  "cljs.core/count", "b__10814", "cljs.core/chunk-buffer", "i__10813",
+  "cljs.core/-nth", "cljs.core/chunk-append", "cljs.core/chunk-cons",
+  "cljs.core/chunk", "iter__10811", "cljs.core/chunk-rest",
+  "cljs.core/first", "cljs.core/cons", "cljs.core/rest", "item",
+  "antares.core/bind", "cljs.core/chunk-first"]}

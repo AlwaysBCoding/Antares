@@ -1,10 +1,21 @@
 (ns antares.dev
   (:require [antares.core :as antares]))
 
-(def comp1
+(reset! antares/app-state {:nav-list {:items [{:header "Item 1" :content "Content 1"}
+                                              {:header "Item 2" :content "Content 2"}
+                                              {:header "Item 3" :content "Content 3"}]}})
+
+(def nav-list
   (antares/component {:ident :comp1
                       :render-fn (fn [data]
-                                   [:h1 "Hello from a component"])
-                      :css-data [:h1 {:color "red"}]}))
+                                   [:div.nav-list
+                                    [:div.ui.horizontal.list
+                                     (for [item (-> data :items)]
+                                       [:div.item
+                                        [:div.content
+                                         [:div.header (-> :header item)]
+                                         (-> :content item)]])]])
+                      :css-data [:div.comp1
+                                 [:h1 {:color "orange"}]]}))
 
-(antares/mount-component comp1 "#test-area")
+(antares/bind nav-list [:nav-list] "#test-area")
