@@ -1,0 +1,10 @@
+{"version":3,
+ "file":
+ "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/antares/dev.js",
+ "sources":["antares-dev.cljs"],
+ "lineCount":10,
+ "mappings":
+ ";AAAA;;;;AAGA,AAAKA,oBACH,iCAAA,2CAAA,oDAAA,sDAAA,tLAACC,oPAC8B,iBAAA,AAAA,0FAAA,kDAAA,lJAAKC;GADpC,6DAAA,mFAAA,kDAAA,2CAAA,uDAAA;AAKF,yDAAA,zDAACC,uCAAwBH",
+ "names":
+ ["antares.dev/comp1", "antares.core/component", "data",
+  "antares.core/mount-component"]}

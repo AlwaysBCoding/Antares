@@ -57,7 +57,10 @@
                                                                                   {:name "css" :display "CSS"}
                                                                                   {:name "test-data" :display "TEST DATA"}]
                                                                            :active-tab ""}
-                                                                :code-editor ""}))
+                                                                :code-editor ""
+                                                                :html-fn "; html-fn"
+                                                                :css-data "; css-data"
+                                                                :test-data "; test-data"}))
     :post-render-fn (fn [component-binding]
                       (postrender/textarea->codemirror component-binding))}))
 
@@ -68,6 +71,16 @@
 (interactions/listen template-editor-binding "click" (fn [event]
                                                        (if-let [name (interactions/get-data (.-target event) "name")]
                                                          (antares/cursor->value [:template-editor :tab-list :active-tab] name))))
+
+#_(antares/data-watcher
+ {:ident :activate-template-editor-tab
+  :app-cursor [:template-editor :tab-list :active-tab]
+  :watch-fn (fn [value]
+              (let [new-value (cond
+                               (= value "html") (get-in @antares/app-state [:template-editor :html-fn])
+                               (= value "css") (get-in @antares/app-state [:template-editor :css-data])
+                               (= value "test-data") (get-in @antares/app-state [:template-editor :test-data]))]
+                (antares/cursor->value [:template-editor :code-editor] new-value)))})
 
 ;; ;; DATA WATCHERS
 ;; (antares/data-watcher
