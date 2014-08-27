@@ -42,7 +42,8 @@
 (defrecord Component
   [ident
    render-fn
-   css-data]
+   css-data
+   subcomponents]
   
   Registerable
   (register-component [self]
@@ -50,7 +51,8 @@
 
   Renderable
   (render-html [self data]
-    (html-renderer/html ((-> self :render) data)))
+    (if-let [render-fn (-> self :render)]
+      (html-renderer/html (render-fn data))))
 
   (render-css [self]
     (if-let [css-data (-> self :styles)]
@@ -93,13 +95,15 @@
   (let [component-data (initialize-state component app-cursor)]
     (component-will-mount component)
     (mount-component component component-data dom-cursor)
+    (doseq [component (-> component :subcomponents)]
+      (component-did-mount component app-cursor dom-cursor))
     (component-did-mount component app-cursor dom-cursor)))
 
 ;; DETECTIVE MODE
-(reset! app-state {:nav-list {:items [{:header "Item 1" :content "Content 1"}
-                                      {:header "Item 2" :content "Content 2"}
-                                      {:header "Item 3" :content "Content 3"}]}
-                   :code-editor "(+ 1 2 3)"})
+(reset! app-state {:template-editor {:nav-list {:items [{:header "Item 1" :content "Content 1"}
+                                                        {:header "Item 2" :content "Content 2"}
+                                                        {:header "Item 3" :content "Content 3"}]}
+                                     :code-editor "(+ 1 2 3)"}})
 
 (def app-state-detective
   (component {:ident :app-state-detective

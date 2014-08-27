@@ -12,7 +12,7 @@
                                       [:div.header (-> :header item)]
                                       (-> :content item)]])]])
                       :styles [:div.nav-list
-                               [:h1 {:color "orange"}]]}))
+                               [:div.header {:color "orange"}]]}))
 
 (def code-editor
   (antares/component {:ident :code-editor
@@ -30,12 +30,17 @@
 
 (def template-editor
   (antares/component {:ident :template-editor
-                      :render (fn [data])
-                      :styles []}))
+                      :subcomponents [nav-list code-editor]
+                      :render (fn [data]
+                                [:div.template-editor
+                                 [:h1 "Template Editor"]
+                                 (antares/render-html nav-list (-> data :nav-list))
+                                 (antares/render-html code-editor (-> data :code-editor))])
+                      :styles [:div.template-editor
+                               (-> nav-list :styles)
+                               (-> code-editor :styles)]}))
 
-(antares/bind nav-list [:nav-list] "#nav-list")
-(antares/bind code-editor [:code-editor] "#code-editor")
+(antares/bind template-editor [:template-editor] "#template-editor")
 
 (antares/bind antares/app-state-detective [] "#app-state-detective")
 (antares/bind antares/registered-components-detective [] "#registered-components-detective")
-(antares/bind antares/mounted-components-detective [] "#mounted-components-detective")
