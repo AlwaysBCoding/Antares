@@ -20,6 +20,17 @@
 (def registered-components (atom []))
 (def mounted-components (atom []))
 
+;; STATE MANIPULATION
+(defn cursor->value
+  [cursor new-value]
+  (swap! app-state (fn [state]
+                     (update-in state cursor (fn [old-value] new-value)))))
+
+(defn cursor->fn
+  [cursor update-fn]
+  (swap! app-state (fn [state]
+                     (update-in state cursor update-fn))))
+
 (defprotocol LifeCycle
   (initialize-state [self app-cursor])
   (component-will-mount [self])
@@ -124,7 +135,9 @@
 (reset! app-state {:template-editor {:nav-list {:items [{:header "Item 1" :content "Content 1"}
                                                         {:header "Item 2" :content "Content 2"}
                                                         {:header "Item 3" :content "Content 3"}]}
-                                     :code-editor "(+ 1 2 3)"}})
+                                     :code-editor "(+ 1 2 3)"}
+                   :list-area {:items ["Item1" "Item2" "Item3"]
+                               :button-text "Add Item"}})
 
 (def app-state-detective
   (component {:ident :app-state-detective
@@ -150,3 +163,10 @@
                          [:h3 "Mounted Components"]
                          (for [component (map #(:ident %) @mounted-components)]
                            [:pre (pr-str component)])])}))
+
+;; WATCHER ON STATE ATOM
+(add-watch
+ app-state
+ :app-state-renderer
+ (fn [key ref old-value new-value]
+   (.log js/console (pr-str new-value))))
