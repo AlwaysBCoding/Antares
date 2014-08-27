@@ -64,12 +64,17 @@
 (defn event-mappings
   [event]
   (cond
+
    (and (= (-> event .-type) "click")
         (= (-> event .-target .-tagName) "H1")) :show-alert
+
    (and (= (-> event .-type) "click")
         (= (-> event .-target .-id) "add-item-button")) :add-item
+
    (= (-> event .-type) "click") :click
+
    (= (-> event .-keyCode) 13) :show-alert
+
    :else :no-action))
 
 (defn controller
@@ -78,7 +83,7 @@
    (= control :add-item) (antares/cursor->fn [:list-area :items] (fn [old-value] (conj old-value (str "Item " (+ 1 (count old-value))))))
    (= control :show-alert) (js/alert "Alert Shown")))
 
-(antares/activate-event-loop event-mappings controller)
+(antares/event-loop event-mappings controller)
 
 ;; (antares/bind antares/app-state-detective [] "#app-state-detective")
 ;; (antares/bind antares/registered-components-detective [] "#registered-components-detective")

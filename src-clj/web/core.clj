@@ -1,5 +1,6 @@
 (ns web.core
-  (:require [web.server :as server]))
+  (:require [web.server :as server]
+            [cemerick.austin.repls :refer (browser-connected-repl-js)]))
 
 (defn -main
   []

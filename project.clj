@@ -11,12 +11,9 @@
                  [org.clojure/core.async "0.1.303.0-886421-alpha"]
                  [com.datomic/datomic-pro "0.9.4815.12"]
 
-                 [com.cemerick/piggieback "0.1.3"]
-                 [weasel "0.3.0"]
-
                  [environ "0.5.0"]
                  [prismatic/plumbing "0.2.2"]
-                 
+
                  [http-kit "2.1.16"]
                  [ring "1.3.0"]
                  [fogus/ring-edn "0.2.0"]
@@ -36,9 +33,9 @@
   :repositories {"my.datomic.com" {:url "https://my.datomic.com/repo"
                                    :username ~(System/getenv "ANTARES_DATOMIC_USERNAME")
                                    :password ~(System/getenv "ANTARES_DATOMIC_PASSWORD")}}
-  
-  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
+  :repl-options {:init-ns web.core}
+  
   :main web.core
 
   :cljsbuild {:builds [{:id "dev"

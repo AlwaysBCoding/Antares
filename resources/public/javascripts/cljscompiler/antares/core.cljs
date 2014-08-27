@@ -9,8 +9,7 @@
             [ajax.core :as ajax]
             [cljs.core.async :refer (chan <! >! put!)]
             [hiccups.runtime :as hiccupsrt]
-            [garden.core :as css-renderer]
-            [antares.repl :as repl]))
+            [garden.core :as css-renderer]))
 
 (defn string->data
   [string]
@@ -52,8 +51,8 @@
 
 (defrecord Component
   [ident
-   render-fn
-   css-data
+   render
+   style
    subcomponents]
   
   Registerable
@@ -66,7 +65,7 @@
       (html-renderer/html (render-fn data))))
 
   (render-css [self]
-    (if-let [css-data (-> self :styles)]
+    (if-let [css-data (-> self :style)]
       (css-renderer/css css-data)))
 
   Mountable
@@ -120,7 +119,7 @@
     (events/listen root-node event-name (fn [event]
                                           (put! event-stream event)))))
 
-(defn activate-event-loop
+(defn event-loop
   [event-mappings controller]
   
   (go
@@ -131,42 +130,45 @@
     (while true
       (controller (<! control-stream)))))
 
+(defn renderer
+  [root]
+  (add-watch
+   app-state
+   :renderer
+   (fn [key reference old-value new-value]
+     (let [root-node (.querySelector js/document "#antares")
+           new-dom (render-html root new-value)]
+       (set! (.-innerHTML root-node) new-dom)))))
+
 ;; DETECTIVE MODE
-(reset! app-state {:template-editor {:nav-list {:items [{:header "Item 1" :content "Content 1"}
-                                                        {:header "Item 2" :content "Content 2"}
-                                                        {:header "Item 3" :content "Content 3"}]}
-                                     :code-editor "(+ 1 2 3)"}
-                   :list-area {:items ["Item1" "Item2" "Item3"]
-                               :button-text "Add Item"}})
+;; (reset! app-state {:template-editor {:nav-list {:items [{:header "Item 1" :content "Content 1"}
+;;                                                         {:header "Item 2" :content "Content 2"}
+;;                                                         {:header "Item 3" :content "Content 3"}]}
+;;                                      :code-editor "(+ 1 2 3)"}
+;;                    :list-area {:items ["Item1" "Item2" "Item3"]
+;;                                :button-text "Add Item"}})
 
-(def app-state-detective
-  (component {:ident :app-state-detective
-              :render (fn [data]
-                        [:textarea (pr-str data)])
-              :styles [:div#app-state-detective
-                       [:textarea
-                        {:width "100%"
-                         :font-size "1rem"}]]}))
+;; (def app-state-detective
+;;   (component {:ident :app-state-detective
+;;               :render (fn [data]
+;;                         [:textarea (pr-str data)])
+;;               :styles [:div#app-state-detective
+;;                        [:textarea
+;;                         {:width "100%"
+;;                          :font-size "1rem"}]]}))
 
-(def registered-components-detective
-  (component {:ident :registered-components-detective
-              :render (fn [data]
-                        [:div.registered-components
-                         [:h3 "Registered Components"]
-                         (for [component (map #(:ident %) @registered-components)]
-                           [:pre (pr-str component)])])}))
+;; (def registered-components-detective
+;;   (component {:ident :registered-components-detective
+;;               :render (fn [data]
+;;                         [:div.registered-components
+;;                          [:h3 "Registered Components"]
+;;                          (for [component (map #(:ident %) @registered-components)]
+;;                            [:pre (pr-str component)])])}))
 
-(def mounted-components-detective
-  (component {:ident :mounted-components-detective
-              :render (fn [data]
-                        [:div.mounted-components
-                         [:h3 "Mounted Components"]
-                         (for [component (map #(:ident %) @mounted-components)]
-                           [:pre (pr-str component)])])}))
-
-;; WATCHER ON STATE ATOM
-(add-watch
- app-state
- :app-state-renderer
- (fn [key ref old-value new-value]
-   (.log js/console (pr-str new-value))))
+;; (def mounted-components-detective
+;;   (component {:ident :mounted-components-detective
+;;               :render (fn [data]
+;;                         [:div.mounted-components
+;;                          [:h3 "Mounted Components"]
+;;                          (for [component (map #(:ident %) @mounted-components)]
+;;                            [:pre (pr-str component)])])}))
