@@ -99,6 +99,27 @@
       (component-did-mount component app-cursor dom-cursor))
     (component-did-mount component app-cursor dom-cursor)))
 
+;; EVENT DISPATCHER
+(def event-list ["click" "keydown"])
+(def event-stream (chan))
+(def control-stream (chan))
+
+(let [root-node (.querySelector js/document "body")]
+  (doseq [event-name event-list]
+    (events/listen root-node event-name (fn [event]
+                                          (put! event-stream event)))))
+
+(defn activate-event-loop
+  [event-mappings controller]
+  
+  (go
+    (while true
+      (>! control-stream (event-mappings (<! event-stream)))))
+
+  (go
+    (while true
+      (controller (<! control-stream)))))
+
 ;; DETECTIVE MODE
 (reset! app-state {:template-editor {:nav-list {:items [{:header "Item 1" :content "Content 1"}
                                                         {:header "Item 2" :content "Content 2"}

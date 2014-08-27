@@ -1,6 +1,7 @@
 (ns antares.dev
   (:require [antares.core :as antares]))
 
+;; COMPONENT DEFINITIONS
 (def nav-list
   (antares/component {:ident :nav-list
                       :render (fn [data]
@@ -40,7 +41,24 @@
                                (-> nav-list :styles)
                                (-> code-editor :styles)]}))
 
+;; COMPONENT BINDINGS
 (antares/bind template-editor [:template-editor] "#template-editor")
 
-(antares/bind antares/app-state-detective [] "#app-state-detective")
-(antares/bind antares/registered-components-detective [] "#registered-components-detective")
+;; ACTIVATE EVENT LOOP
+(defn event-mappings
+  [event]
+  (cond
+   (= (-> event .-type) "click") :click
+   (= (-> event .-keyCode) 13) :show-alert
+   :else :no-action))
+
+(defn controller
+  [control]
+  (.log js/console (pr-str control))
+  (cond
+   (= control :show-alert) (js/alert "Alert Shown")))
+
+(antares/activate-event-loop event-mappings controller)
+
+;; (antares/bind antares/app-state-detective [] "#app-state-detective")
+;; (antares/bind antares/registered-components-detective [] "#registered-components-detective")
