@@ -88,9 +88,13 @@
     (if-let [component-did-mount-fn (-> self :component-did-mount)]
       (component-did-mount-fn self app-cursor dom-cursor)))
 
-  (component-will-update [self])
+  (component-will-update [self]
+    (if-let [component-will-update-fn (-> self :component-will-update)]
+      (component-will-update-fn self)))
 
-  (component-did-update [self])
+  (component-did-update [self]
+    (if-let [component-did-update-fn (-> self :component-did-update)]
+      (component-did-update-fn self)))
 
   (component-will-unmount [self]))
 
@@ -138,7 +142,11 @@
    (fn [key reference old-value new-value]
      (let [root-node (.querySelector js/document "#antares")
            new-dom (render-html root new-value)]
-       (set! (.-innerHTML root-node) new-dom)))))
+       (doseq [component (-> root :subcomponents)]
+         (component-will-update component))
+       (set! (.-innerHTML root-node) new-dom)
+       (doseq [component (-> root :subcomponents)]
+         (component-did-update component))))))
 
 ;; DETECTIVE MODE
 ;; (reset! app-state {:template-editor {:nav-list {:items [{:header "Item 1" :content "Content 1"}
