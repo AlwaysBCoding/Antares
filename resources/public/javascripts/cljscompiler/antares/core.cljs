@@ -17,7 +17,6 @@
 
 (def app-state (atom {}))
 (def registered-components (atom []))
-(def mounted-components (atom []))
 
 ;; STATE MANIPULATION
 (defn cursor->value
@@ -29,6 +28,10 @@
   [cursor update-fn]
   (swap! app-state (fn [state]
                      (update-in state cursor update-fn))))
+
+(defn reset-state
+  [new-state]
+  (reset! app-state (string->data new-state)))
 
 (defprotocol LifeCycle
   (initialize-state [self app-cursor])
@@ -52,8 +55,7 @@
 (defrecord Component
   [ident
    render
-   style
-   subcomponents]
+   style]
   
   Registerable
   (register-component [self]
@@ -73,8 +75,7 @@
     (dom/appendChild (.querySelector js/document dom-cursor) (dom/htmlToDocumentFragment (render-html self component-data)))
     (let [text-node (dom/createTextNode (render-css self))
           style-node (dom/createDom "style" text-node)]
-      (dom/appendChild (.querySelector js/document "#antares-styles") style-node))
-    (swap! mounted-components conj self))
+      (dom/appendChild (.querySelector js/document "#antares-styles") style-node)))
 
   (unmount-component [self])
 
@@ -109,12 +110,12 @@
   (let [component-data (initialize-state component app-cursor)]
     (component-will-mount component)
     (mount-component component component-data dom-cursor)
-    (doseq [component (-> component :subcomponents)]
+    (doseq [component @registered-components]
       (component-did-mount component app-cursor dom-cursor))
     (component-did-mount component app-cursor dom-cursor)))
 
 ;; EVENT DISPATCHER
-(def event-list ["click" "keydown"])
+(def event-list ["click" "keydown" "focusout"])
 (def event-stream (chan))
 (def control-stream (chan))
 
@@ -142,41 +143,8 @@
    (fn [key reference old-value new-value]
      (let [root-node (.querySelector js/document "#antares")
            new-dom (render-html root new-value)]
-       (doseq [component (-> root :subcomponents)]
+       (doseq [component @registered-components]
          (component-will-update component))
        (set! (.-innerHTML root-node) new-dom)
-       (doseq [component (-> root :subcomponents)]
+       (doseq [component @registered-components]
          (component-did-update component))))))
-
-;; DETECTIVE MODE
-;; (reset! app-state {:template-editor {:nav-list {:items [{:header "Item 1" :content "Content 1"}
-;;                                                         {:header "Item 2" :content "Content 2"}
-;;                                                         {:header "Item 3" :content "Content 3"}]}
-;;                                      :code-editor "(+ 1 2 3)"}
-;;                    :list-area {:items ["Item1" "Item2" "Item3"]
-;;                                :button-text "Add Item"}})
-
-;; (def app-state-detective
-;;   (component {:ident :app-state-detective
-;;               :render (fn [data]
-;;                         [:textarea (pr-str data)])
-;;               :styles [:div#app-state-detective
-;;                        [:textarea
-;;                         {:width "100%"
-;;                          :font-size "1rem"}]]}))
-
-;; (def registered-components-detective
-;;   (component {:ident :registered-components-detective
-;;               :render (fn [data]
-;;                         [:div.registered-components
-;;                          [:h3 "Registered Components"]
-;;                          (for [component (map #(:ident %) @registered-components)]
-;;                            [:pre (pr-str component)])])}))
-
-;; (def mounted-components-detective
-;;   (component {:ident :mounted-components-detective
-;;               :render (fn [data]
-;;                         [:div.mounted-components
-;;                          [:h3 "Mounted Components"]
-;;                          (for [component (map #(:ident %) @mounted-components)]
-;;                            [:pre (pr-str component)])])}))

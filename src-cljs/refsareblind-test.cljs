@@ -36,9 +36,12 @@
   (antares/component {:ident :sport-item
                       :render (fn [data]
                                 [:div.sport.item
-                                 [:div.sport.content (-> data :display)]])
+                                 (if (= data (get-in @antares/app-state [:active-sport]))
+                                   [:div.sport.content.active (-> data :display)]
+                                   [:div.sport.content (-> data :display)])])
                       :style [:div.sport
-                              [:div.content {:color "red"}]]}))
+                              [:div.content {:color "red"}
+                               [:&.active {:color "blue"}]]]}))
 
 (def sports-list
   (antares/component {:ident :sports-list
@@ -55,16 +58,18 @@
   (antares/component {:ident :active-sport
                       :render (fn [data]
                                 [:div.active-sport
-                                 [:h1 (-> data :display)]])
-                      :component-did-update (fn [self] (.log js/console (-> self :ident)))}))
+                                 [:h1 (-> data :display)]])}))
 
 (def team-item
   (antares/component {:ident :team-item
                       :render (fn [data]
                                 [:div.team.item
-                                 [:div.team.content (-> data :display)]])
-                      :stlye [:div.sport
-                              [:div.content {:color "orange"}]]}))
+                                 (if (= data (get-in @antares/app-state [:active-team]))
+                                   [:div.team.content.active (-> data :display)]
+                                   [:div.team.content (-> data :display)])])
+                      :style [:div.team
+                              [:div.content
+                               [:&.active {:color "red"}]]]}))
 
 (def active-sport-active-team
   (antares/component {:ident :active-sport-active-team
@@ -83,20 +88,34 @@
                               {:cursor "pointer"}
                               (-> team-item :style)]}))
 
+(def app-state-inspector
+  (antares/component {:ident :app-state-inspector
+                      :render (fn [data]
+                                [:div#app-state-inspector
+                                 [:textarea#app-state-inspector-data (pr-str data)]])
+                      :style [:div#app-state-inspector
+                              [:textarea {:width "100%"
+                                          :height "100px"
+                                          :font-size ".8rem"}]]}))
+
 (def root
   (antares/component {:ident :root
-                      :subcomponents [active-sport]
                       :render (fn [data]
-                                [:h1 "Refs Are Blind Test App"]
-                                [:div.container.ui.grid
-                                 [:div.row
-                                  [:div.column.wide.four
-                                   (antares/render-html active-sport (-> data :active-sport))
-                                   (antares/render-html sports-list (-> data :sports))]
-                                  [:div.column.wide.four
-                                   (antares/render-html active-sport-active-team (-> data :active-team))
-                                   (antares/render-html active-sport-teams-list (-> data :active-sport-teams-list))]]])
+                                [:div#antares-render
+                                 [:h1 "Refs Are Blind Test App"]                                 
+                                 [:div.container.ui.grid
+                                  [:div.row
+                                   [:div.column.wide.sixteen
+                                    (antares/render-html app-state-inspector data)]]
+                                  [:div.row
+                                   [:div.column.wide.four
+                                    (antares/render-html active-sport (-> data :active-sport))
+                                    (antares/render-html sports-list (-> data :sports))]
+                                   [:div.column.wide.four
+                                    (antares/render-html active-sport-active-team (-> data :active-team))
+                                    (antares/render-html active-sport-teams-list (-> data :active-sport-teams-list))]]]])
                       :style [:div.container
+                              (-> app-state-inspector :style)
                               (-> active-sport :style)
                               (-> sports-list :style)
                               (-> active-sport-teams-list :style)]}))
@@ -107,7 +126,14 @@
 ;; HANDLE EVENTS
 (defn event-mappings
   [event]
+  
   (cond
+   (and (= (-> event .-type) "click")
+        (-> event .-metaKey)) [:inspect-element {:element (-> event .-target)}]
+
+   (and (= (-> event .-type) "focusout")
+        (= (-> event .-target .-id) "app-state-inspector-data")) [:reload-state {:state (-> event .-target .-value)}]
+
    (and (= (-> event .-type) "click")
         (.contains (-> event .-target .-classList) "sport")) [:activate-sport {:display (-> event .-target .-textContent)
                                                                                :teams-cursor (case (-> event .-target .-textContent)
@@ -123,6 +149,8 @@
 (defn controller
   [[control data]]
   (cond
+   (= control :reload-state) (do (antares/reset-state (-> data :state)))
+   (= control :inspect-element) (.log js/console (-> data :element))
    (= control :activate-sport) (do (antares/cursor->value [:active-sport] {:display (-> data :display)})
                                    (antares/cursor->value [:active-sport-teams-list] (get-in @antares/app-state (-> data :teams-cursor)))
                                    (antares/cursor->value [:active-team] ""))
