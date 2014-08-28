@@ -2,60 +2,15 @@
 
   <head>
     <title>Antares Template Builder</title>
-    <link href="stylesheets/app.css" rel="stylesheet" type="text/css" />
     <link href="stylesheets/semantic.css" rel="stylesheet" type="text/css" />
     <link href="stylesheets/codemirror/codemirror.css" rel="stylesheet" type="text/css" />
     <link href="stylesheets/codemirror/themes/solarized.css" rel="stylesheet" type="text/css" />
-    <link href="stylesheets/template-builder.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
-    <div class="app-container ui grid">
 
-      <div class="row">
-        <div class="column wide sixteen">
-          <div id="app-state" class="antares"></div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="column wide sixteen">
-          <div id="test-area"></div>
-        </div>
-      </div>
-           
-      <div class="row">
-        <div class="left-side column wide eight">
-          <div id="template-data-editor"></div>
-          
-          <div class="html-fn-container">
-            <h1>HTML FN</h1>
-            <div id="html-fn"></div>
-          </div>
-          
-          <div class="css-data-container">
-            <h1>CSS Data Structure</h1>
-            <div id="css-data"></div>
-          </div>
-          
-          <div class="test-data-container">
-            <h1>HTML FN Test Data</h1>
-            <div id="test-data"></div>
-          </div>
-          
-        </div>
-
-        <div class="right-side column wide eight">
-          <div class="template-render-container">
-            <img class="iphone-wireframe" src="images/iphone-5s.svg"/>
-            <div id="compiled-template-render"></div>
-          </div>  
-          <div id="save-template-action"></div>
-        </div>
-        
-      </div>
-      
-    </div>
+    <div id="antares"></div>
+    <div id="antares-styles"></div>
 
     <div class="footer-javascripts">
       <script src="javascripts/codemirror/lib/codemirror.js"></script>

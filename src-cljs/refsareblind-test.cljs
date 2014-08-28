@@ -40,8 +40,8 @@
                                    [:div.sport.content.active (-> data :display)]
                                    [:div.sport.content (-> data :display)])])
                       :style [:div.sport
-                              [:div.content {:color "red"}
-                               [:&.active {:color "blue"}]]]}))
+                              [:div.content
+                               [:&.active {:color "red"}]]]}))
 
 (def sports-list
   (antares/component {:ident :sports-list

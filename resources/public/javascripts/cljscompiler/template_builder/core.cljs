@@ -1,232 +1,60 @@
 (ns template-builder.core
-  (:require [antares.core :as antares]
-            [antares.postrender :as postrender]
-            [antares.interactions :as interactions]))
+  (:require [antares.core :as antares]))
 
+;; INITIAL STATE
+(reset! antares/app-state {:tabs [{:display "HTML FN"}
+                                  {:display "CSS"}
+                                  {:display "TEST DATA"}]
+                           :active-tab {}})
+
+;; DEFINE COMPONENTS
 (def tab-list
   (antares/component
    {:ident :tab-list
-    :data-type :vector
-    :render-data-fn (fn [data]
-                      [:div.ui.horizontal.list.tab-list
-                       (map (fn [tab]
-                              [:div.item
-                               [:div.content
-                                (if (= (-> tab :name) (-> data :active-tab))
-                                  [:div.header.active
-                                   {:data-name (-> tab :name)} (-> tab :display)]
-                                  [:div.header.inactive
-                                   {:data-name (-> tab :name)} (-> tab :display)])]]) (-> data :tabs))])
-    :style-data [:div.tab-list
-                 {:cursor "pointer"}
-                 [:div.item
-                  [:div.content
-                   [:div.header {:color "green"}]
-                   [:div.header.active {:color "red"}]]]]}))
+    :render (fn [data]
+              [:div.tab-list.ui.divided.horizontal.list
+               (for [tab data]
+                 (if (= tab (get-in @antares/app-state [:active-tab]))
+                   [:div.tab.item.active (-> tab :display)]
+                   [:div.tab.item (-> tab :display)]))])
+    :style [:div.tab-list
+            {:cursor "pointer"}
+            [:div.tab
+             [:&.active {:color "red"}]]]}))
 
-(def code-editor
+(def root
   (antares/component
-   {:ident :code-editor
-    :data-type :string
-    :render-data-fn (fn [data]
-                      [:div.code-editor
-                       [:textarea data]])}))
+   {:ident :root
+    :render (fn [data]
+              [:div.container.ui.grid
+               [:div.row
+                [:div.column.wide.sixteen
+                 [:h1 "Template Builder"]]]
+               [:div.row
+                [:div.column.wide.six
+                 (antares/render-html tab-list (-> data :tabs))]]])
+    :style [:div.container
+            (-> tab-list :style)]}))
 
-(def template-editor
-  (antares/component
-   {:ident :template-editor
-    :data-type :map
-    :subcomponents [tab-list code-editor]
-    :render-data-fn (fn [data]
-                      [:div.template-editor
-                       [:h1 "Template Editor"]
-                       (antares/render tab-list (-> data :tab-list))
-                       (antares/render code-editor (-> data :code-editor))])
-    :style-data [:div.template-editor
-                 (antares/get-attr tab-list :style-data)
-                 (antares/get-attr code-editor :style-data)]}))
+;; BIND COMPONENTS
+(antares/bind root [] "#antares")
 
-(def template-editor-binding
-  (antares/component-binding
-   {:ident :template-editor-binding
-    :component template-editor
-    :app-cursor [:template-editor]
-    :dom-cursor "#test-area"
-    :initialize-fn (fn []
-                     (antares/cursor->value [:template-editor] {:tab-list {:tabs [{:name "html" :display "HTML"}
-                                                                                  {:name "css" :display "CSS"}
-                                                                                  {:name "test-data" :display "TEST DATA"}]
-                                                                           :active-tab ""}
-                                                                :code-editor ""
-                                                                :html-fn "; html-fn"
-                                                                :css-data "; css-data"
-                                                                :test-data "; test-data"}))
-    :post-render-fn (fn [component-binding]
-                      (postrender/textarea->codemirror component-binding))}))
+;; EVENT MAPPINGS
+(defn event-mappings
+  [event]
+  (cond
+   (and (= (-> event .-type) "click")
+        (.contains (-> event .-target .-classList) "tab")) [:activate-tab {:display (-> event .-target .-textContent)}]
+   :else [:no-action {}]))
 
-;; EVENT HANDLING
-(interactions/listen antares/app-state-inspector-binding "blur" (fn [event]
-                                                                  (antares/app-state->value (-> event .-target .-value antares/read-string))))
+;; EVENT CONTROLLER
+(defn controller
+  [[control data]]
+  (cond
+   (= control :activate-tab) (antares/cursor->value [:active-tab] data)))
 
-(interactions/listen template-editor-binding "click" (fn [event]
-                                                       (if-let [name (interactions/get-data (.-target event) "name")]
-                                                         (antares/cursor->value [:template-editor :tab-list :active-tab] name))))
+;; EVENT LOOP
+(antares/event-loop event-mappings controller)
 
-#_(antares/data-watcher
- {:ident :activate-template-editor-tab
-  :app-cursor [:template-editor :tab-list :active-tab]
-  :watch-fn (fn [value]
-              (let [new-value (cond
-                               (= value "html") (get-in @antares/app-state [:template-editor :html-fn])
-                               (= value "css") (get-in @antares/app-state [:template-editor :css-data])
-                               (= value "test-data") (get-in @antares/app-state [:template-editor :test-data]))]
-                (antares/cursor->value [:template-editor :code-editor] new-value)))})
-
-;; ;; DATA WATCHERS
-;; (antares/data-watcher
-;;  {:ident :activate-template-editor-tab
-;;   :app-cursor [:template-editor :tab-list :active-tab]
-;;   :watch-fn (fn [value]
-;;               (let [new-value (cond
-;;                                (= value "html") (get-in @antares/app-state [:html-fn])
-;;                                (= value "css") (get-in @antares/app-state [:css-data])
-;;                                (= value "test-data") (get-in @antares/app-state [:test-data]))]
-;;                 (antares/cursor->value [:template-editor :code-editor] new-value)))})
-
-;; (antares/http-get "http://localhost:8989/template/17592186045418"
-;;                   {:handler (fn [response]
-;;                               (antares/cursor->value [:html-fn] (-> response antares/read-string :html-fn))
-;;                               (antares/cursor->value [:css-data] (-> response antares/read-string :css-data))
-;;                               (antares/cursor->value [:test-data] (-> response antares/read-string :test-data))
-;;                               (antares/cursor->value [:template-editor :tab-list :active-tab] "html"))})
-
-;; ;; DATA INITIALIZATION
-;; (antares/app-state->value {:template-editor {:tab-list {:tabs [{:name "html"
-;;                                                                 :display "HTML"}
-;;                                                                {:name "css"
-;;                                                                 :display "CSS"}
-;;                                                                {:name "test-data"
-;;                                                                 :display "TEST DATA"}]
-;;                                                         :active-tab ""}
-;;                                              :code-editor ""}
-;;                            :html-fn "Loading..."
-;;                            :css-data "Loading..."
-;;                            :test-data "Loading..."})
-
-
-;; Five Factors
-;; 1/ Rendering (down)
-;; 2/ Event Handling (up)
-;; 3/ Data Watching (horizontal)
-;; 4/ Loading Data (3d)
-;; 5/ Action Layer (3d)
-
-;; ;; DATA WATCH FUNCTIONS
-;; (def compile-template!
-;;   (fn []
-;;     (let [template (get-in @antares/app-state [:html-fn])
-;;           test-data (get-in @antares/app-state [:test-data])]
-;;       (antares/http-post "http://localhost:8989/compile-template"
-;;                          {:params {:compile-data test-data
-;;                                    :template template}
-;;                           :handler (fn [response]
-;;                                      (antares/cursor->value [:compiled-template] response))}))))
-
-;; (def compile-css!
-;;   (fn []
-;;     (let [css-data (get-in @antares/app-state [:css-data])
-;;           target-node (.querySelector js/document ".template-css-render")]
-;;       (set! (.-innerHTML target-node) (antares/compile-css css-data)))))
-
-;; ;; EVENT ACTIONS
-;; (def save-template!
-;;   (fn [event]
-;;     (let [template-id 17592186045418
-;;           html-fn (get-in @antares/app-state [:html-fn])
-;;           css-data (get-in @antares/app-state [:css-data])
-;;           test-data (get-in @antares/app-state [:test-data])]
-;;       (antares/http-post (str "http://localhost:8989/template/" template-id "/save")
-;;                          {:params {:eid template-id
-;;                                    :html-fn html-fn
-;;                                    :css-data css-data
-;;                                    :test-data test-data}
-;;                           :handler (fn [response] (.log js/console response))}))))
-
-;; ;; HTML FN
-;; (antares/create-component
-;;  {:ident :html-fn
-;;   :data-type :string
-;;   :app-cursor [:html-fn]
-;;   :dom-cursor "#html-fn"
-;;   :initialize-fn load-html-fn
-;;   :render-fn (fn [data]
-;;                [:textarea data])
-;;   :post-render-fn (postrender/textarea->codemirror [:html-fn] "#html-fn textarea")})
-
-;; ;; CSS DATA
-;; (antares/create-component
-;;  {:ident :css-data
-;;   :data-type :string
-;;   :app-cursor [:css-data]
-;;   :dom-cursor "#css-data"
-;;   :initialize-fn load-css-data
-;;   :render-fn (fn [data]
-;;                [:textarea data])
-;;   :post-render-fn (postrender/textarea->codemirror [:css-data] "#css-data textarea")})
-
-;; ;; TEST DATA
-;; (antares/create-component
-;;  {:ident :test-data
-;;   :data-type :string
-;;   :app-cursor [:test-data]
-;;   :dom-cursor "#test-data"
-;;   :initialize-fn load-test-data
-;;   :render-fn (fn [data]
-;;                [:textarea data])
-;;   :post-render-fn (postrender/textarea->codemirror [:test-data] "#test-data textarea")})
-
-;; ;; Compiled Template HTML
-;; (antares/create-component
-;;  {:ident :compiled-template
-;;   :data-type :string
-;;   :app-cursor [:compiled-template]
-;;   :dom-cursor "#compiled-template-render"
-;;   :initialize-fn (fn [] "[:div.template]")
-;;   :render-fn (fn [data] (antares/read-string data))})
-
-;; ;; Save Template Button
-;; (antares/create-component
-;;  {:ident :save-template-button
-;;   :data-type :string
-;;   :app-cursor [:save-template-button-text]
-;;   :dom-cursor "#save-template-action"
-;;   :initialize-fn (fn [] "Save Template")
-;;   :render-fn (fn [data]
-;;                [:div {:class "ui button"} data])
-;;   :interactions [{:event-type "click"
-;;                   :event-action save-template!}]})
-
-;; (antares/create-data-watcher
-;;  {:ident :compile-template-from-html
-;;   :app-cursor [:html-fn]
-;;   :watch-fn compile-template!})
-
-;; (antares/create-data-watcher
-;;  {:ident :compile-template-from-test-data
-;;   :app-cursor [:test-data]
-;;   :watch-fn compile-template!})
-
-;; (antares/create-data-watcher
-;;  {:ident :compile-css-data
-;;   :app-cursor [:css-data]
-;;   :watch-fn compile-css!})
-
-;; REPL
-
-#_
-(
- (require 'weasel.repl.websocket)
- (cemerick.piggieback/cljs-repl
-  :repl-env (weasel.repl.websocket/repl-env
-             :ip "0.0.0.0" :port 9001))
-)
+;; RENDERER
+(antares/renderer root)
