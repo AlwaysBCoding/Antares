@@ -1,7 +1,7 @@
 (ns template-builder.core
   (:require [antares.core :as antares]))
 
-;; INITIAL STATE
+;; INITIAL STATE SYNC
 (reset! antares/app-state {:tabs [{:display "HTML FN"}
                                   {:display "CSS"}
                                   {:display "TEST DATA"}]
@@ -68,6 +68,9 @@
     :render (fn [data]
               [:div#template-code-editor
                [:textarea.code-editor (-> data :display)]])
+    :style [:div#template-code-editor
+            [:div.CodeMirror
+             {:min-height "600px"}]]
     :component-did-update (fn [self]
                             (let [codemirror (.fromTextArea js/CodeMirror (.querySelector js/document "#template-code-editor textarea") {})
                                   options {"theme" "solarized light"
@@ -98,15 +101,13 @@
                 [:div.column.wide.sixteen
                  (antares/render-html app-state-inspector data)]]
                [:div.row
-                [:div.column.wide.sixteen
-                 [:h1 "Template Builder"]]]
-               [:div.row
-                [:div.column.wide.six
+                [:div.column.wide.eight
                  (antares/render-html tab-list (-> data :tabs))
                  (antares/render-html code-editor (-> data :code-editor))]]])
     :style [:div.container
             (-> app-state-inspector :style)
-            (-> tab-list :style)]}))
+            (-> tab-list :style)
+            (-> code-editor :style)]}))
 
 ;; BIND COMPONENTS
 (antares/bind root [] "#antares")
