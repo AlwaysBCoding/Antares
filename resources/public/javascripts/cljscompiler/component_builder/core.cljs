@@ -16,7 +16,7 @@
                            :test-data {:display "{:display \"Something\"\n :subtitle \"This is a subtitle\"}"}
                            :initialize {:display ""}
                            :component-did-update {:display ""}
-                           :event-mappings {:display ""}
+                           :event-mappings {:display "[{}]"}
                            :controller-actions {:display ""}
                            :component {:html ""
                                        :css ""}})
@@ -26,32 +26,43 @@
 ;; EVENT MAPPINGS
 (defn event-mappings
   [event]
-  (cond
-   
-   (and (= (-> event .-type) "click")
-        (antares/has-class? (-> event .-target) "tab")) [:activate-tab {:display (-> event .-target .-textContent)
-                                                                        :ident (-> event .-target .-dataset .-ident keyword)}]
 
-   :else [:no-action {}]))
+  (let [static-mappings [{:condition (and (= (-> event .-type) "click")
+                                          (antares/has-class? (-> event .-target) "tab"))
+                          :control [:activate-tab {:display (-> event .-target .-textContent)
+                                                   :ident (-> event .-target .-dataset .-ident keyword)}]}]
+        app-mappings static-mappings]
+
+    (doseq [event-mapping app-mappings]
+      (if (:condition event-mapping)
+        (controller (:control event-mapping))))))
 
 ;; EVENT CONTROLLER
 (defn controller
   [[control data]]
-  (cond
-   (= control :activate-tab) (do (antares/cursor->value [:active-tab] data)
-                                 (antares/cursor->value [:code-editor] (antares/get-value [(-> data :ident)])))
 
-   (= control :update-code) (do (antares/cursor->value [:code-editor] {:display (.getValue data)})
-                                (antares/cursor->value [(-> (antares/get-value [:active-tab]) :ident)] {:display (.getValue data)})                                
-                                (cond
-                                 (or (= (-> (antares/get-value [:active-tab]) :ident) :render) (= (-> (antares/get-value [:active-tab]) :ident) :test-data))
-                                   (antares/post {:uri "http://localhost:8989/compile-template"
-                                                  :params {:compile-data (-> (antares/get-value [:test-data]) :display)
-                                                           :template (-> (antares/get-value [:render]) :display)}
-                                                  :handler (fn [response]
-                                                             (antares/cursor->value [:component :html] (antares/compile-html! (antares/string->data response))))})
+  (let [static-controls [{:control :activate-tab
+                          :action (fn [data]
+                                    (antares/cursor->value [:active-tab] data)
+                                    (antares/cursor->value [:code-editor] (antares/get-value [(-> data :ident)])))}
+                          
+                         {:control :update-code
+                          :action (fn [data]
+                                    (antares/cursor->value [:code-editor] {:display (.getValue data)})
+                                    (antares/cursor->value [(-> (antares/get-value [:active-tab]) :ident)] {:display (.getValue data)})
+                                    (cond
+                                     (or (= (-> (antares/get-value [:active-tab]) :ident) :render) (= (-> (antares/get-value [:active-tab]) :ident) :test-data))
+                                     (antares/post {:uri "http://localhost:8989/compile-template"
+                                                    :params {:compile-data (-> (antares/get-value [:test-data]) :display)
+                                                             :template (-> (antares/get-value [:render]) :display)}
+                                                    :handler (fn [response]
+                                                               (antares/cursor->value [:component :html] (antares/compile-html! (antares/string->data response))))})
+                                     
+                                     (= (-> (antares/get-value [:active-tab]) :ident) :style) (antares/cursor->value [:component :css] (antares/compile-css! (antares/string->data (-> (antares/get-value [:style]) :display))))))}]]
 
-                                   (= (-> (antares/get-value [:active-tab]) :ident) :style) (antares/cursor->value [:component :css] (antares/compile-css! (antares/string->data (-> (antares/get-value [:style]) :display))))))))
+    (doseq [static-control static-controls]
+      (if (= control (-> static-control :control))
+        ((-> static-control :action) data)))))
 
 ;; DEFINE COMPONENTS
 (def tab-list

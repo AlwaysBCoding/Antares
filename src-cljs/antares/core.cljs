@@ -148,9 +148,13 @@
 (defn event-loop
   [event-mappings controller]
   
-  (go
+  #_(go
     (while true
       (>! control-stream (event-mappings (<! event-stream)))))
+
+  (go
+    (while true
+      (event-mappings (<! event-stream))))
 
   (go
     (while true

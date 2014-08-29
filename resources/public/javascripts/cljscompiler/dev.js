@@ -22,6 +22,7 @@ goog.addDependency("../garden/core.js", ['garden.core'], ['cljs.core', 'garden.c
 goog.addDependency("../antares/core.js", ['antares.core'], ['goog.dom', 'goog.dom.classes', 'ajax.core', 'hiccups.runtime', 'cljs.core', 'cljs.core.async', 'clojure.string', 'cljs.reader', 'goog.events', 'garden.core']);
 goog.addDependency("../template_builder/core.js", ['template_builder.core'], ['cljs.core', 'antares.core']);
 goog.addDependency("../antares/postrender.js", ['antares.postrender'], ['cljs.core', 'antares.core']);
+goog.addDependency("../shaun_example/core.js", ['shaun_example.core'], ['cljs.core', 'antares.core']);
 goog.addDependency("../antares/interactions.js", ['antares.interactions'], ['goog.dom', 'goog.dom.classes', 'cljs.core', 'goog.dom.dataset', 'antares.core', 'goog.events']);
 goog.addDependency("../no/en/core.js", ['no.en.core'], ['cljs.core', 'goog.crypt.base64', 'clojure.string', 'cljs.reader']);
 goog.addDependency("../cljs_http/util.js", ['cljs_http.util'], ['no.en.core', 'goog.Uri', 'cljs.core', 'goog.userAgent', 'clojure.string']);
