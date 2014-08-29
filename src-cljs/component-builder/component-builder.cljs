@@ -42,12 +42,16 @@
                                  (antares/cursor->value [:code-editor] (antares/get-value [(-> data :ident)])))
 
    (= control :update-code) (do (antares/cursor->value [:code-editor] {:display (.getValue data)})
-                                (antares/cursor->value [(-> (antares/get-value [:active-tab]) :ident)] {:display (.getValue data)})
-                                (antares/post {:uri "http://localhost:8989/compile-template"
-                                               :params {:compile-data (-> (antares/get-value [:test-data]) :display)
-                                                        :template (-> (antares/get-value [:render]) :display)}
-                                               :handler (fn [response]
-                                                          (antares/cursor->value [:component :html] (antares/compile-html! (antares/string->data response))))}))))
+                                (antares/cursor->value [(-> (antares/get-value [:active-tab]) :ident)] {:display (.getValue data)})                                
+                                (cond
+                                 (or (= (-> (antares/get-value [:active-tab]) :ident) :render) (= (-> (antares/get-value [:active-tab]) :ident) :test-data))
+                                   (antares/post {:uri "http://localhost:8989/compile-template"
+                                                  :params {:compile-data (-> (antares/get-value [:test-data]) :display)
+                                                           :template (-> (antares/get-value [:render]) :display)}
+                                                  :handler (fn [response]
+                                                             (antares/cursor->value [:component :html] (antares/compile-html! (antares/string->data response))))})
+
+                                   (= (-> (antares/get-value [:active-tab]) :ident) :style) (antares/cursor->value [:component :css] (antares/compile-css! (antares/string->data (-> (antares/get-value [:style]) :display))))))))
 
 ;; DEFINE COMPONENTS
 (def tab-list
