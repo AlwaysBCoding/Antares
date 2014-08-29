@@ -15,6 +15,14 @@
   [string]
   (cljs-reader/read-string string))
 
+(defn has-class?
+  [node class-name]
+  (.contains (-> node .-classList) class-name))
+
+(defn has-id?
+  [node id]
+  (= (-> node .-id) id))
+
 (def app-state (atom {}))
 (def registered-components (atom []))
 
@@ -111,7 +119,7 @@
     (component-will-mount component)
     (mount-component component component-data dom-cursor)
     (doseq [component @registered-components]
-      (component-did-mount component app-cursor dom-cursor))
+      (component-did-update component))
     (component-did-mount component app-cursor dom-cursor)))
 
 ;; EVENT DISPATCHER
