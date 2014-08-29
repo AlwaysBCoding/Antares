@@ -6,10 +6,20 @@
                                   {:display "CSS"}
                                   {:display "TEST DATA"}]
                            :active-tab {}
+                           :active-template-id {:display 17592186045418}
                            :code-editor {:display ""}
-                           :html-fn {:display "(fn [data] \n (+ 1 2 3))"}
-                           :css-data {:display "[:div.template \n {:color \"green\"}]]"}
-                           :test-data {:display "{:vendor-name \"Profish\"}"}})
+                           :html-fn {:display ""}
+                           :css-data {:display ""}
+                           :test-data {:display ""}})
+
+;; INITIAL STATE ASYNC
+(antares/get
+ {:uri (str "http://localhost:8989/template/" (:display (get-in @antares/app-state [:active-template-id])))
+  :handler (fn [response]
+             (let [response-data (antares/string->data response)]
+               (antares/cursor->value [:html-fn] {:display (-> response-data :html-fn)})
+               (antares/cursor->value [:css-data] {:display (-> response-data :css-data)})
+               (antares/cursor->value [:test-data] {:display (-> response-data :test-data)})))})
 
 ;; EVENT MAPPINGS
 (defn event-mappings
@@ -24,7 +34,6 @@
 ;; EVENT CONTROLLER
 (defn controller
   [[control data]]
-  (.log js/console (pr-str control))
   (cond
    (= control :activate-tab) (do (case (-> data :display)
                                    "HTML FN" (antares/cursor->value [:code-editor] (get-in @antares/app-state [:html-fn]))
@@ -37,9 +46,6 @@
                                   "CSS"     (antares/cursor->value [:css-data] {:display (.getValue data)})
                                   "TEST DATA" (antares/cursor->value [:test-data] {:display (.getValue data)}))
                                 (antares/cursor->value [:code-editor] {:display (.getValue data)}))))
-
-;; EVENT LOOP
-(antares/event-loop event-mappings controller)
 
 ;; DEFINE COMPONENTS
 (def tab-list
@@ -105,5 +111,8 @@
 ;; BIND COMPONENTS
 (antares/bind root [] "#antares")
 
-;; RENDERER
+;; EVENT LOOP
+(antares/event-loop event-mappings controller)
+
+;; START RENDERER
 (antares/renderer root)

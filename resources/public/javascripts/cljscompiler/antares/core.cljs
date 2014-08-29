@@ -156,3 +156,15 @@
        (set! (.-innerHTML root-node) new-dom)
        (doseq [component @registered-components]
          (component-did-update component))))))
+
+;; ASYNC
+(defn get
+  [request]
+  (ajax/GET (-> request :uri) {:params (-> request :params)
+                               :handler (-> request :handler)}))
+
+(defn post
+  [request]
+  (ajax/POST (-> request :uri) {:params (-> request :params)
+                                :handler (-> request :handler)}))
+
