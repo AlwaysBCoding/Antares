@@ -30,6 +30,7 @@ goog.addDependency("../cljs_http/client.js", ['cljs_http.client'], ['cljs_http.c
 goog.addDependency("../components/core.js", ['components.core'], ['hiccups.runtime', 'cljs.core', 'cljs_http.client', 'antares.core']);
 goog.addDependency("../sandbox/core.js", ['sandbox.core'], ['components.core', 'cljs.core', 'antares.core']);
 goog.addDependency("../antares/importers.js", ['antares.importers'], ['cljs.core', 'cljs_http.client']);
+goog.addDependency("../component_builder/core.js", ['component_builder.core'], ['cljs.core', 'antares.core']);
 goog.addDependency("../refsareblind/test.js", ['refsareblind.test'], ['cljs.core', 'antares.core']);
 goog.addDependency("../antares/dev.js", ['antares.dev'], ['cljs.core', 'antares.core']);
 goog.addDependency("../channels/core.js", ['channels.core'], ['goog.dom', 'cljs.core', 'cljs.core.async', 'goog.events']);

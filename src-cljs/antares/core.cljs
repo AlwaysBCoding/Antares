@@ -41,6 +41,19 @@
   [new-state]
   (reset! app-state (string->data new-state)))
 
+(defn get-value
+  [cursor]
+  (get-in @app-state cursor))
+
+;; COMPILE SERVICES
+(defn compile-html!
+  [html-data]
+  (html-renderer/html html-data))
+
+(defn compile-css!
+  [css-data]
+  (css-renderer/css css-data))
+
 (defprotocol LifeCycle
   (initialize-state [self app-cursor])
   (component-will-mount [self])
