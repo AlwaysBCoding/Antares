@@ -11,9 +11,9 @@
                                   {:display "Controller Actions" :ident :controller-actions}]
                            :active-tab {}
                            :code-editor {:display ""}
-                           :render {:display "(fn [data] [:h1 (-> data :display)])"}
-                           :style {:display "[:h1 {:color \"orange\"}]"}
-                           :test-data {:display "{:display \"Something\"}"}
+                           :render {:display "(fn [data] \n  [:div.template\n   [:h1 (-> data :display)]\n   [:h2 (-> data :subtitle)]])"}
+                           :style {:display "[:div.template\n [:h1 {:color \"orange\"\n       :text-align \"center\"\n       :background-color \"gray\"}]\n [:h2 {:text-align \"center\"\n       :color \"gray\"\n       :background-color \"orange\"}]]"}
+                           :test-data {:display "{:display \"Something\"\n :subtitle \"This is a subtitle\"}"}
                            :initialize {:display ""}
                            :component-did-update {:display ""}
                            :event-mappings {:display ""}
@@ -111,7 +111,10 @@
                [:div.row
                 [:div.column.wide.eight
                  (antares/render-html tab-list (-> data :tabs))
-                 (antares/render-html code-editor (-> data :code-editor))]]])
+                 (antares/render-html code-editor (-> data :code-editor))]
+                [:div.column.wide.eight
+                 [:div#component-preview]
+                 [:style#component-preview-styles]]]])
     :style [:div.container
             (-> app-state-inspector :style)
             (-> tab-list :style)
@@ -125,3 +128,10 @@
 
 ;; START RENDERER
 (antares/renderer root)
+
+(add-watch
+ antares/app-state
+ :component-preview
+ (fn [key reference old-value new-value]
+   (set! (.-innerHTML (.querySelector js/document "#component-preview")) (get-in new-value [:component :html]))
+   (set! (.-innerHTML (.querySelector js/document "#component-preview-styles")) (get-in new-value [:component :css]))))
