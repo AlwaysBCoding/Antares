@@ -2,11 +2,11 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/cljs/hackpad.js",
  "sources":["hackpad.cljs"],
- "lineCount":14,
+ "lineCount":17,
  "mappings":
- ";AAAA;;;;;;AAIA,AAAKA,oBACH,iCAAA,2CAAA,oDAAA,qDAAA,rLAACC,+OAES,iBAAA,AAAA,0FAAA,qEAAA,mFAAA,kDAAA,1SAAKC,iUAGF,wEAAA,2CAAA,yDAAA,mFAAA,2CAAA,uDAAA,cAAA,2CAAA,uDAAA,eAAA,2CAAA,uDAAA,lkBAACC,mCAAoBC;GALlC,uDAAA,mFAAA,wMAAA,mRAAA,tZASU,AAAA,qFAAQA,uHAEA,2BAAA,3BAACC,4DAEA,AAAA,uGAAiBD,oGAExB,2BAAA,mFAAA,9GAACC,yJAEA,AAAA,2FAAWD;AAE1B,8CAAA,iCAAA,/EAACE,4BAAaN;AACd,AAACO,gCAAiBP;AAClB,AAACQ,kCAAmB,AAAA,uGAAiBR,mBAAM,AAAA,2FAAWA",
+ ";AAAA;;;;;;AAIA,AAAKA,oBACH,iCAAA,2CAAA,oDAAA,qDAAA,rLAACC,+OAES,iBAAA,AAAA,0FAAA,qEAAA,mFAAA,kDAAA,1SAAKC,iUAGF,wEAAA,2CAAA,oEAAA,2CAAA,uDAAA,cAAA,yDAAA,mFAAA,2CAAA,uDAAA,cAAA,2CAAA,uDAAA,eAAA,2CAAA,uDAAA,tvBAACC,mCAAoBC;GALlC,uDAAA,mFAAA,wMAAA,nIAUU,AAAA,qFAAQA,uHAEA,2BAAA,mFAAA,2CAAA,zJAACC,wNACa,kBAAA,AAAA,PAAKC;GADnB,yDAEW,kBAAA,AAAA,0FAAA,+DAAA,hKAAKA;iKAdlC,9IAemB,AAAA,uGAAiBF,oGAExB,2BAAA,mFAAA,2CAAA,2DAAA,+DAAA,nRAACC,4UAEU,iBAAA,NAAKH,MAAM,mBAAA,ZAACK;mBACtB,AAAA,2FAAWH;AAE1B,8CAAA,iCAAA,/EAACI,4BAAaR;AACd,AAACS,gCAAiBT;AAClB,AAACU,kCAAmB,AAAA,uGAAiBV,mBAAM,AAAA,2FAAWA",
  "names":
  ["cljs.hackpad/root", "antares.core/component", "data",
   "antares.core/render-html", "components.color-picker/color-picker",
-  "cljs.core/concat", "antares.core/bind", "antares.core/renderer",
-  "antares.core/event-loop"]}
+  "cljs.core/concat", "event", "js/console.log", "antares.core/bind",
+  "antares.core/renderer", "antares.core/event-loop"]}

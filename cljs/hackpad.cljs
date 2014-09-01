@@ -8,18 +8,21 @@
     :render (fn [data]
               [:div.container
                [:h1 "Hello World!"]
-               (antares/render-html color-picker/color-picker {:colors [{:color "red"}
+               (antares/render-html color-picker/color-picker {:active-color {:color "red"}
+                                                               :colors [{:color "red"}
                                                                         {:color "lime"}
                                                                         {:color "blue"}]})])
     :style [:div.container
             (:style color-picker/color-picker)]
 
     :event-mappings (concat
-                     []
+                     [{:condition (fn [event] false)
+                       :action (fn [event] [:no-action {}])}]
                      (:event-mappings color-picker/color-picker))
 
     :controls (concat
-               [{}]
+               [{:command :no-action
+                 :action (fn [data] (js/console.log "this will never happen"))}]
                (:controls color-picker/color-picker))}))
 
 (antares/bind root [] "#antares")

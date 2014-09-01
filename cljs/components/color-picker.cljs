@@ -35,17 +35,34 @@
                             (antares/remove-class node "active"))
                           (antares/add-class (data :target) "active"))}]}))
 
+(def active-color-display
+  (antares/component
+   {:ident :active-color-display
+
+    :render (fn [data]
+              [:div.active-color
+               [:p
+                [:span "Active Color: "]
+                [:span.active-color-name (.toUpperCase (:color data))]]])
+
+    :style [:div.active-color
+            [:span.active-color-name
+             {:color "red"
+              :font-weight "bold"}]]}))
+
 (def color-picker
   (antares/component
    {:ident :color-picker
     :render (fn [data]
               [:div.color-picker
                [:h1 "Color Picker"]
+               (antares/render-html active-color-display (data :active-color))
                [:div.color-swatches
                 (for [color (data :colors)]
                   (antares/render-html color-swatch color))]])
 
     :style [:div.color-picker
+            (:style active-color-display)
             [:div.color-swatches
              (:style color-swatch)]]
 
