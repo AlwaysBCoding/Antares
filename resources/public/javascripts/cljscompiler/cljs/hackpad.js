@@ -1,0 +1,14 @@
+// Compiled by ClojureScript 0.0-2311
+goog.provide('cljs.hackpad');
+goog.require('cljs.core');
+goog.require('components.color_picker');
+goog.require('components.color_picker');
+goog.require('antares.core');
+goog.require('antares.core');
+cljs.hackpad.root = antares.core.component.call(null,new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null,"ident","ident",-742346),new cljs.core.Keyword(null,"root","root",-448657453),new cljs.core.Keyword(null,"render","render",-1408033454),(function (data){return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div.container","div.container",72419955),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"h1","h1",-1896887462),"Hello World!"], null),antares.core.render_html.call(null,components.color_picker.color_picker,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"colors","colors",1157174732),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"color","color",1011675173),"red"], null),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"color","color",1011675173),"lime"], null),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"color","color",1011675173),"blue"], null)], null)], null))], null);
+}),new cljs.core.Keyword(null,"style","style",-496642736),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div.container","div.container",72419955),new cljs.core.Keyword(null,"style","style",-496642736).cljs$core$IFn$_invoke$arity$1(components.color_picker.color_picker)], null),new cljs.core.Keyword(null,"event-mappings","event-mappings",2117797885),cljs.core.concat.call(null,cljs.core.PersistentVector.EMPTY,new cljs.core.Keyword(null,"event-mappings","event-mappings",2117797885).cljs$core$IFn$_invoke$arity$1(components.color_picker.color_picker)),new cljs.core.Keyword(null,"controls","controls",1340701452),cljs.core.concat.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.PersistentArrayMap.EMPTY], null),new cljs.core.Keyword(null,"controls","controls",1340701452).cljs$core$IFn$_invoke$arity$1(components.color_picker.color_picker))], null));
+antares.core.bind.call(null,cljs.hackpad.root,cljs.core.PersistentVector.EMPTY,"#antares");
+antares.core.renderer.call(null,cljs.hackpad.root);
+antares.core.event_loop.call(null,new cljs.core.Keyword(null,"event-mappings","event-mappings",2117797885).cljs$core$IFn$_invoke$arity$1(cljs.hackpad.root),new cljs.core.Keyword(null,"controls","controls",1340701452).cljs$core$IFn$_invoke$arity$1(cljs.hackpad.root));
+
+//# sourceMappingURL=hackpad.js.map

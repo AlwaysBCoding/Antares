@@ -26,7 +26,7 @@
 
   :plugins [[lein-cljsbuild "1.0.3"]]
 
-  :source-paths ["src-clj"]
+  :source-paths ["clj"]
   
   :jvm-opts ["-Xss1g" "-Xmx4g"]
   
@@ -34,12 +34,12 @@
                                    :username ~(System/getenv "ANTARES_DATOMIC_USERNAME")
                                    :password ~(System/getenv "ANTARES_DATOMIC_PASSWORD")}}
 
-  :repl-options {:init-ns web.core}
+  :repl-options {:init-ns dev.repl}
   
   :main web.core
 
   :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src-cljs"]
+                        :source-paths ["cljs"]
                         :compiler {:optimizations :none
                                    :output-to "resources/public/javascripts/cljscompiler/dev.js"
                                    :output-dir "resources/public/javascripts/cljscompiler/"

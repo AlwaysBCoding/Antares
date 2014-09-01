@@ -30,7 +30,10 @@
   (let [static-mappings [{:condition (and (= (-> event .-type) "click")
                                           (antares/has-class? (-> event .-target) "tab"))
                           :control [:activate-tab {:display (-> event .-target .-textContent)
-                                                   :ident (-> event .-target .-dataset .-ident keyword)}]}]
+                                                   :ident (-> event .-target .-dataset .-ident keyword)}]}
+                         {:condition (and (= (-> event .-type) "click")
+                                          (= (-> event .-target .-tagName) "H1"))
+                          :control [:activate-header {:target (-> event .-target)}]}]
         app-mappings static-mappings]
 
     (doseq [event-mapping app-mappings]
@@ -58,7 +61,11 @@
                                                     :handler (fn [response]
                                                                (antares/cursor->value [:component :html] (antares/compile-html! (antares/string->data response))))})
                                      
-                                     (= (-> (antares/get-value [:active-tab]) :ident) :style) (antares/cursor->value [:component :css] (antares/compile-css! (antares/string->data (-> (antares/get-value [:style]) :display))))))}]]
+                                     (= (-> (antares/get-value [:active-tab]) :ident) :style) (antares/cursor->value [:component :css] (antares/compile-css! (antares/string->data (-> (antares/get-value [:style]) :display))))))}
+
+                         {:control :activate-header
+                          :action (fn [data]
+                                    (antares/toggle-class (-> data :target) "active"))}]]
 
     (doseq [static-control static-controls]
       (if (= control (-> static-control :control))

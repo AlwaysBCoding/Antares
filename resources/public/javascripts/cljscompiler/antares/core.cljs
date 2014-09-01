@@ -2,7 +2,7 @@
   (:require-macros [cljs.core.async.macros :refer (go go-loop)]
                    [hiccups.core :as html-renderer])
   (:require [goog.dom :as dom]
-            [goog.dom.classes :as classes]
+            [goog.dom.classes :as classes]            
             [goog.events :as events]
             [cljs.reader :as cljs-reader]
             [clojure.string :as str]
@@ -22,6 +22,22 @@
 (defn has-id?
   [node id]
   (= (-> node .-id) id))
+
+(defn add-class
+  [target class]
+  (classes/add target class))
+
+(defn remove-class
+  [target class]
+  (classes/remove target class))
+
+(defn toggle-class
+  [target class]
+  (classes/toggle target class))
+
+(defn nodelist->array
+  [nodelist]
+  (.call (.-slice (.-prototype js/Array)) nodelist))
 
 (def app-state (atom {}))
 (def registered-components (atom []))
@@ -76,7 +92,9 @@
 (defrecord Component
   [ident
    render
-   style]
+   style
+   event-mappings
+   controls]
   
   Registerable
   (register-component [self]
@@ -88,8 +106,8 @@
       (html-renderer/html (render-fn data))))
 
   (render-css [self]
-    (if-let [css-data (-> self :style)]
-      (css-renderer/css css-data)))
+    (if-let [style-data (-> self :style)]
+      (css-renderer/css style-data)))
 
   Mountable
   (mount-component [self component-data dom-cursor]
@@ -145,20 +163,27 @@
     (events/listen root-node event-name (fn [event]
                                           (put! event-stream event)))))
 
+(defn dispatch-event!
+  [event event-mappings]
+  (doseq [event-mapping event-mappings]
+    (when ((:condition event-mapping) event)
+      (put! control-stream ((:action event-mapping) event)))))
+
+(defn controller-action!
+  [[command data] controls]
+  (doseq [control (filter #(= command (:command %)) controls)]
+    ((:action control) data)))
+
 (defn event-loop
-  [event-mappings controller]
+  [event-mappings controls]
   
-  #_(go
+  (go
     (while true
-      (>! control-stream (event-mappings (<! event-stream)))))
+      (dispatch-event! (<! event-stream) event-mappings)))
 
   (go
     (while true
-      (event-mappings (<! event-stream))))
-
-  (go
-    (while true
-      (controller (<! control-stream)))))
+      (controller-action! (<! control-stream) controls))))
 
 (defn renderer
   [root]
@@ -177,11 +202,11 @@
 ;; ASYNC
 (defn get
   [request]
-  (ajax/GET (-> request :uri) {:params (-> request :params)
-                               :handler (-> request :handler)}))
+  (ajax/GET (-> request :uri) {:params (request :params)
+                               :handler (request :handler)}))
 
 (defn post
   [request]
-  (ajax/POST (-> request :uri) {:params (-> request :params)
-                                :handler (-> request :handler)}))
+  (ajax/POST (-> request :uri) {:params (request :params)
+                                :handler (request :handler)}))
 

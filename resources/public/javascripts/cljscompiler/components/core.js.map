@@ -1,7 +1,7 @@
 {"version":3,
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/components/core.js",
- "sources":["components.cljs"],
- "lineCount":11,
+ "sources":["core.cljs"],
+ "lineCount":7,
  "mappings":";AAAA",
  "names":[]}
