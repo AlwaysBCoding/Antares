@@ -62,7 +62,7 @@ goog.addDependency("structs/prioritypool.js", ['goog.structs.PriorityPool'], ['g
 goog.addDependency("net/xhriopool.js", ['goog.net.XhrIoPool'], ['goog.net.XhrIo', 'goog.structs.PriorityPool']);
 goog.addDependency("net/xhrmanager.js", ['goog.net.XhrManager', 'goog.net.XhrManager.Event', 'goog.net.XhrManager.Request'], ['goog.events', 'goog.events.Event', 'goog.events.EventHandler', 'goog.events.EventTarget', 'goog.net.ErrorCode', 'goog.net.EventType', 'goog.net.XhrIo', 'goog.net.XhrIoPool', 'goog.structs.Map']);
 goog.addDependency("uri/uri.js", ['goog.Uri', 'goog.Uri.QueryData'], ['goog.array', 'goog.string', 'goog.structs', 'goog.structs.Map', 'goog.uri.utils', 'goog.uri.utils.ComponentIndex', 'goog.uri.utils.StandardQueryParam']);
-goog.addDependency("string/stringformat.js", ['goog.string.format'], ['goog.string']);
 goog.addDependency("dom/dataset.js", ['goog.dom.dataset'], ['goog.string']);
+goog.addDependency("string/stringformat.js", ['goog.string.format'], ['goog.string']);
 goog.addDependency("crypt/crypt.js", ['goog.crypt'], ['goog.array', 'goog.asserts']);
 goog.addDependency("crypt/base64.js", ['goog.crypt.base64'], ['goog.crypt', 'goog.userAgent']);

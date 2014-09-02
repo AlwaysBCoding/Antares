@@ -6,8 +6,11 @@
    {:ident :color-swatch
 
     :render (fn [data]
-              [:div.color-swatch
-               {:color (data :color)}])
+              (if (= (data :active-color) (data :color))
+                [:div.color-swatch.active
+                 {:data-color (-> data :color :color)}]
+                [:div.color-swatch
+                 {:data-color (-> data :color :color)}]))
 
     :style [:div.color-swatch
             {:height "40px"
@@ -22,18 +25,9 @@
             [:&.active
              {:border "3px solid red"}]]
 
-    :event-mappings [{:condition (fn [event]
-                                   (and
-                                    (= (-> event .-type) "click")
-                                    (antares/has-class? (-> event .-target) "color-swatch")))
-                      :action (fn [event]
-                                [:activate-color-swatch {:target (-> event .-target)}])}]
+    :event-mappings []
     
-    :controls [{:command :activate-color-swatch
-                :action (fn [data]                          
-                          (doseq [node (antares/nodelist->array (js/document.querySelectorAll ".color-swatch.active"))]
-                            (antares/remove-class node "active"))
-                          (antares/add-class (data :target) "active"))}]}))
+    :controls []}))
 
 (def active-color-display
   (antares/component
@@ -59,7 +53,8 @@
                (antares/render-html active-color-display (data :active-color))
                [:div.color-swatches
                 (for [color (data :colors)]
-                  (antares/render-html color-swatch color))]])
+                  (antares/render-html color-swatch {:color color
+                                                     :active-color (data :active-color)}))]])
 
     :style [:div.color-picker
             (:style active-color-display)
@@ -67,9 +62,18 @@
              (:style color-swatch)]]
 
     :event-mappings (concat
-                     []
+                     [{:condition (fn [event]
+                                   (and
+                                    (= (-> event .-type) "click")
+                                    (antares/has-class? (-> event .-target) "color-swatch")))
+                      :action (fn [event]
+                                [:activate-color-swatch {:target (-> event .-target)}])}]
                      (:event-mappings color-swatch))
 
     :controls (concat
-               []
+               [{:command :activate-color-swatch
+                 :action (fn [data]
+                           (antares/cursor->value
+                            [:root :color-picker :active-color]
+                            {:color (antares/get-data (data :target) "color")}))}]
                (:controls color-swatch))}))

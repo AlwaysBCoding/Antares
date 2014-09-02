@@ -2,11 +2,13 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/cljs/hackpad.js",
  "sources":["hackpad.cljs"],
- "lineCount":17,
+ "lineCount":18,
  "mappings":
- ";AAAA;;;;;;AAIA,AAAKA,oBACH,iCAAA,2CAAA,oDAAA,qDAAA,rLAACC,+OAES,iBAAA,AAAA,0FAAA,qEAAA,mFAAA,kDAAA,1SAAKC,iUAGF,wEAAA,2CAAA,oEAAA,2CAAA,uDAAA,cAAA,yDAAA,mFAAA,2CAAA,uDAAA,cAAA,2CAAA,uDAAA,eAAA,2CAAA,uDAAA,tvBAACC,mCAAoBC;GALlC,uDAAA,mFAAA,wMAAA,nIAUU,AAAA,qFAAQA,uHAEA,2BAAA,mFAAA,2CAAA,zJAACC,wNACa,kBAAA,AAAA,PAAKC;GADnB,yDAEW,kBAAA,AAAA,0FAAA,+DAAA,hKAAKA;iKAdlC,9IAemB,AAAA,uGAAiBF,oGAExB,2BAAA,mFAAA,2CAAA,2DAAA,+DAAA,nRAACC,4UAEU,iBAAA,NAAKH,MAAM,mBAAA,ZAACK;mBACtB,AAAA,2FAAWH;AAE1B,8CAAA,iCAAA,/EAACI,4BAAaR;AACd,AAACS,gCAAiBT;AAClB,AAACU,kCAAmB,AAAA,uGAAiBV,mBAAM,AAAA,2FAAWA",
+ ";AAAA;;;;;;AAKA,uDAAA,2CAAA,qDAAA,2CAAA,qEAAA,2CAAA,yDAAA,mFAAA,2CAAA,uDAAA,cAAA,2CAAA,uDAAA,eAAA,2CAAA,uDAAA,eAAA,2CAAA,uDAAA,yBAAA,oEAAA,2CAAA,uDAAA,eAAA,qEAAA,roCAACA,gCAAOC;AASR,AAAKC,oBACH,iCAAA,2CAAA,oDAAA,qDAAA,rLAACC,+OAES,iBAAA,AAAA,0FAAA,hGAAKC,qKAEF,AAACC,mCAAoBC,qCAA0B,2BAAA,AAAAC,kDAAA,mFAAA,qDAAA,rNAACC,qDAAQP;GAJrE,uDAAA,mFAAA,wMAAA,nIAMU,AAAA,qFAAQK,uHAEA,2BAAA,mFAAA,2CAAA,zJAACG,wNACa,kBAAA,AAAA,PAAKC;GADnB,yDAEW,kBAAA,AAAA,0FAAA,+DAAA,hKAAKA;iKAVlC,9IAWmB,AAAA,uGAAiBJ,oGAExB,2BAAA,mFAAA,2CAAA,2DAAA,+DAAA,nRAACG,4UAEU,iBAAA,NAAKL,MAAM,mBAAA,ZAACO;mBACtB,AAAA,2FAAWL;AAE1B,8CAAA,mFAAA,6DAAA,9LAACM,4BAAaV;AACd,AAACW,gCAAiBX;AAClB,AAACY,kCAAmB,AAAA,uGAAiBZ,mBAAM,AAAA,2FAAWA",
  "names":
- ["cljs.hackpad/root", "antares.core/component", "data",
-  "antares.core/render-html", "components.color-picker/color-picker",
-  "cljs.core/concat", "event", "js/console.log", "antares.core/bind",
-  "antares.core/renderer", "antares.core/event-loop"]}
+ ["cljs.core/reset!", "antares.core/app-state", "cljs.hackpad/root",
+  "antares.core/component", "data", "antares.core/render-html",
+  "components.color-picker/color-picker", "cljs.core/deref",
+  "cljs.core/get-in", "cljs.core/concat", "event", "js/console.log",
+  "antares.core/bind", "antares.core/renderer",
+  "antares.core/event-loop"]}

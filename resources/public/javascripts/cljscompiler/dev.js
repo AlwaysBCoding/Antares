@@ -19,7 +19,7 @@ goog.addDependency("../garden/color.js", ['garden.color'], ['cljs.core', 'garden
 goog.addDependency("../garden/compression.js", ['garden.compression'], ['cljs.core']);
 goog.addDependency("../garden/compiler.js", ['garden.compiler'], ['garden.units', 'garden.types', 'cljs.core', 'garden.util', 'garden.selectors', 'garden.color', 'clojure.string', 'garden.compression']);
 goog.addDependency("../garden/core.js", ['garden.core'], ['cljs.core', 'garden.compiler']);
-goog.addDependency("../antares/core.js", ['antares.core'], ['goog.dom', 'goog.dom.classes', 'ajax.core', 'hiccups.runtime', 'cljs.core', 'cljs.core.async', 'clojure.string', 'cljs.reader', 'goog.events', 'garden.core']);
+goog.addDependency("../antares/core.js", ['antares.core'], ['goog.dom', 'goog.dom.classes', 'ajax.core', 'hiccups.runtime', 'cljs.core', 'goog.dom.dataset', 'cljs.core.async', 'clojure.string', 'cljs.reader', 'goog.events', 'garden.core']);
 goog.addDependency("../template_builder/core.js", ['template_builder.core'], ['cljs.core', 'antares.core']);
 goog.addDependency("../components/color_picker.js", ['components.color_picker'], ['cljs.core', 'antares.core']);
 goog.addDependency("../antares/postrender.js", ['antares.postrender'], ['cljs.core', 'antares.core']);

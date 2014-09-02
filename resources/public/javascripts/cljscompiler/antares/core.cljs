@@ -2,7 +2,8 @@
   (:require-macros [cljs.core.async.macros :refer (go go-loop)]
                    [hiccups.core :as html-renderer])
   (:require [goog.dom :as dom]
-            [goog.dom.classes :as classes]            
+            [goog.dom.classes :as classes]
+            [goog.dom.dataset :as dataset]
             [goog.events :as events]
             [cljs.reader :as cljs-reader]
             [clojure.string :as str]
@@ -35,6 +36,10 @@
 (defn toggle-class
   [target class]
   (classes/toggle target class))
+
+(defn get-data
+  [target property-name]
+  (dataset/get target property-name))
 
 (defn nodelist->array
   [nodelist]
