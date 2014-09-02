@@ -150,6 +150,14 @@
    (register-component component)
    component))
 
+(defn stateless-component
+  [source-map]
+  (component source-map))
+
+(defn stateful-component
+  [source-map]
+  (component source-map))
+
 (defn bind
   [component app-cursor dom-cursor]
   (let [component-data (initialize-state component app-cursor)]

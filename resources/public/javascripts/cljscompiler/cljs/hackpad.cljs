@@ -4,13 +4,15 @@
 
 ;; INITIALIZE DATA
 (reset! antares/app-state {:root
-                           {:color-picker
-                            {:colors [{:color "red"}
-                                      {:color "lime"}
-                                      {:color "blue"}
-                                      {:color "orange"}]
-                             :active-color {:color "lime"}
-                             :color-swatch {}}}})
+                           {:color-picker {}}})
+
+(antares/cursor->value
+ [:root :color-picker]
+ {:colors [{:color "red"}
+           {:color "lime"}
+           {:color "blue"}
+           {:color "orange"}]
+  :active-color {:color "red"}})
 
 (def root
   (antares/component

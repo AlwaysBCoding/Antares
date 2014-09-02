@@ -2,7 +2,7 @@
   (:require [antares.core :as antares]))
 
 (def color-swatch
-  (antares/component
+  (antares/stateless-component
    {:ident :color-swatch
 
     :render (fn [data]
@@ -23,14 +23,10 @@
             [:&:last-child
              {:margin-right "0px"}]
             [:&.active
-             {:border "3px solid red"}]]
-
-    :event-mappings []
-    
-    :controls []}))
+             {:border "3px solid red"}]]}))
 
 (def active-color-display
-  (antares/component
+  (antares/stateless-component
    {:ident :active-color-display
 
     :render (fn [data]
@@ -45,7 +41,7 @@
               :font-weight "bold"}]]}))
 
 (def color-picker
-  (antares/component
+  (antares/stateful-component
    {:ident :color-picker
     :render (fn [data]
               [:div.color-picker
@@ -61,19 +57,15 @@
             [:div.color-swatches
              (:style color-swatch)]]
 
-    :event-mappings (concat
-                     [{:condition (fn [event]
+    :event-mappings [{:condition (fn [event]
                                    (and
                                     (= (-> event .-type) "click")
                                     (antares/has-class? (-> event .-target) "color-swatch")))
                       :action (fn [event]
                                 [:activate-color-swatch {:target (-> event .-target)}])}]
-                     (:event-mappings color-swatch))
-
-    :controls (concat
-               [{:command :activate-color-swatch
-                 :action (fn [data]
-                           (antares/cursor->value
-                            [:root :color-picker :active-color]
-                            {:color (antares/get-data (data :target) "color")}))}]
-               (:controls color-swatch))}))
+    
+    :controls [{:command :activate-color-swatch
+                :action (fn [data]
+                          (antares/cursor->value
+                           [:root :color-picker :active-color]
+                           {:color (antares/get-data (data :target) "color")}))}]}))
