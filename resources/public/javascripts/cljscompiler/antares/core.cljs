@@ -213,6 +213,15 @@
        (doseq [component @registered-components]
          (component-did-update component))))))
 
+;; FROM THE COMPONENT LEVEL
+(defn emit-event!
+  [event]
+  (put! control-stream event))
+
+(defn on-transition
+  [ident cursor watch-fn]
+  (add-watch app-state ident watch-fn))
+
 ;; ASYNC
 (defn get
   [request]

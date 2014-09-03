@@ -1,10 +1,16 @@
 (ns cljs.hackpad
   (:require [antares.core :as antares]
+            [components.codeeditor :as code-editor]
             [components.templates.vendoranalysis :as vendor-analysis]))
 
 (reset! antares/app-state {:root
-                           {:vendor-analysis
-                            {:vendors [{:name "Kelly Produce"
+
+                           {:code-editor
+                            {:display "Hello Code!"}
+                            
+                            :vendor-analysis
+                            {:active-vendor {}
+                             :vendors [{:name "Kelly Produce"
                                         :buyer-score 40
                                         :deliveries 21
                                         :last-month "$4,250"
@@ -42,57 +48,29 @@
 
     :render (fn [data]
               [:div.container
-               (antares/render-html vendor-analysis/vendor-analysis (data :vendor-analysis))])
+               (antares/render-html code-editor/code-editor (-> data :root :code-editor))
+               (antares/render-html vendor-analysis/vendor-analysis (-> data :root :vendor-analysis))])
 
     :style [:div.container
             {:margin-top "25px"}
             (:style vendor-analysis/vendor-analysis)]
 
-    :event-mappings []
+    :event-mappings (concat [] (:event-mappings vendor-analysis/vendor-analysis))
 
-    :controls []}))
+    :controls (concat
+               [{:command :update-editor
+                 :action (fn [data]
+                           (antares/cursor->value [:root :code-editor] {:display (data :value)}))}]
+               (:controls vendor-analysis/vendor-analysis)
+               (:controls code-editor/code-editor))}))
 
-(antares/bind root [:root] "#antares")
+(antares/bind root [] "#antares")
 (antares/renderer root)
 (antares/event-loop (:event-mappings root) (:controls root))
 
-;; CACHE
-
-;; (ns cljs.hackpad
-;;   (:require [antares.core :as antares]
-;;             [components.color-picker :as color-picker]))
-
-;; ;; INITIALIZE DATA
-;; (reset! antares/app-state {:root
-;;                            {:color-picker {}}})
-
-;; (antares/cursor->value
-;;  [:root :color-picker]
-;;  {:colors [{:color "red"}
-;;            {:color "lime"}
-;;            {:color "blue"}
-;;            {:color "orange"}]
-;;   :active-color {:color "red"}})
-
-;; (def root
-;;   (antares/component
-;;    {:ident :root
-;;     :render (fn [data]
-;;               [:div.container
-;;                (antares/render-html color-picker/color-picker (get-in @antares/app-state [:root :color-picker]))])
-;;     :style [:div.container
-;;             (:style color-picker/color-picker)]
-
-;;     :event-mappings (concat
-;;                      [{:condition (fn [event] false)
-;;                        :action (fn [event] [:no-action {}])}]
-;;                      (:event-mappings color-picker/color-picker))
-
-;;     :controls (concat
-;;                [{:command :no-action
-;;                  :action (fn [data] (js/console.log "this will never happen"))}]
-;;                (:controls color-picker/color-picker))}))
-
-;; (antares/bind root [:root] "#antares")
-;; (antares/renderer root)
-;; (antares/event-loop (:event-mappings root) (:controls root))
+(antares/on-transition
+ :query-database
+ [:root :code-editor]
+ (fn [key reference old-value new-value]
+   (if (not= old-value new-value)
+     (js/console.log "TRANSITION ACTIVATED"))))

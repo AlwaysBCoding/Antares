@@ -53,8 +53,9 @@
                  [:th "LAST MONTH"]
                  [:th "KEY OPPORTUNITIES"]]]
                [:tbody
-                (for [vendor data]
-                  [:tr
+                (for [vendor (data :vendors)]
+                  [:tr.vendor-row
+                   {:data-vendor (pr-str vendor)}
                    [:td (vendor :name)]
                    [:td (antares/render-html buyer-score vendor)]
                    [:td (vendor :deliveries)]
@@ -71,7 +72,10 @@
             [:tbody
              [:tr
               {:padding-bottom "5px"
-               :border-bottom "2px solid black"}]]
+               :border-bottom "2px solid black"
+               :cursor "pointer"}
+              [:&.active
+               [:td {:background-color "yellow"}]]]]
             (:style buyer-score)]}))
 
 (def vendor-analysis
@@ -84,7 +88,7 @@
                 [:h2
                  [:span.emphasized "Your Vendors."]
                  [:span.unemphasized "Here are your key vendors we analyzed"]]]
-               (antares/render-html vendor-analysis-table (data :vendors))
+               (antares/render-html vendor-analysis-table data)
                [:div.footer
                 [:h1 "Key Opportunities"]
                 [:p "How can you improve your Buyer Score? We have analyzed each of your vendors and looked for key opportunities for you to change your buying behavior and improve your Buyer Score. Improved Buyer Scores often lead to improved vendor pricing or terms."]
