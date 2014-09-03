@@ -45,6 +45,12 @@
   [nodelist]
   (.call (.-slice (.-prototype js/Array)) nodelist))
 
+(defn has-ancestor-with-class?
+  [node class-name]
+  (if (dom/getAncestorByClass node class-name)
+    true
+    false))
+
 (def app-state (atom {}))
 (def registered-components (atom []))
 
@@ -215,6 +221,10 @@
 
 ;; FROM THE COMPONENT LEVEL
 (defn emit-event!
+  [event]
+  (put! event-stream event))
+
+(defn emit-control!
   [event]
   (put! control-stream event))
 

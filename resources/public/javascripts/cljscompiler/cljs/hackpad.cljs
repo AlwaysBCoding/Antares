@@ -80,7 +80,11 @@
     :controls (concat
                [{:command :update-editor
                  :action (fn [data]
-                           (antares/cursor->value [:root :query-editor] {:display (data :value)}))}]
+                           (cond
+                            (antares/has-ancestor-with-class? (-> data :event .-target) "query-editor")
+                            (antares/cursor->value [:root :query-editor] {:display (data :value)})
+                            (antares/has-ancestor-with-class? (-> data :event .-target) "query-mapping")
+                            (antares/cursor->value [:root :query-mapping] {:display (data :value)})))}]
                (:controls vendor-analysis/vendor-analysis)
                (:controls code-editor/code-editor))}))
 
@@ -90,10 +94,17 @@
 
 (antares/on-transition
  :query-database
- [:root :code-editor]
+ [:root :query-editor]
  (fn [key reference old-value new-value]
-   (if (not= old-value new-value)
+   (if (not= (get-in old-value [:root :query-editor]) (get-in new-value [:root :query-editor]))
      (antares/post {:uri "http://localhost:8989/datomic/query"
                     :params {:query (-> new-value :root :query-editor :display antares/string->data)}
                     :handler (fn [response]
                                (antares/cursor->value [:root :query-response :response] (antares/string->data response)))}))))
+
+(antares/on-transition
+ :query-mapping-test
+ [:root :query-mapping]
+ (fn [key reference old-value new-value]
+   (if (not= (get-in old-value [:root :query-mapping]) (get-in new-value [:root :query-mapping]))
+     (js/console.log "TRANSITION"))))

@@ -21,8 +21,12 @@
                                 (doseq [[option-key option-value] options]
                                   (.setOption codemirror option-key option-value))
 
-                                (.on codemirror "blur" (fn [self event]
-                                                         (antares/emit-event! [:update-editor {:value (.getValue self)}]))))))
+                                (.on codemirror "keydown" (fn [self event]
+                                                            (if (and
+                                                                 (= (.-keyCode event) 13)
+                                                                 (.-shiftKey event))
+                                                              (antares/emit-control! [:update-editor {:event event
+                                                                                                      :value (.getValue self)}])))))))
 
     :style []
 
