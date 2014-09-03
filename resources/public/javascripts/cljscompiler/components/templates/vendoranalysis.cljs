@@ -96,10 +96,11 @@
 
     :style [:div.vendor-analysis
             [:div.header
-             {:font-family "Futura"}
+             {:font-family "museo-slab"
+              :color "rgb(55,58,64)"}
              [:h2
               [:span.emphasized
-               {:font-family "Futura"
+               {:font-weight "900"
                 :margin-right "10px"
                 :margin-left "10px"}]]]
             (:style vendor-analysis-table)

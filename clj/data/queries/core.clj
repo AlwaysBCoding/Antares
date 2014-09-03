@@ -6,3 +6,9 @@
 (defnk get-template
   [eid]
   (d/entity (config/db) eid))
+
+(defnk basic-query
+  [query]
+  (d/q
+   query
+   (config/db)))

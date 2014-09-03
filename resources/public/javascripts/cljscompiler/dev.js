@@ -33,8 +33,9 @@ goog.addDependency("../cljs_http/core.js", ['cljs_http.core'], ['goog.net.XhrIo'
 goog.addDependency("../cljs_http/client.js", ['cljs_http.client'], ['cljs_http.core', 'no.en.core', 'goog.Uri', 'cljs.core', 'cljs_http.util', 'cljs.core.async', 'clojure.string', 'cljs.reader']);
 goog.addDependency("../antares/importers.js", ['antares.importers'], ['cljs.core', 'cljs_http.client']);
 goog.addDependency("../components/codeeditor.js", ['components.codeeditor'], ['cljs.core', 'antares.core']);
+goog.addDependency("../components/queryresponse.js", ['components.queryresponse'], ['cljs.core', 'antares.core']);
 goog.addDependency("../component_builder/core.js", ['component_builder.core'], ['cljs.core', 'antares.core']);
-goog.addDependency("../cljs/hackpad.js", ['cljs.hackpad'], ['components.templates.vendoranalysis', 'cljs.core', 'components.codeeditor', 'antares.core']);
+goog.addDependency("../cljs/hackpad.js", ['cljs.hackpad'], ['components.templates.vendoranalysis', 'cljs.core', 'components.queryresponse', 'components.codeeditor', 'antares.core']);
 goog.addDependency("../refsareblind/test.js", ['refsareblind.test'], ['cljs.core', 'antares.core']);
 goog.addDependency("../antares/dev.js", ['antares.dev'], ['cljs.core', 'antares.core']);
 goog.addDependency("../channels/core.js", ['channels.core'], ['goog.dom', 'cljs.core', 'cljs.core.async', 'goog.events']);

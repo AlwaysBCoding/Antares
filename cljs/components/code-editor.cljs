@@ -10,15 +10,19 @@
                [:textarea (data :display)]])
 
     :component-did-update (fn [self]
-                            (let [codemirror (js/CodeMirror.fromTextArea (js/document.querySelector ".code-editor textarea") {})
+                            (let [nodelist (antares/nodelist->array (js/document.querySelectorAll ".code-editor textarea"))
+                                  codemirrors (map #(js/CodeMirror.fromTextArea %) nodelist)
                                   options {"theme" "solarized light"
                                             "mode" "clojure"
                                             "matchBrackets" true
                                             "lineNumbers" true}]
-                              (doseq [[option-key option-value] options]
-                                (.setOption codemirror option-key option-value))
-                              (.on codemirror "blur" (fn [self event]
-                                                       (antares/emit-event! [:update-editor {:value (.getValue self)}])))))
+
+                              (doseq [codemirror codemirrors]
+                                (doseq [[option-key option-value] options]
+                                  (.setOption codemirror option-key option-value))
+
+                                (.on codemirror "blur" (fn [self event]
+                                                         (antares/emit-event! [:update-editor {:value (.getValue self)}]))))))
 
     :style []
 

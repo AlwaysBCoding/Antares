@@ -32,3 +32,9 @@
        (queries/get-template)
        (d/touch)
        (serializers/get-template)))
+
+(defn datomic-query
+  [request]  
+  (->> {:query (-> request :params :query eval)}
+       (queries/basic-query)
+       (pr-str)))

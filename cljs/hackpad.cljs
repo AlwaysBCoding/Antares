@@ -1,13 +1,20 @@
 (ns cljs.hackpad
   (:require [antares.core :as antares]
             [components.codeeditor :as code-editor]
+            [components.queryresponse :as query-response]
             [components.templates.vendoranalysis :as vendor-analysis]))
 
 (reset! antares/app-state {:root
 
-                           {:code-editor
-                            {:display "Hello Code!"}
-                            
+                           {:query-editor
+                            {:display "Query"}
+
+                            :query-response
+                            {:response #{[123 "Something"] [456 "Something Else"]}}
+
+                            :query-mapping
+                            {:display "Query Mapping Fn"}
+
                             :vendor-analysis
                             {:active-vendor {}
                              :vendors [{:name "Kelly Produce"
@@ -48,11 +55,24 @@
 
     :render (fn [data]
               [:div.container
-               (antares/render-html code-editor/code-editor (-> data :root :code-editor))
-               (antares/render-html vendor-analysis/vendor-analysis (-> data :root :vendor-analysis))])
+               [:div.query-editor
+                [:h1 "Query Editor"]
+                (antares/render-html code-editor/code-editor (-> data :root :query-editor))]
+               [:div.query-response
+                [:h1 "Query Response"]
+                (antares/render-html query-response/query-response (-> data :root :query-response))]
+               [:div.query-mapping
+                [:h1 "Query Mapping"]
+                (antares/render-html code-editor/code-editor (-> data :root :query-mapping))]
+               [:div.template
+                [:h1 "Template"]
+                (antares/render-html vendor-analysis/vendor-analysis (-> data :root :vendor-analysis))]])
 
     :style [:div.container
             {:margin-top "25px"}
+            [:h1 {:font-family "museo-slab"
+                  :font-weight "900"
+                  :border-bottom "1px solid gray"}]
             (:style vendor-analysis/vendor-analysis)]
 
     :event-mappings (concat [] (:event-mappings vendor-analysis/vendor-analysis))
@@ -60,7 +80,7 @@
     :controls (concat
                [{:command :update-editor
                  :action (fn [data]
-                           (antares/cursor->value [:root :code-editor] {:display (data :value)}))}]
+                           (antares/cursor->value [:root :query-editor] {:display (data :value)}))}]
                (:controls vendor-analysis/vendor-analysis)
                (:controls code-editor/code-editor))}))
 
@@ -73,4 +93,7 @@
  [:root :code-editor]
  (fn [key reference old-value new-value]
    (if (not= old-value new-value)
-     (js/console.log "TRANSITION ACTIVATED"))))
+     (antares/post {:uri "http://localhost:8989/datomic/query"
+                    :params {:query (-> new-value :root :query-editor :display antares/string->data)}
+                    :handler (fn [response]
+                               (antares/cursor->value [:root :query-response :response] (antares/string->data response)))}))))
