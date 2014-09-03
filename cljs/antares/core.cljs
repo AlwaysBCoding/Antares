@@ -223,4 +223,3 @@
   [request]
   (ajax/POST (-> request :uri) {:params (request :params)
                                 :handler (request :handler)}))
-

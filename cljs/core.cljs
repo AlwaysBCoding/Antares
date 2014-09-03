@@ -1,6 +1,5 @@
 (ns sandbox.core
-  (:require [antares.core :as antares]
-            [components.core :as components]))
+  (:require [antares.core :as antares]))
 
 ;; (antares/create-component components/files-list)
 ;; (antares/create-component components/templates-list)

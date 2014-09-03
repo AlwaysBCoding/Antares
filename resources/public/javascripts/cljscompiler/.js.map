@@ -1,7 +1,7 @@
 {"version":3,
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/.js",
- "sources":["core.cljs"],
+ "sources":["vendor-analysis.cljs"],
  "lineCount":3,
  "mappings":"",
  "names":[]}

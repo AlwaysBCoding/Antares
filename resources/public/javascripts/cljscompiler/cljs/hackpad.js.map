@@ -2,14 +2,13 @@
  "file":
  "/Users/AlwaysBCoding/Desktop/code/clojure/sandbox/resources/public/javascripts/cljscompiler/cljs/hackpad.js",
  "sources":["hackpad.cljs"],
- "lineCount":19,
+ "lineCount":15,
  "mappings":
- ";AAAA;;;;;;AAKA,uDAAA,2CAAA,qDAAA,2CAAA,qEAAA,vQAACA,gCAAOC;AAGR,wCAAA,mFAAA,qDAAA,6EAAA,2CAAA,yDAAA,mFAAA,2CAAA,uDAAA,cAAA,2CAAA,uDAAA,eAAA,2CAAA,uDAAA,eAAA,2CAAA,uDAAA,yBAAA,oEAAA,2CAAA,uDAAA,viCAACC;AAQD,AAAKC,oBACH,iCAAA,2CAAA,oDAAA,qDAAA,rLAACC,+OAES,iBAAA,AAAA,0FAAA,hGAAKC,qKAEF,AAACC,mCAAoBC,qCAA0B,2BAAA,AAAAC,kDAAA,mFAAA,qDAAA,rNAACC,qDAAQR;GAJrE,uDAAA,mFAAA,wMAAA,nIAMU,AAAA,qFAAQM,uHAEA,2BAAA,mFAAA,2CAAA,zJAACG,wNACa,kBAAA,AAAA,PAAKC;GADnB,yDAEW,kBAAA,AAAA,0FAAA,+DAAA,hKAAKA;iKAVlC,9IAWmB,AAAA,uGAAiBJ,oGAExB,2BAAA,mFAAA,2CAAA,2DAAA,+DAAA,nRAACG,4UAEU,iBAAA,NAAKL,MAAM,mBAAA,ZAACO;mBACtB,AAAA,2FAAWL;AAE1B,8CAAA,mFAAA,6DAAA,9LAACM,4BAAaV;AACd,AAACW,gCAAiBX;AAClB,AAACY,kCAAmB,AAAA,uGAAiBZ,mBAAM,AAAA,2FAAWA",
+ ";AAAA;;;;;;AAIA,uDAAA,2CAAA,qDAAA,2CAAA,2EAAA,2CAAA,2DAAA,mFAAA,2CAAA,qDAAA,gBAAA,mEAAA,KAAA,iEAAA,KAAA,kEAAA,SAAA,8EAAA,mFAAA,2CAAA,0DAAA,+BAAA,2CAAA,0DAAA,0BAAA,2CAAA,0DAAA,4BAAA,2CAAA,0DAAA,sCAAA,2CAAA,qDAAA,aAAA,mEAAA,KAAA,iEAAA,KAAA,kEAAA,SAAA,8EAAA,mFAAA,2CAAA,0DAAA,8BAAA,2CAAA,0DAAA,sCAAA,2CAAA,qDAAA,iBAAA,mEAAA,KAAA,iEAAA,KAAA,kEAAA,SAAA,8EAAA,mFAAA,2CAAA,0DAAA,+BAAA,2CAAA,0DAAA,mCAAA,2CAAA,0DAAA,2BAAA,2CAAA,0DAAA,qCAAA,2CAAA,qDAAA,kBAAA,mEAAA,KAAA,iEAAA,KAAA,kEAAA,SAAA,8EAAA,mFAAA,2CAAA,0DAAA,mCAAA,2CAAA,0DAAA,94HAACA,gCAAOC;AAkCR,AAAKC,oBACH,0CAAA,2CAAA,oDAAA,qDAAA,9LAACC,wPAGS,iBAAA,AAAA,0FAAA,hGAAKC,qKAEF,AAACC,mCAAoBC,oDAAgC,eAAA,fAACF;GALnE,uDAAA,mFAAA,qEAAA,2CAAA,gEAAA,iKAAA,yEAAA,iCAAA,6DAAA,zTASU,AAAA,qFAAQE;AAMpB,8CAAA,mFAAA,6DAAA,9LAACC,4BAAaL;AACd,AAACM,gCAAiBN;AAClB,AAACO,kCAAmB,AAAA,uGAAiBP,mBAAM,AAAA,2FAAWA",
  "names":
- ["cljs.core/reset!", "antares.core/app-state",
-  "antares.core/cursor->value", "cljs.hackpad/root",
-  "antares.core/component", "data", "antares.core/render-html",
-  "components.color-picker/color-picker", "cljs.core/deref",
-  "cljs.core/get-in", "cljs.core/concat", "event", "js/console.log",
+ ["cljs.core/reset!", "antares.core/app-state", "cljs.hackpad/root",
+  "antares.core/stateful-component", "data",
+  "antares.core/render-html",
+  "components.templates.vendoranalysis/vendor-analysis",
   "antares.core/bind", "antares.core/renderer",
   "antares.core/event-loop"]}
