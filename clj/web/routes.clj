@@ -7,6 +7,7 @@
   (GET "/" [] "HELLO WORLD!")
   (POST "/transit-test"         [] controllers/transit-test)
   (POST "/compile-template"     [] controllers/compile-template)
+  (POST "/compile-clojure-fn"   [] controllers/compile-clojure-fn)
   (GET "/template/:id"          [] controllers/get-template)
   (POST "/template/:id/save"    [] controllers/save-template)
   (POST "/datomic/query"        [] controllers/datomic-query))

@@ -13,6 +13,9 @@
 (def active-file-data-state (atom {:filename ""
                                    :filecontent ""}))
 
+(def mapping-fn-state (atom ""))
+(def mapping-fn-result-state (atom []))
+
 ;; Initializers
 (antares/get {:uri "http://localhost:8889/services/s3/vendoriq-data-imports/list-objects"
               :params {}
@@ -57,7 +60,7 @@
     [:div.active-file
      [:h1 (active-file-data :filename)]
      [:div.active-file-data
-      [:table
+      [:table.ui.table.segment
        [:thead
         [:tr
          (for [header file-headers]
@@ -69,7 +72,7 @@
              [:td column])])]]]]))
 
 (defn code-editor []
-  [:textarea.code-editor-text ""])
+  [:textarea.code-editor-text @mapping-fn-state])
 
 (def codemirror-code-editor
   (with-meta code-editor
@@ -82,7 +85,10 @@
                       "lineNumbers" true}]
 
          (doseq [[option-key option-value] options]
-           (.setOption codemirror option-key option-value))))}))
+           (.setOption codemirror option-key option-value))
+
+         (.on codemirror "change" (fn [self event]
+                                    (reset! mapping-fn-state (.getValue self))))))}))
 
 (defn mapping-workbench []
   [:div.mapping-workbench
@@ -90,7 +96,22 @@
     [:h1 "Mapping Function"]
     [:div.code-editor
      [codemirror-code-editor]]]
-   [:div.data-structure
+   [:div.mapping-fn-result
+    [:h1 "Mapping Function Result"]
+    (let [mapping-fn-result (antares/string->data @mapping-fn-result-state)
+          result-headers (first mapping-fn-result)
+          result-body (rest mapping-fn-result)]
+      [:table.ui.table.segment
+       [:thead
+        [:tr
+         (for [header result-headers]
+           [:th header])]]
+       [:tbody
+        (for [row result-body]
+          [:tr
+           (for [column row]
+             [:td column])])]])]
+   #_[:div.data-structure
     [:h1 "Data Structure"]
     [:pre "{}"]]])
 
@@ -120,3 +141,13 @@
                             (reset! active-file-data-state
                                     {:filename (get response "filename")
                                      :filecontent (get response "filecontent")}))})))
+
+(add-watch
+ mapping-fn-state
+ :compile-clojure-fn
+ (fn [key ref old-value new-value]
+   (antares/post {:uri "http://localhost:8989/compile-clojure-fn"
+                  :params {:compile-fn @mapping-fn-state
+                           :compile-data (get-in @active-file-data-state [:filecontent])}
+                  :handler (fn [response]
+                             (reset! mapping-fn-result-state response))})))

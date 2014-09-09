@@ -1,5 +1,11 @@
 (ns antares.helpers
-  (:require [ajax.core :as ajax]))
+  (:require [ajax.core :as ajax]
+            [cljs.reader :as cljs-reader]))
+
+;; READERS
+(defn string->data
+  [string]
+  (cljs-reader/read-string string))
 
 ;; ASYNC
 (defn get

@@ -54,7 +54,7 @@ goog.addDependency("../template_builder/core.js", ['template_builder.core'], ['c
 goog.addDependency("../components/tabular.js", ['components.tabular'], ['cljs.core', 'antares.core']);
 goog.addDependency("../cljs/hackpad.js", ['cljs.hackpad'], ['components.tabular', 'components.templates.vendoranalysis', 'cljs.core', 'components.codeeditor', 'antares.core']);
 goog.addDependency("../refsareblind/test.js", ['refsareblind.test'], ['cljs.core', 'antares.core']);
-goog.addDependency("../antares/helpers.js", ['antares.helpers'], ['ajax.core', 'cljs.core']);
+goog.addDependency("../antares/helpers.js", ['antares.helpers'], ['ajax.core', 'cljs.core', 'cljs.reader']);
 goog.addDependency("../cljs/templatefinal.js", ['cljs.templatefinal'], ['reagent.core', 'cljs.core', 'antares.helpers', 'clojure.string']);
 goog.addDependency("../cljs/template/final.js", ['cljs.template.final$'], ['reagent.core', 'cljs.core', 'antares.core']);
 goog.addDependency("../antares/dev.js", ['antares.dev'], ['cljs.core', 'antares.core']);

@@ -27,6 +27,23 @@
       (transactions/save-template!)
       (str)))
 
+(defn compile-clojure-fn
+  [request]
+  (let [compile-fn (if (not-empty (-> request :params :compile-fn))
+                     (try
+                       (-> request :params :compile-fn read-string)
+                       (catch Exception e ""))
+                     "")
+        compile-data (if (not-empty (-> request :params :compile-data))
+                         (-> request :params :compile-data)
+                         "")]
+    
+    (if (not-empty compile-fn)
+      (try
+        (pr-str ((eval compile-fn) compile-data))
+        (catch Exception e (str "caught exception: " (.getMessage e))))
+      "")))
+
 (defn get-template
   [request]
   (->> {:eid (-> request :params :id read-string)}
