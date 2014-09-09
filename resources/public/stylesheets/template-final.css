@@ -2,3 +2,11 @@ ul.files-list {
   cursor: pointer; }
   ul.files-list li.file.active {
     color: red; }
+
+div.active-file .active-file-data {
+  overflow-x: auto; }
+
+ul.templates-list {
+  cursor: pointer; }
+  ul.templates-list li.template.active {
+    color: red; }
