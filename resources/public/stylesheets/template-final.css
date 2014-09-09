@@ -1,0 +1,4 @@
+ul.files-list {
+  cursor: pointer; }
+  ul.files-list li.file.active {
+    color: red; }

@@ -115,7 +115,7 @@
   Renderable
   (render-html [self data]
     (if-let [render-fn (-> self :render)]
-      (html-renderer/html (render-fn data))))
+        (html-renderer/html (render-fn data))))
 
   (render-css [self]
     (if-let [style-data (-> self :style)]
@@ -178,7 +178,7 @@
 (def event-stream (chan))
 (def control-stream (chan))
 
-(let [root-node (.querySelector js/document "body")]
+(let [root-node (js/document.querySelector "#antares")]
   (doseq [event-name event-list]
     (events/listen root-node event-name (fn [event]
                                           (put! event-stream event)))))
@@ -205,13 +205,13 @@
     (while true
       (controller-action! (<! control-stream) controls))))
 
-(defn renderer
+(defn render-loop
   [root]
   (add-watch
    app-state
    :renderer
    (fn [key reference old-value new-value]
-     (let [root-node (.querySelector js/document "#antares")
+     (let [root-node (js/document.querySelector "#antares")
            new-dom (render-html root new-value)]
        (doseq [component @registered-components]
          (component-will-update component))

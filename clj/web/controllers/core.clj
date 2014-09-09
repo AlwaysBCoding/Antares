@@ -3,7 +3,8 @@
             [data.db.config :as config]
             [data.queries.core :as queries]
             [data.transactions.core :as transactions]
-            [web.serializers.core :as serializers]))
+            [web.serializers.core :as serializers]
+            [cognitect.transit :as transit]))
 
 (defn compile-template
   [request]
@@ -38,3 +39,8 @@
   (->> {:query (-> request :params :query eval)}
        (queries/basic-query)
        (pr-str)))
+
+(defn transit-test
+  [request]
+  (prn request)
+  "okay")

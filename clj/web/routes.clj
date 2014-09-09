@@ -5,6 +5,7 @@
 
 (defroutes app-routes
   (GET "/" [] "HELLO WORLD!")
+  (POST "/transit-test"         [] controllers/transit-test)
   (POST "/compile-template"     [] controllers/compile-template)
   (GET "/template/:id"          [] controllers/get-template)
   (POST "/template/:id/save"    [] controllers/save-template)

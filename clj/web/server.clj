@@ -2,7 +2,7 @@
   (:require [org.httpkit.server :refer (run-server)]
             [ring.middleware.resource :refer (wrap-resource)]
             [ring.middleware.file-info :refer (wrap-file-info)]
-            [ring.middleware.edn :refer (wrap-edn-params)]
+            [ring.middleware.edn :refer (wrap-edn-params)]            
             [web.routes :as routes]))
 
 (def app

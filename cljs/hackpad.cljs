@@ -1,8 +1,11 @@
 (ns cljs.hackpad
   (:require [antares.core :as antares]
             [components.codeeditor :as code-editor]
-            [components.queryresponse :as query-response]
+            [components.tabular :as tabular]
             [components.templates.vendoranalysis :as vendor-analysis]))
+
+(antares/post {:uri "http://localhost:8989/transit-test"
+               :params "{:data \"test-data\"}"})
 
 (reset! antares/app-state {:root
 
@@ -14,6 +17,9 @@
 
                             :query-mapping
                             {:display "Query Mapping Fn"}
+
+                            :query-mapping-result
+                            {:display "Something..."}
 
                             :vendor-analysis
                             {:active-vendor {}
@@ -60,10 +66,13 @@
                 (antares/render-html code-editor/code-editor (-> data :root :query-editor))]
                [:div.query-response
                 [:h1 "Query Response"]
-                (antares/render-html query-response/query-response (-> data :root :query-response))]
+                (antares/render-html tabular/matrix-table (-> data :root :query-response))]
                [:div.query-mapping
                 [:h1 "Query Mapping"]
                 (antares/render-html code-editor/code-editor (-> data :root :query-mapping))]
+               [:div.query-mapping-result
+                [:h1 "Query Mapping Result"]
+                (antares/render-html tabular/raw-data (-> data :root :query-mapping-result))]
                [:div.template
                 [:h1 "Template"]
                 (antares/render-html vendor-analysis/vendor-analysis (-> data :root :vendor-analysis))]])
@@ -89,7 +98,8 @@
                (:controls code-editor/code-editor))}))
 
 (antares/bind root [] "#antares")
-(antares/renderer root)
+
+(antares/render-loop root)
 (antares/event-loop (:event-mappings root) (:controls root))
 
 (antares/on-transition
@@ -107,4 +117,4 @@
  [:root :query-mapping]
  (fn [key reference old-value new-value]
    (if (not= (get-in old-value [:root :query-mapping]) (get-in new-value [:root :query-mapping]))
-     (js/console.log "TRANSITION"))))
+     (antares/cursor->value [:root :query-mapping-result] {:display "this works..."}))))

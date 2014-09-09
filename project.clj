@@ -11,6 +11,14 @@
                  [org.clojure/core.async "0.1.303.0-886421-alpha"]
                  [com.datomic/datomic-pro "0.9.4815.12"]
 
+                 [om "0.7.1"]
+                 [sablono "0.2.22"]
+                 [prismatic/om-tools "0.3.2"]
+
+                 [reagent "0.4.2"]
+
+                 [com.cognitect/transit-clj "0.8.247"]
+
                  [environ "0.5.0"]
                  [prismatic/plumbing "0.2.2"]
 
